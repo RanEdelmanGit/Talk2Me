@@ -1,13 +1,49 @@
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import './styles/App.css'
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
+import ChatPage from "./pages/ChatPage";
+import { useUser } from "./context/userContext";
+import SupportersPage from "./pages/Supporters";
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useUser();
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+};
 
 function App() {
- 
-
   return (
-    <>
-      <h1 className='text-red-500 text-2xl font-bold'>Talk Support</h1>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Registration />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <SupportersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
