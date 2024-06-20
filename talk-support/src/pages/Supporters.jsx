@@ -1,10 +1,11 @@
 
 import { Link } from "react-router-dom";
+import SupporterCard from "../components/supporters/SupporterCard";
 
 export default function SupportersPage() {
   return (
     <div className="">
-      <h2>Find Supporter</h2>
+      <SupporterCard/>
       <Link to="/chat"><p className="text-blue-500">chat</p></Link>
     </div>
   );
