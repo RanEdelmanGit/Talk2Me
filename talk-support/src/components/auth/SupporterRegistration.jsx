@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase_config";
@@ -10,7 +10,6 @@ import "../../styles/registrationPage.css";
 const SupporterRegistration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [area, setArea] = useState("");
@@ -35,7 +34,11 @@ const SupporterRegistration = () => {
     setError(null);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const userId = userCredential.user.uid;
 
       await updateProfile(userCredential.user, { displayName });
@@ -67,150 +70,200 @@ const SupporterRegistration = () => {
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="login-container" dir="rtl">
-        <h2 className="text-2xl font-bold mb-4">הרשמת מאזין</h2>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="flex-container">
-            <div className="form-group mb-4">
-              <label htmlFor="fullName" className="block mb-2">שם מלא:</label>
-              <input
-                id="fullName"
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            </div>
-            <div className="form-group mb-4">
-              <label htmlFor="email" className="block mb-2">אימייל:</label>
-              <input
-                id="email"
-                type="email"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+    <div className="w-full max-w-lg p-6 bg-gray-100 rounded-lg shadow-md">
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-medium">
+              אימייל:
+            </label>
+            <input
+              id="email"
+              type="email"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-          <div className="flex-container">
-            <div className="form-group mb-4">
-              <label htmlFor="password" className="block mb-2">סיסמה:</label>
-              <input
-                id="password"
-                type="password"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="form-group mb-4">
-              <label htmlFor="phone" className="block mb-2">טלפון:</label>
-              <input
-                id="phone"
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="fullName" className="block text-sm font-medium">
+              שם מלא:
+            </label>
+            <input
+              id="fullName"
+              type="text"
+              className="input"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
           </div>
-          <div className="flex-container">
-            <div className="form-group mb-4">
-              <label htmlFor="area" className="block mb-2">איזור:</label>
-              <select
-                id="area"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
-              >
-                <option value="">בחר איזור</option>
-                <option value="צפון">צפון</option>
-                <option value="מרכז">מרכז</option>
-                <option value="דרום">דרום</option>
-              </select>
-            </div>
-            <div className="form-group mb-4">
-              <label htmlFor="meeting" className="block mb-2">אופן המפגש:</label>
-              <select
-                id="meeting"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={meeting}
-                onChange={(e) => setMeeting(e.target.value)}
-              >
-                <option value="">בחר אופן מפגש</option>
-                <option value="מפגש פנים אל פנים">מפגש פנים אל פנים</option>
-                <option value="מרחוק">מרחוק</option>
-                <option value="שניהם">שניהם</option>
-              </select>
-            </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="phone" className="block text-sm font-medium">
+              טלפון:
+            </label>
+            <input
+              id="phone"
+              type="text"
+              className="input"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
           </div>
-          <div className="flex-container">
-            <div className="form-group mb-4">
-              <label htmlFor="education" className="block mb-2">השכלה:</label>
-              <select
-                id="education"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={education}
-                onChange={(e) => setEducation(e.target.value)}
-              >
-                <option value="">בחר השכלה</option>
-                <option value="תואר שני">תואר שני</option>
-                <option value="תואר שלישי">תואר שלישי</option>
-              </select>
-            </div>
-            <div className="form-group mb-4">
-              <label htmlFor="school" className="block mb-2">מוסד לימודים:</label>
-              <select
-                id="school"
-                className="w-full p-2 border border-gray-300 rounded"
-                value={school}
-                onChange={(e) => setSchool(e.target.value)}
-              >
-                <option value="">בחר מוסד</option>
-                <option value="אונ' תל אביב">אונ' תל אביב</option>
-                <option value="רייכמן">רייכמן</option>
-              </select>
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-sm font-medium">
+              סיסמה:
+            </label>
+            <input
+              id="password"
+              type="password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
-          <div className="form-group mb-4">
-            <label className="block mb-2">העלאת מסמכים:</label> 
-            <div className="input-file-group"> 
-              <span>תעודת זהות</span>
-              <input
-                type="file"
-                onChange={(e) => handleFileUpload(e, setIdDoc)}
-                accept=".pdf,.jpg,.jpeg,.png"
-              />
-              <span>אישור סטודנט</span> 
-              <input
-                type="file"
-                onChange={(e) => handleFileUpload(e, setStudentApproval)}
-                accept=".pdf,.jpg,.jpeg,.png"
-              />
-              <span>ציונים</span>
-              <input
-                type="file"
-                onChange={(e) => handleFileUpload(e, setGrades)}
-                accept=".pdf,.jpg,.jpeg,.png"
-              />
-              <span>תמונת פרופיל</span>
-              <input
-                type="file"
-                onChange={(e) => handleFileUpload(e, setProfilePic)}
-                accept=".jpg,.jpeg,.png"
-              />
-            </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="area" className="block text-sm font-medium">
+              איזור:
+            </label>
+            <select
+              id="area"
+              className="input"
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
+            >
+              <option value="">בחר איזור</option>
+              <option value="צפון">צפון</option>
+              <option value="מרכז">מרכז</option>
+              <option value="דרום">דרום</option>
+            </select>
           </div>
-          {error && <div className="error-message text-red-500 mb-4">{error}</div>}
-          <div className="form-group">
-            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">הרשמה</button>
+          <div className="space-y-2">
+            <label htmlFor="meeting" className="block text-sm font-medium">
+              אופן המפגש:
+            </label>
+            <select
+              id="meeting"
+              className="input"
+              value={meeting}
+              onChange={(e) => setMeeting(e.target.value)}
+            >
+              <option value="">בחר אופן מפגש</option>
+              <option value="מפגש פנים אל פנים">מפגש פנים אל פנים</option>
+              <option value="מרחוק">מרחוק</option>
+              <option value="שניהם">שניהם</option>
+            </select>
           </div>
-        </form>
-        <p className="registration-link mt-4 text-center">
-          כבר יש לך חשבון? <Link to="/login" className="text-blue-500">התחבר</Link>
-        </p>
-      </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="education" className="block text-sm font-medium">
+              השכלה:
+            </label>
+            <select
+              id="education"
+              className="input"
+              value={education}
+              onChange={(e) => setEducation(e.target.value)}
+            >
+              <option value="">בחר השכלה</option>
+              <option value="תואר שני">תואר שני</option>
+              <option value="תואר שלישי">תואר שלישי</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="school" className="block text-sm font-medium">
+              מוסד לימודים:
+            </label>
+            <select
+              id="school"
+              className="input"
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
+            >
+              <option value="">בחר מוסד</option>
+              <option value="אונ' תל אביב">אונ' תל אביב</option>
+              <option value="רייכמן">רייכמן</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex flex-col justify-center ">
+          <h2 className="text-center mb-4 font-bold underline">מסמכים</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="idDoc" className="block text-sm font-medium">
+              תעודת זהות:
+            </label>
+            <input
+              id="idDoc"
+              type="file"
+              className="file-input"
+              onChange={(e) => handleFileUpload(e, setIdDoc)}
+              accept=".pdf,.jpg,.jpeg,.png"
+            />
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="studentApproval"
+              className="block text-sm font-medium"
+            >
+              אישור סטודנט:
+            </label>
+            <input
+              id="studentApproval"
+              type="file"
+              className="file-input"
+              onChange={(e) => handleFileUpload(e, setStudentApproval)}
+              accept=".pdf,.jpg,.jpeg,.png"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label htmlFor="grades" className="block text-sm font-medium">
+              גיליון ציונים:
+            </label>
+            <input
+              id="grades"
+              type="file"
+              className="file-input"
+              onChange={(e) => handleFileUpload(e, setGrades)}
+              accept=".pdf,.jpg,.jpeg,.png"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="profilePic" className="block text-sm font-medium">
+              תמונת פרופיל:
+            </label>
+            <input
+              id="profilePic"
+              type="file"
+              className="file-input"
+              onChange={(e) => handleFileUpload(e, setProfilePic)}
+              accept=".jpg,.jpeg,.png"
+            />
+          </div>
+        </div>
+        </div>
+        {error && <div className="text-red-500 mb-4">{error}</div>}
+        <div className="flex flex-col items-end space-y-4">
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded"
+          >
+            הרשמה
+          </button>
+          <div className="text-sm text-center w-full">
+            כבר יש לך חשבון?{" "}
+            <Link to="/login" className="text-blue-500">
+              התחבר
+            </Link>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };

@@ -14,13 +14,13 @@ const RegistrationPage = () => {
             className={`toggle-button ${isSupporter ? "active bg-slate-400" : ""}`}
             onClick={() => setIsSupporter(true)}
           >
-            הרשמת מאזין
+           לתמוך
           </button>
           <button
             className={`toggle-button ${!isSupporter ? "active bg-slate-400" : ""}`}
             onClick={() => setIsSupporter(false)}
           >
-            הרשמת לקוח
+             להשמע
           </button>
         </div>
         {isSupporter ? <SupporterRegistration /> : <ClientRegistration />}
