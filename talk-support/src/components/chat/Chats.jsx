@@ -1,8 +1,8 @@
 import { onSnapshot, doc } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
-import { db } from "../firebase_config";
-import { useUser } from "../context/userContext";
-import { useChat } from "../context/chatContext";
+import { db } from "../../firebase_config";
+import { useUser } from "../../context/userContext";
+import { useChat } from "../../context/chatContext";
 
 export default function Chats() {
   const { user } = useUser();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { db } from "../firebase_config";
+import { db } from "../../firebase_config";
 import {
   collection,
   getDocs,
@@ -11,7 +11,7 @@ import {
   setDoc,
   getDoc,
 } from "firebase/firestore";
-import { useUser } from "../context/userContext";
+import { useUser } from "../../context/userContext";
 
 export default function Search() {
   const [userName, setUserName] = useState("");

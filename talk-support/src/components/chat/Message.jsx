@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useUser } from "../context/userContext";
+import { useUser } from "../../context/userContext";
 
 export default function Message({ message }) {
   const { user } = useUser();

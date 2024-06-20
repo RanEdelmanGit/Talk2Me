@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useUser } from "../context/userContext";
-import { useChat } from "../context/chatContext";
+import { useUser } from "../../context/userContext";
+import { useChat } from "../../context/chatContext";
 import {
   arrayUnion,
   doc,
@@ -8,7 +8,7 @@ import {
   Timestamp,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../firebase_config";
+import { db } from "../../firebase_config";
 import { v4 as uuid } from "uuid";
 
 export default function Input() {

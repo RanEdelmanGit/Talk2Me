@@ -1,7 +1,7 @@
 import React from "react";
 import Messages from "./Messages";
 import Input from "./Input";
-import { useChat } from "../context/chatContext";
+import { useChat } from "../../context/chatContext";
 
 export default function Chat() {
   const { data } = useChat();

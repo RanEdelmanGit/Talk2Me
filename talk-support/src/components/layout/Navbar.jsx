@@ -1,6 +1,6 @@
 import React from "react";
-import SignOut from "./SignOut";
-import { useUser } from "../context/userContext";
+import SignOut from "../auth/SignOut";
+import { useUser } from "../../context/userContext";
 
 export default function Navbar() {
   const { user } = useUser();

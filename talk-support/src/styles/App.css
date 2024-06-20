@@ -7,7 +7,7 @@
 @tailwind utilities;
 
 body {
-  @apply flex items-center justify-center min-h-screen bg-black;
+  @apply flex items-center justify-center min-h-screen bg-white;
 }
   
   button {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Message from "./Message";
-import { useChat } from "../context/chatContext";
+import { useChat } from "../../context/chatContext";
 import { onSnapshot, doc } from "firebase/firestore";
-import { db } from "../firebase_config";
+import { db } from "../../firebase_config";
 
 export default function Messages() {
   const { data } = useChat();

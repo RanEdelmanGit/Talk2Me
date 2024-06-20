@@ -1,6 +1,6 @@
 
-import SideBar from "../components/SideBar";
-import Chat from "../components/Chat";
+import SideBar from "../components/chat/SideBar";
+import Chat from "../components/chat/Chat";
 import { useUser } from "../context/userContext";
 
 export default function ChatPage() {
