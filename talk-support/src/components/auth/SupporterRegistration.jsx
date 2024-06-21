@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase_config";
+import { auth, db, storage } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/userContext";
 import { Link } from "react-router-dom";
@@ -21,6 +22,8 @@ const SupporterRegistration = () => {
   const [studentApproval, setStudentApproval] = useState(null);
   const [grades, setGrades] = useState(null);
   const [profilePic, setProfilePic] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [confirmEmail, setConfirmEmail] = useState("");
   const navigate = useNavigate();
   const { user } = useUser();
 
@@ -59,6 +62,11 @@ const SupporterRegistration = () => {
     event.preventDefault();
     setError(null);
 
+    if (registration.email !== confirmEmail) {
+      setError("Emails do not match");
+      return;
+    }
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -66,25 +74,43 @@ const SupporterRegistration = () => {
         registration.password
       );
       const userId = userCredential.user.uid;
-
-      await updateProfile(userCredential.user, { displayName });
-
+  
+      await updateProfile(userCredential.user, { displayName: registration.name });
+  
       await setDoc(doc(db, "userChats", userId), {});
-
+  
+      // Handle file uploads if necessary
+      if (idDoc) {
+        const idDocRef = storageRef(storage, `supporters/${userId}/idDoc`);
+        await uploadBytes(idDocRef, idDoc);
+        registration.idDocURL = await getDownloadURL(idDocRef);
+      }
+      if (studentApproval) {
+        const studentApprovalRef = storageRef(storage, `supporters/${userId}/studentApproval`);
+        await uploadBytes(studentApprovalRef, studentApproval);
+        registration.studentApprovalURL = await getDownloadURL(studentApprovalRef);
+      }
+      if (grades) {
+        const gradesRef = storageRef(storage, `supporters/${userId}/grades`);
+        await uploadBytes(gradesRef, grades);
+        registration.gradesURL = await getDownloadURL(gradesRef);
+      }
+      if (profilePic) {
+        const profilePicRef = storageRef(storage, `supporters/${userId}/profilePic`);
+        await uploadBytes(profilePicRef, profilePic);
+        registration.profilePicURL = await getDownloadURL(profilePicRef);
+      }
+  
       await setDoc(doc(db, "supporters", userId), registration);
       dispatch(setUserType(userTypeSupporter));
       dispatch(setFormDetails(registration));
-
-      navigate("/");
+  
+      setShowModal(true); // Show modal on successful registration
     } catch (error) {
       setError(error.message);
     }
   };
 
-  if (user) {
-    navigate("/");
-    return null;
-  }
 
   return (
     <div className="w-full max-w-lg p-6 bg-gray-100 rounded-lg shadow-md">
@@ -97,8 +123,9 @@ const SupporterRegistration = () => {
             <input
               id="email"
               type="email"
-              className="input w-full p-2 border border-gray-300 rounded-md text-end text-base pl-2"
+              className="input w-full p-2 border border-gray-300 rounded-md text-sm pl-2"
               value={registration.email}
+              style={{direction: "ltr"}}
               onChange={handleChange}
               required
             />
@@ -120,6 +147,19 @@ const SupporterRegistration = () => {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
+            <label htmlFor="confirmEmail" className="block text-sm font-medium">
+              אשרו את הדוא"ל:
+            </label>
+            <input
+              id="confirmEmail"
+              type="email"
+              className="input w-full p-2 border border-gray-300 rounded-md text-sm pl-2"
+              style={{direction: "ltr"}}
+              value={confirmEmail}
+              onChange={({ target }) => setConfirmEmail(target.value)}
+            />
+          </div>
+          <div className="space-y-2">
             <label htmlFor="email" className="block text-sm font-medium">
         סיסמא:
             </label>
@@ -132,19 +172,6 @@ const SupporterRegistration = () => {
               required
             />
           </div>
-          <div className="space-y-2">
-            <label htmlFor="fullName" className="block text-sm font-medium">
-              עיסוק:
-            </label>
-            <input
-              id="job"
-              type="text"
-              className="input w-full p-2 border border-gray-300 rounded-md"
-              value={registration.job}
-              onChange={handleChange}
-            />
-          </div>
-          
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -356,6 +383,27 @@ const SupporterRegistration = () => {
           </div>
         </div>
       </form>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Registration Successful</h2>
+            <p>Thank you for registering as a supporter!</p>
+            <button
+              onClick={() => {
+                setShowModal(false);
+                setTimeout(() => {
+                  navigate("/"); 
+                }, 1500); 
+              }
+              }
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

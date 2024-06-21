@@ -10,6 +10,7 @@ import Registration from "./pages/Registration";
 import ChatPage from "./pages/ChatPage";
 import { useUser } from "./context/userContext";
 import SupportersPage from "./pages/Supporters";
+import Home from './pages/Home';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useUser();
@@ -23,10 +24,11 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Home />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route
-          path="/"
+          path="/supporters"
           element={
             <ProtectedRoute>
               <SupportersPage />

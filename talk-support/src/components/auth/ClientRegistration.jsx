@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase_config";
@@ -13,6 +13,8 @@ import {
 } from "../../redux/features/registrationSlice";
 
 const ClientRegistration = () => {
+  const [registrationComplete, setRegistrationComplete] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -60,21 +62,16 @@ const ClientRegistration = () => {
       await updateProfile(userCredential.user, {
         displayName: registration.name,
       });
-      await setDoc(doc(db, "userChats", userId), {});
-      await setDoc(doc(db, "users", userId), registration);
+      await setDoc(doc(db, "clientChats", userId), {});
+      await setDoc(doc(db, "clients", userId), registration);
       // TODO update redux
       dispatch(setUserType(userTypeClient));
       dispatch(setFormDetails(registration));
-      navigate("/");
+      setRegistrationComplete(true); // Set registration complete to true
     } catch (error) {
       setError(error.message);
     }
   };
-
-  if (user) {
-    navigate("/");
-    return null;
-  }
 
   return (
     <div className="w-full max-w-lg p-6 bg-gray-100 rounded-lg shadow-md">
@@ -257,7 +254,8 @@ const ClientRegistration = () => {
             <input
               id="email"
               type="email"
-              className="input w-full p-2 border border-gray-300 rounded-md text-base pl-2 text-end"
+              className="input w-full p-2 border border-gray-300 rounded-md text-base pl-2"
+              style={{direction: "ltr"}}
               value={registration.email}
               onChange={handleChange}
               required
@@ -272,7 +270,8 @@ const ClientRegistration = () => {
             <input
               id="confirmEmail"
               type="email"
-              className="input w-full p-2 border border-gray-300 rounded-md text-base pl-2 text-end"
+              className="input w-full p-2 border border-gray-300 rounded-md text-base pl-2"
+              style={{direction: "ltr"}}
               value={confirmEmail}
               onChange={({ target }) => setConfirmEmail(target.value)}
             />
@@ -313,6 +312,26 @@ const ClientRegistration = () => {
           </div>
         </div>
       </form>
+      {registrationComplete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Registration Successful</h2>
+            <p>Thank you for registering as a client!</p>
+            <button
+              onClick={() => {
+                setShowModal(false);
+                setTimeout(() => {
+                  navigate("/supporters"); 
+                }, 1500); 
+              }
+              }
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
