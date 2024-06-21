@@ -17,7 +17,7 @@ const SupporterCard = ({
       dir="rtl"
     >
       <div className="flex items-start">
-        <div className="flex items-start flex-col bg-gray-200">
+        <div className="flex items-start flex-col">
           <img
             src={profilePic}
             alt="Profile"
@@ -25,19 +25,19 @@ const SupporterCard = ({
           />
         </div>
         <div className="mr-4 md:mr-6">
-            <div className="text-base md:text-lg font-bold mb-2">פגי גו </div>
-          <div className="text-sm md:text-base">
-            <span className="text-sm font-bold">איזור: </span>הרצליה
+            <div className="text-base md:text-lg font-bold mb-1 text-black">פגי גו </div>
+          <div className="text-sm md:text-base text-black">
+            <span className="text-sm font-bold text-black">איזור: </span>הרצליה
           </div>
-          <div className="text-sm md:text-base">
-            <span className="text-sm font-bold">אופן המפגש: </span>
+          <div className="text-sm md:text-base text-black">
+            <span className="text-sm font-bold text-black">אופן המפגש: </span>
             {"[גם וגם]"}
           </div>
-          <div className="text-sm md:text-base">
-            <span className="text-sm md:text font-bold">השכלה: </span>תואר שלישי
+          <div className="text-sm md:text-base text-black">
+            <span className="text-sm font-bold text-black">השכלה: </span>תואר שלישי
           </div>
-          <div className="text-sm md:text-base">
-            <span className="text-sm font-bold">מוסד לימודים: </span>אונ' תל אביב
+          <div className="text-sm md:text-base text-black">
+            <span className="text-sm font-bold text-black">מוסד לימודים: </span>אונ' תל אביב
           </div>
         </div>
       </div>

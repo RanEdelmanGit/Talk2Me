@@ -74,7 +74,7 @@
 }
 
 .file-input{
-  @apply  w-full mr-8 p-2 border-gray-300 rounded text-transparent
+  @apply  w-full p-2 border-gray-300 rounded text-transparent
 }
 
 .input-file-group {

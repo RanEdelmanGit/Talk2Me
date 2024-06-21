@@ -5,11 +5,11 @@ import { auth, db } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/userContext";
 import { Link } from "react-router-dom";
-import "../../styles/registrationPage.css";
+
 
 const SupporterRegistration = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [age, setAge] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [area, setArea] = useState("");
@@ -75,12 +75,12 @@ const SupporterRegistration = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <label htmlFor="email" className="block text-sm font-medium">
-              אימייל:
+            דוא"ל:
             </label>
             <input
               id="email"
               type="email"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -92,7 +92,7 @@ const SupporterRegistration = () => {
             <input
               id="fullName"
               type="text"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
@@ -106,21 +106,27 @@ const SupporterRegistration = () => {
             <input
               id="phone"
               type="text"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
           <div className="space-y-2">
             <label htmlFor="password" className="block text-sm font-medium">
-              סיסמה:
+              גיל:
             </label>
             <input
-              id="password"
-              type="password"
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="age"
+              type="number"
+              className="input w-full p-2 border border-gray-300 rounded-md"
+              value={age}
+              onChange={(e) => {
+                const newAge = e.target.value;
+                if (newAge === "" || newAge >= 18) {
+                  setAge(newAge);
+                }
+              }}
+              min="18"
             />
           </div>
         </div>
@@ -131,7 +137,7 @@ const SupporterRegistration = () => {
             </label>
             <select
               id="area"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={area}
               onChange={(e) => setArea(e.target.value)}
             >
@@ -147,7 +153,7 @@ const SupporterRegistration = () => {
             </label>
             <select
               id="meeting"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={meeting}
               onChange={(e) => setMeeting(e.target.value)}
             >
@@ -165,7 +171,7 @@ const SupporterRegistration = () => {
             </label>
             <select
               id="education"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={education}
               onChange={(e) => setEducation(e.target.value)}
             >
@@ -180,7 +186,7 @@ const SupporterRegistration = () => {
             </label>
             <select
               id="school"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={school}
               onChange={(e) => setSchool(e.target.value)}
             >
@@ -200,7 +206,7 @@ const SupporterRegistration = () => {
             <input
               id="idDoc"
               type="file"
-              className="file-input"
+              className="file-input border border-gray-300"
               onChange={(e) => handleFileUpload(e, setIdDoc)}
               accept=".pdf,.jpg,.jpeg,.png"
             />
@@ -215,7 +221,7 @@ const SupporterRegistration = () => {
             <input
               id="studentApproval"
               type="file"
-              className="file-input"
+              className="file-input border border-gray-300"
               onChange={(e) => handleFileUpload(e, setStudentApproval)}
               accept=".pdf,.jpg,.jpeg,.png"
             />
@@ -229,7 +235,7 @@ const SupporterRegistration = () => {
             <input
               id="grades"
               type="file"
-              className="file-input"
+              className="file-input  border border-gray-300"
               onChange={(e) => handleFileUpload(e, setGrades)}
               accept=".pdf,.jpg,.jpeg,.png"
             />
@@ -241,7 +247,7 @@ const SupporterRegistration = () => {
             <input
               id="profilePic"
               type="file"
-              className="file-input"
+              className="file-input  border border-gray-300"
               onChange={(e) => handleFileUpload(e, setProfilePic)}
               accept=".jpg,.jpeg,.png"
             />

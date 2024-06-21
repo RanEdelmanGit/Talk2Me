@@ -5,7 +5,7 @@ import { auth, db } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/userContext";
 import { Link } from "react-router-dom";
-import "../../styles/registrationPage.css";
+
 
 const ClientRegistration = () => {
   const [email, setEmail] = useState("");
@@ -65,7 +65,7 @@ const ClientRegistration = () => {
             </label>
             <select
               id="gender"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={gender}
               onChange={(e) => setGender(e.target.value)}
             >
@@ -81,9 +81,15 @@ const ClientRegistration = () => {
             <input
               id="age"
               type="number"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={age}
-              onChange={(e) => setAge(e.target.value)}
+              onChange={(e) => {
+                const newAge = e.target.value;
+                if (newAge === "" || newAge >= 18) {
+                  setAge(newAge);
+                }
+              }}
+              min="18"
             />
           </div>
         </div>
@@ -94,7 +100,7 @@ const ClientRegistration = () => {
             </label>
             <select
               id="location"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             >
@@ -113,7 +119,7 @@ const ClientRegistration = () => {
             </label>
             <select
               id="relationshipStatus"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={relationshipStatus}
               onChange={(e) => setRelationshipStatus(e.target.value)}
             >
@@ -130,11 +136,11 @@ const ClientRegistration = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <label htmlFor="recentStatus" className="block text-sm font-medium">
-               מצבך בתקופה האחרונה?
+              מצבך בתקופה האחרונה?
             </label>
             <select
               id="recentStatus"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={recentStatus}
               onChange={(e) => setRecentStatus(e.target.value)}
             >
@@ -147,11 +153,11 @@ const ClientRegistration = () => {
           </div>
           <div className="space-y-2">
             <label htmlFor="religious" className="block text-sm font-medium">
-            האם את/ה דתי?
+              האם את/ה דתי?
             </label>
             <select
               id="religious"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={religious}
               onChange={(e) => setReligious(e.target.value)}
             >
@@ -167,11 +173,11 @@ const ClientRegistration = () => {
               htmlFor="referralSource"
               className="block text-sm font-medium"
             >
-               מי הפנה אתכם אלינו? 
+              מי הפנה אתכם אלינו?
             </label>
             <select
               id="referralSource"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={referralSource}
               onChange={(e) => setReferralSource(e.target.value)}
             >
@@ -196,11 +202,11 @@ const ClientRegistration = () => {
               htmlFor="preferredLanguage"
               className="block text-sm font-medium"
             >
-             שפה מועדפת?
+              שפה מועדפת?
             </label>
             <select
               id="preferredLanguage"
-              className="input"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={preferredLanguage}
               onChange={(e) => setPreferredLanguage(e.target.value)}
             >
@@ -213,12 +219,12 @@ const ClientRegistration = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <label htmlFor="displayName" className="block text-sm font-medium">
-              שם פרטי (או כינוי)
+              שם מלא (או כינוי)
             </label>
             <input
               id="displayName"
               type="text"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
             />
@@ -230,7 +236,7 @@ const ClientRegistration = () => {
             <input
               id="email"
               type="email"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -244,7 +250,7 @@ const ClientRegistration = () => {
             <input
               id="confirmEmail"
               type="email"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={confirmEmail}
               onChange={(e) => setConfirmEmail(e.target.value)}
             />
@@ -256,7 +262,7 @@ const ClientRegistration = () => {
             <input
               id="password"
               type="password"
-              className="input"
+              className="input w-full p-2 border border-gray-300 rounded-md"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />

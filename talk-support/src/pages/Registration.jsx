@@ -8,7 +8,7 @@ const RegistrationPage = () => {
 
   return (
     <div className="flex items-center justify-center" dir="rtl">
-      <div className="">
+      <div className="w-[450px]">
         <div className=" flex toggle-buttons mb-4">
           <button
             className={`toggle-button ${isSupporter ? "active bg-slate-400" : ""}`}
