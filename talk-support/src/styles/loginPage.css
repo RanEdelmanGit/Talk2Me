@@ -25,7 +25,7 @@
 }
 
 .form-group input {
-  @apply w-56 p-3 text-base border border-gray-300 rounded text-center;
+  @apply p-3 text-base border border-gray-300 rounded text-center;
 }
 
 .error-message {

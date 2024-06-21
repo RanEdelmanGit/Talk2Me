@@ -3,6 +3,10 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userTypeSupporter = "supporter";
 export const userTypeClient = "client";
 
+export const meetingOnline = "online";
+export const meetingOffline = "offline";
+export const meetingAll = "online_and_offline";
+
 
 const initialState = {
   userType:"",
