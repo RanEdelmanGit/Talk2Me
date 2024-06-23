@@ -39,14 +39,12 @@ const SupporterRegistration = () => {
     email: "",
     phone: "",
     password: "",
-    job:"",
     name: "",
     meeting: "not-selected",
     gender: "not-selected",
     age: 18,
     location: "not-selected",
     relationshipStatus: "not-selected",
-    recentStatus: "not-selected",
     religious: "not-selected",
     referralSource: "not-selected",
     preferredLanguage: "hebrew",
@@ -252,9 +250,9 @@ const SupporterRegistration = () => {
               onChange={handleChange}
             >
               <option value="not-selected">בחר איזור</option>
-              <option value="צפון">צפון</option>
-              <option value="מרכז">מרכז</option>
-              <option value="דרום">דרום</option>
+              <option value="north">צפון</option>
+              <option value="center">מרכז</option>
+              <option value="south">דרום</option>
             </select>
           </div>
           <div className="space-y-2">
