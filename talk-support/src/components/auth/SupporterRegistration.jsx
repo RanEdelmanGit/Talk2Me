@@ -60,6 +60,23 @@ const SupporterRegistration = () => {
     event.preventDefault();
     setError(null);
 
+    // Validation for "not-selected" or empty options
+    const requiredFields = [
+      { key: "gender", label: "Gender" },
+      { key: "location", label: "Location" },
+      { key: "relationshipStatus", label: "Relationship Status" },
+      { key: "religious", label: "Religious Status" },
+      { key: "referralSource", label: "Referral Source" },
+      { key: "meeting", label: "Meeting Preference" },
+    ];
+
+    for (let field of requiredFields) {
+      if (registration[field.key] === "not-selected") {
+        setError(`Please select a valid option for ${field.label}`);
+        return;
+      }
+    }
+
     if (registration.email !== confirmEmail) {
       setError("Emails do not match");
       return;
@@ -109,7 +126,6 @@ const SupporterRegistration = () => {
     }
   };
 
-
   return (
     <div className="w-full max-w-lg p-6 bg-gray-100 rounded-lg shadow-md">
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -141,25 +157,29 @@ const SupporterRegistration = () => {
               required
             />
           </div>
-          
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label htmlFor="confirmEmail" className="block text-sm font-medium">
-              אשרו את הדוא"ל:
+            <label
+              htmlFor="preferredLanguage"
+              className="block text-sm font-medium"
+            >
+              שפה מועדפת?
             </label>
-            <input
-              id="confirmEmail"
-              type="email"
-              className="input w-full p-2 border border-gray-300 rounded-md text-sm pl-2"
-              style={{direction: "ltr"}}
-              value={confirmEmail}
-              onChange={({ target }) => setConfirmEmail(target.value)}
-            />
+            <select
+              id="preferredLanguage"
+              className="w-full py-3 rounded-md px-1 border border-gray-300"
+              value={registration.preferredLanguage}
+              onChange={handleChange}
+              required
+            >
+              <option value="hebrew">עברית</option>
+              <option value="english">אנגלית</option>
+            </select>
           </div>
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium">
-        סיסמא:
+            <label htmlFor="password" className="block text-sm font-medium">
+              סיסמא:
             </label>
             <input
               id="password"
@@ -183,7 +203,7 @@ const SupporterRegistration = () => {
               onChange={handleChange}
               required
             >
-              <option value="">בחר</option>
+              <option value="not-selected">בחר</option>
               <option value="woman">אישה</option>
               <option value="man">גבר</option>
             </select>
@@ -197,6 +217,7 @@ const SupporterRegistration = () => {
               className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={registration.religious}
               onChange={handleChange}
+              required
             >
               <option value="not-selected">בחר</option>
               <option value="לא">לא</option>
@@ -219,7 +240,7 @@ const SupporterRegistration = () => {
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium">
+            <label htmlFor="age" className="block text-sm font-medium">
               גיל:
             </label>
             <input
@@ -240,7 +261,7 @@ const SupporterRegistration = () => {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label htmlFor="area" className="block text-sm font-medium">
+            <label htmlFor="location" className="block text-sm font-medium">
               איזור:
             </label>
             <select
@@ -248,6 +269,7 @@ const SupporterRegistration = () => {
               className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={registration.location}
               onChange={handleChange}
+              required
             >
               <option value="not-selected">בחר איזור</option>
               <option value="north">צפון</option>
@@ -285,7 +307,7 @@ const SupporterRegistration = () => {
               onChange={handleChange}
               required
             >
-              <option value="">בחר השכלה</option>
+              <option value="not-selected">בחר השכלה</option>
               <option value="תואר שני">תואר שני</option>
               <option value="תואר שלישי">תואר שלישי</option>
             </select>
@@ -301,7 +323,7 @@ const SupporterRegistration = () => {
               onChange={handleChange}
               required
             >
-              <option value="">בחר מוסד</option>
+              <option value="not-selected">בחר מוסד</option>
               <option value="אונ' תל אביב">אונ' תל אביב</option>
               <option value="רייכמן">רייכמן</option>
             </select>
@@ -393,8 +415,7 @@ const SupporterRegistration = () => {
                 setTimeout(() => {
                   navigate("/"); 
                 }, 1500); 
-              }
-              }
+              }}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
             >
               Close

@@ -24,7 +24,7 @@ const ClientRegistration = () => {
     email: "",
     password: "",
     name: "",
-    gender: "",
+    gender: "not-selected",
     age: 18,
     location: "not-selected",
     relationshipStatus: "not-selected",
@@ -34,7 +34,7 @@ const ClientRegistration = () => {
     preferredLanguage: "hebrew",
   });
 
-  const fromDetails = useSelector((state) => state.registration.formDetails);
+  const formDetails = useSelector((state) => state.registration.formDetails);
   const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
@@ -42,9 +42,27 @@ const ClientRegistration = () => {
     const value = target.value;
     setRegistration({ ...registration, [key]: value });
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
+
+    // Validation for "not-selected" options
+    const requiredFields = [
+      { key: "gender", label: "Gender" },
+      { key: "location", label: "Location" },
+      { key: "relationshipStatus", label: "Relationship Status" },
+      { key: "recentStatus", label: "Recent Status" },
+      { key: "religious", label: "Religious Status" },
+      { key: "referralSource", label: "Referral Source" },
+    ];
+
+    for (let field of requiredFields) {
+      if (registration[field.key] === "not-selected") {
+        setError(`Please select a valid option for ${field.label}`);
+        return;
+      }
+    }
 
     if (registration.email !== confirmEmail) {
       setError("Emails do not match");
@@ -64,7 +82,8 @@ const ClientRegistration = () => {
       });
       await setDoc(doc(db, "clientChats", userId), {});
       await setDoc(doc(db, "clients", userId), registration);
-      // TODO update redux
+
+      // Update Redux
       dispatch(setUserType(userTypeClient));
       dispatch(setFormDetails(registration));
       setRegistrationComplete(true); // Set registration complete to true
@@ -133,7 +152,7 @@ const ClientRegistration = () => {
           </div>
           <div className="space-y-2">
             <label
-              htmlFor="relationshipStatus"
+              htmlFor="relationshipStatus"  
               className="block text-sm font-medium"
             >
               סטטוס יחסים?
@@ -183,6 +202,7 @@ const ClientRegistration = () => {
               className="w-full py-3 rounded-md px-1 border border-gray-300"
               value={registration.religious}
               onChange={handleChange}
+              required
             >
               <option value="not-selected">בחר</option>
               <option value="לא">לא</option>
@@ -274,6 +294,7 @@ const ClientRegistration = () => {
               style={{direction: "ltr"}}
               value={confirmEmail}
               onChange={({ target }) => setConfirmEmail(target.value)}
+              required
             />
           </div>
           <div className="space-y-2">
@@ -323,8 +344,7 @@ const ClientRegistration = () => {
                 setTimeout(() => {
                   navigate("/supporters"); 
                 }, 1500); 
-              }
-              }
+              }}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
             >
               Close
