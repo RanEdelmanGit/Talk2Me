@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase_config";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../../context/userContext";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setFormDetails,
   setUserType,
   userTypeClient,
-} from "../../redux/features/registrationSlice";
+  setUid,
+} from "../../redux/features/authSlice";
 
 const ClientRegistration = () => {
   const [registrationComplete, setRegistrationComplete] = useState(false);
@@ -18,7 +17,6 @@ const ClientRegistration = () => {
   const [confirmEmail, setConfirmEmail] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { user } = useUser();
 
   const [registration, setRegistration] = useState({
     email: "",
@@ -34,7 +32,7 @@ const ClientRegistration = () => {
     preferredLanguage: "hebrew",
   });
 
-  const formDetails = useSelector((state) => state.registration.formDetails);
+  const formDetails = useSelector((state) => state.auth.formDetails || {});
   const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
@@ -87,6 +85,8 @@ const ClientRegistration = () => {
       dispatch(setUserType(userTypeClient));
       dispatch(setFormDetails(registration));
       setRegistrationComplete(true); // Set registration complete to true
+      dispatch(setUid(userId));
+      navigate("/");
     } catch (error) {
       setError(error.message);
     }
@@ -152,7 +152,7 @@ const ClientRegistration = () => {
           </div>
           <div className="space-y-2">
             <label
-              htmlFor="relationshipStatus"  
+              htmlFor="relationshipStatus"
               className="block text-sm font-medium"
             >
               סטטוס יחסים?
@@ -275,7 +275,7 @@ const ClientRegistration = () => {
               id="email"
               type="email"
               className="input w-full p-2 border border-gray-300 rounded-md text-base pl-2"
-              style={{direction: "ltr"}}
+              style={{ direction: "ltr" }}
               value={registration.email}
               onChange={handleChange}
               required
@@ -291,7 +291,7 @@ const ClientRegistration = () => {
               id="confirmEmail"
               type="email"
               className="input w-full p-2 border border-gray-300 rounded-md text-base pl-2"
-              style={{direction: "ltr"}}
+              style={{ direction: "ltr" }}
               value={confirmEmail}
               onChange={({ target }) => setConfirmEmail(target.value)}
               required
@@ -342,8 +342,8 @@ const ClientRegistration = () => {
               onClick={() => {
                 setShowModal(false);
                 setTimeout(() => {
-                  navigate("/supporters"); 
-                }, 1500); 
+                  navigate("/supporters");
+                }, 1500);
               }}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
             >

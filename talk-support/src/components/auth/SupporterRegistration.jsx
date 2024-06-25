@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +18,8 @@ import {
   meetingOffline,
   meetingOnline,
   userTypeSupporter,
-} from "../../redux/features/registrationSlice";
+  setUid,
+} from "../../redux/features/authSlice";
 
 const SupporterRegistration = () => {
   const [error, setError] = useState(null);
@@ -81,7 +86,7 @@ const SupporterRegistration = () => {
       setError("Emails do not match");
       return;
     }
-  
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -89,11 +94,13 @@ const SupporterRegistration = () => {
         registration.password
       );
       const userId = userCredential.user.uid;
-  
-      await updateProfile(userCredential.user, { displayName: registration.name });
-  
+
+      await updateProfile(userCredential.user, {
+        displayName: registration.name,
+      });
+
       await setDoc(doc(db, "userChats", userId), {});
-  
+
       // Handle file uploads if necessary
       if (idDoc) {
         const idDocRef = storageRef(storage, `supporters/${userId}/idDoc`);
@@ -101,9 +108,14 @@ const SupporterRegistration = () => {
         registration.idDocURL = await getDownloadURL(idDocRef);
       }
       if (studentApproval) {
-        const studentApprovalRef = storageRef(storage, `supporters/${userId}/studentApproval`);
+        const studentApprovalRef = storageRef(
+          storage,
+          `supporters/${userId}/studentApproval`
+        );
         await uploadBytes(studentApprovalRef, studentApproval);
-        registration.studentApprovalURL = await getDownloadURL(studentApprovalRef);
+        registration.studentApprovalURL = await getDownloadURL(
+          studentApprovalRef
+        );
       }
       if (grades) {
         const gradesRef = storageRef(storage, `supporters/${userId}/grades`);
@@ -111,15 +123,20 @@ const SupporterRegistration = () => {
         registration.gradesURL = await getDownloadURL(gradesRef);
       }
       if (profilePic) {
-        const profilePicRef = storageRef(storage, `supporters/${userId}/profilePic`);
+        const profilePicRef = storageRef(
+          storage,
+          `supporters/${userId}/profilePic`
+        );
         await uploadBytes(profilePicRef, profilePic);
         registration.profilePicURL = await getDownloadURL(profilePicRef);
       }
-  
+
       await setDoc(doc(db, "supporters", userId), registration);
       dispatch(setUserType(userTypeSupporter));
       dispatch(setFormDetails(registration));
-  
+
+      dispatch(setUid(userId));
+      navigate("/");
       setShowModal(true); // Show modal on successful registration
     } catch (error) {
       setError(error.message);
@@ -139,7 +156,7 @@ const SupporterRegistration = () => {
               type="email"
               className="input w-full p-2 border border-gray-300 rounded-md text-sm pl-2"
               value={registration.email}
-              style={{direction: "ltr"}}
+              style={{ direction: "ltr" }}
               onChange={handleChange}
               required
             />
@@ -413,8 +430,8 @@ const SupporterRegistration = () => {
               onClick={() => {
                 setShowModal(false);
                 setTimeout(() => {
-                  navigate("/"); 
-                }, 1500); 
+                  navigate("/");
+                }, 1500);
               }}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
             >

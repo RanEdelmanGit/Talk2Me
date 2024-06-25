@@ -11,11 +11,12 @@ export const meetingAll = "online_and_offline";
 const initialState = {
   userType:"",
   formDetails:{},
+  user:{}
 }
 
 
-export const registrationSlice = createSlice({
-  name: 'registration',
+export const authSlice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
     setFormDetails:(state,action) =>{
@@ -23,11 +24,17 @@ export const registrationSlice = createSlice({
     },
     setUserType:(state,action)=>{
       state.userType = action.payload;
+    },
+    setUid:(state,action)=>{
+      state.user.id = action.payload;
+    },
+    clearUser: (state) => {
+      state.user = {}  
     }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const {setFormDetails, setUserType} = registrationSlice.actions
+export const {setFormDetails, setUserType, setUid, clearUser } = authSlice.actions
 
-export default registrationSlice.reducer
+export default authSlice.reducer
