@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "../styles/loginPage.css";
 import { useDispatch } from "react-redux";
-import { setUid } from "../redux/features/authSlice";
+import { setUid, fetchUser, userTypeClient } from "../redux/features/authSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -26,6 +26,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       const uid = auth.currentUser.uid;
       dispatch(setUid(uid));
+      dispatch(fetchUser({ uid, userType: userTypeClient }));
       navigate("/");
     } catch (error) {
       setError(error.message);

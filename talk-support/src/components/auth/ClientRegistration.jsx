@@ -74,12 +74,13 @@ const ClientRegistration = () => {
         registration.password
       );
       const userId = userCredential.user.uid;
+      const user = {...registration, uid: userId}
 
       await updateProfile(userCredential.user, {
         displayName: registration.name,
       });
       await setDoc(doc(db, "clientChats", userId), {});
-      await setDoc(doc(db, "clients", userId), registration);
+      await setDoc(doc(db, "clients", userId), user);
 
       // Update Redux
       dispatch(setUserType(userTypeClient));

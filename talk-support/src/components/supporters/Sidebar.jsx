@@ -5,7 +5,7 @@ const Sidebar = ({ onFilter }) => {
     name: '',
     meeting: '',
     gender: '',
-    age: '',
+    age: 18,
     location: '',
     religious: '',
     preferredLanguage: ''
@@ -13,7 +13,10 @@ const Sidebar = ({ onFilter }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if(name == 'age')
+      value = +value;
+    console.log(value);
     setFilters((prevFilters) => {
       const newFilters = { ...prevFilters, [name]: value };
       onFilter(newFilters);
@@ -58,7 +61,7 @@ const Sidebar = ({ onFilter }) => {
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">גיל</label>
-          <input name="age" value={filters.age} onChange={handleChange} type="number" className="w-full p-2 border border-gray-300 rounded" />
+          <input name="age" min={18} value={filters.age} onChange={handleChange} type="number" className="w-full p-2 border border-gray-300 rounded" />
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">איזור</label>

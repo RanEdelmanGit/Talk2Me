@@ -11,9 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <UserProvider>
       <ChatContextProvider>
-        <React.StrictMode>
           <App />
-        </React.StrictMode>
       </ChatContextProvider>
     </UserProvider>
   </Provider>

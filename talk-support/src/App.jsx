@@ -8,8 +8,8 @@ import "./styles/App.css";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import ChatPage from "./pages/ChatPage";
-import { useUser } from "./context/userContext";
 import SupportersPage from "./pages/Supporters";
+import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -32,6 +32,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/supporters" element={<SupportersPage />} />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/profile" element={<Profile/>} />
           </>
         )}
         <Route path="/login" element={<Login />} />

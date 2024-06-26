@@ -27,7 +27,7 @@ const SupportersPage = () => {
         (!filters.name || supporter.name.toLowerCase().includes(filters.name.toLowerCase())) &&
         (!filters.meeting || supporter.meeting.toLowerCase().includes(filters.meeting.toLowerCase())) &&
         (!filters.gender || supporter.gender.toLowerCase().includes(filters.gender.toLowerCase())) &&
-        (!filters.age || supporter.age.toString().includes(filters.age)) &&
+        (!filters.age || +supporter.age >= (filters.age)) &&
         (!filters.location || supporter.location.toLowerCase().includes(filters.location.toLowerCase())) &&
         (!filters.religious || supporter.religious.toLowerCase().includes(filters.religious.toLowerCase())) &&
         (!filters.preferredLanguage || supporter.preferredLanguage.toLowerCase().includes(filters.preferredLanguage.toLowerCase()))
@@ -45,17 +45,15 @@ const SupportersPage = () => {
   }
 
   return (
-    <div className="min-h-screen max-md:flex-col flex pt-4" dir="rtl">
-      <div> <Link to="/chat">
-        <p className="text-blue-500">chat</p>
-      </Link>
-      </div>
-  
-      <Sidebar onFilter={handleFilter} />
-      <div className="flex-1 flex flex-col items-center">
+    <div className="min-h-screen flex pt-4" dir="rtl">
+      <div className="flex-1 flex flex-col items-center mr-64"> {/* Margin right equals the sidebar width */}
+        <Link to="/chat" className="text-blue-500 mb-4">Chat</Link>
         <div className="w-full">
           <SupporterList supporters={filteredSupporters} />
         </div>
+      </div>
+      <div className="fixed top-0 right-5 w-64 h-full"> {/* Adjust width as needed */}
+        <Sidebar onFilter={handleFilter}/>
       </div>
     </div>
   );
