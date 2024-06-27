@@ -11,7 +11,7 @@ export default function Chats() {
 
   useEffect(() => {
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", user.uid), (doc) => {
+      const unsub = onSnapshot(doc(db, "clientChats", user.uid), (doc) => {
         if (doc.exists()) {
           setChats(doc.data());
         } else {

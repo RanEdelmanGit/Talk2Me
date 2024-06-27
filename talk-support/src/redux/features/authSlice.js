@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
 export const userTypeSupporter = "supporter";
 export const userTypeClient = "client";
@@ -21,14 +21,22 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
   const db = getFirestore();
   let userCollectionQuery;
 
-  if (userType === 'client') {
-    userCollectionQuery = collection(db, 'clients', uid);
-  } else {
-    userCollectionQuery = collection(db, 'supporters');
+  try{
+    if (userType === userTypeClient) {
+      userCollectionQuery = doc(db, 'clients', uid);
+    } else {
+      userCollectionQuery = doc(db, 'supporters', uid);
+    }
+  
+    const querySnapshot = await getDoc(userCollectionQuery);
+    if(querySnapshot.exists()){
+      return(querySnapshot.data())
+    }
+    return {};
+  }catch(error){
+    console.log(error);
   }
-
-  const querySnapshot = await getDocs(userCollectionQuery);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
 });
 
 export const authSlice = createSlice({
@@ -55,6 +63,7 @@ export const authSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        console.log(action.payload);
         state.user = action.payload;
       })
       .addCase(fetchUser.rejected, (state, action) => {

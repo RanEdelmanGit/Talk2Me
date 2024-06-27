@@ -12,9 +12,6 @@ export default function Home() {
       <Link to="/chat">
         <p className="text-blue-500">chat</p>
       </Link>
-      <Link to="/profile">
-        <p className="text-blue-500">profile</p>
-      </Link>
     </div>
   );
 }

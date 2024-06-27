@@ -29,10 +29,9 @@ function App() {
       <Routes>
         {user.id && (
           <>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Profile/>} />
             <Route path="/supporters" element={<SupportersPage />} />
             <Route path="/chat" element={<ChatPage />} />
-            <Route path="/profile" element={<Profile/>} />
           </>
         )}
         <Route path="/login" element={<Login />} />

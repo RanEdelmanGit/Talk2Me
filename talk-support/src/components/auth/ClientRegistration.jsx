@@ -32,7 +32,6 @@ const ClientRegistration = () => {
     preferredLanguage: "hebrew",
   });
 
-  const formDetails = useSelector((state) => state.auth.formDetails || {});
   const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
