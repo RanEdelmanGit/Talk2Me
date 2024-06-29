@@ -3,18 +3,18 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "../firebase_config";
+import { auth } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import "../styles/loginPage.css";
+import "../../styles/loginPage.css";
 import { useDispatch } from "react-redux";
-import { setUid, fetchUser, userTypeClient } from "../redux/features/authSlice";
+import { setUid, fetchUser, userTypeClient } from "../../redux/features/authSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState(null); // To show messages like password reset email sent
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

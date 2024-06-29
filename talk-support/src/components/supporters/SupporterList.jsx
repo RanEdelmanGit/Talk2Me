@@ -6,7 +6,7 @@ export default function SupporterList({ supporters }) {
   const repeatedSupporters = Array.from({ length: 10 }, () => supporters).flat();
 
   return (
-    <div className='container max-w-[1200px] h-full flex flex-wrap justify-start mx-auto'>
+    <div className='h-full flex flex-wrap justify-start mx-auto'>
       {repeatedSupporters.map((supporter, index) => (
         <SupporterCard 
           key={index} 

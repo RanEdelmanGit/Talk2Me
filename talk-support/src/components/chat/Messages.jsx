@@ -17,7 +17,6 @@ export default function Messages() {
         setMessages([]);
       }
     });
-    console.log("Messages:", messages);
     return () => {
       unSub();
     };

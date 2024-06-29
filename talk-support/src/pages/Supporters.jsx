@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import SupporterList from "../components/supporters/SupporterList";
 import Sidebar from "../components/supporters/Sidebar";
 import { fetchSupporters } from '../redux/features/supportersSlice';
+import Favorites from '../components/supporters/Favorites';
 
-const SupportersPage = () => {
+const SupportersPage = ({ userType }) => {
   const dispatch = useDispatch();
   const supporters = useSelector((state) => state.supporters.supporters);
   const status = useSelector((state) => state.supporters.status);
@@ -45,15 +45,14 @@ const SupportersPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex pt-4" dir="rtl">
-      <div className="flex-1 flex flex-col items-center mr-64"> {/* Margin right equals the sidebar width */}
-        <Link to="/chat" className="text-blue-500 mb-4">Chat</Link>
+    <div className="min-h-screen flex flex-col md:flex-row pt-4" dir="rtl">
+      <div className="order-1 w-full md:w-64 md:fixed md:right-5">
+        <Sidebar onFilter={handleFilter} />
+      </div>
+      <div className=" order-2 w-full md:mr-72 flex-1 flex flex-col items-center">
         <div className="w-full">
           <SupporterList supporters={filteredSupporters} />
         </div>
-      </div>
-      <div className="fixed top-0 right-5 w-64 h-full"> {/* Adjust width as needed */}
-        <Sidebar onFilter={handleFilter}/>
       </div>
     </div>
   );

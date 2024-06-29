@@ -44,10 +44,3 @@
   @apply underline;
 }
 
-button {
-  @apply w-full bg-blue-500 text-white py-2 rounded-lg;
-}
-
-button:hover {
-  @apply bg-blue-700;
-}

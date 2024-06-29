@@ -84,7 +84,7 @@ const ClientRegistration = () => {
       // Update Redux
       dispatch(setUserType(userTypeClient));
       dispatch(setFormDetails(registration));
-      setRegistrationComplete(true); // Set registration complete to true
+      setRegistrationComplete(true);
       dispatch(setUid(userId));
       navigate("/");
     } catch (error) {
