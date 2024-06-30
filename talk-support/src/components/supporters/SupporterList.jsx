@@ -6,6 +6,7 @@ export default function SupporterList({ supporters }) {
   const repeatedSupporters = Array.from({ length: 10 }, () => supporters).flat();
 
   return (
+    <>
     <div className='h-full flex flex-wrap justify-start mx-auto'>
       {repeatedSupporters.map((supporter, index) => (
         <SupporterCard 
@@ -22,5 +23,9 @@ export default function SupporterList({ supporters }) {
         />
       ))}
     </div>
+    </>
   );
 }
+
+
+

@@ -29,7 +29,7 @@ const Sidebar = ({ onFilter }) => {
   };
 
   return (
-    <div className="w-full md:w-64 bg-gray-100 p-4 shadow-md h-full rounded-md">
+    <div className="w-full md:w-64 bg-gray-100 p-4 shadow-md h-full rounded-md" dir=''>
       <button 
         onClick={toggleDropdown} 
         className="md:hidden flex items-center justify-between w-full p-2 bg-blue-500 text-white rounded mb-4"

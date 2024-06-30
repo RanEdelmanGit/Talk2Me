@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 
+export const chatCollection = "chats"
+
 const initialState = {
   status:'ready',
   error:'',
@@ -16,7 +18,7 @@ const initialState = {
 export const resumeChat = createAsyncThunk('chat/resumeChat', async ({ supporterId, clientId }) => {
   const db = getFirestore();
   try{  
-    const chat = doc(db, 'chats', supporterId+clientId);
+    const chat = doc(db, chatCollection, supporterId+clientId);
     
     const querySnapshot = await getDoc(chat);
     if(querySnapshot.exists()){
@@ -32,7 +34,7 @@ export const saveChat = createAsyncThunk('chat/saveChat', async ({ chat }) => {
   const db = getFirestore();
 
   try{
-    await setDoc(doc(db, "clientChats", userId), chat);
+    await setDoc(doc(db, chatCollection, userId), chat);
     //TODO if supporter has a chat with clientId, update its lastMessage field, else add to supporter a new document to db, "supporters", chat.supporterId, 'supporterChats'
     //TODO make supporterChatSlice and ClientChatSlice
     //await setDoc(doc(db, "supporters", chat.supporterId, 'supporterChats'), chat);

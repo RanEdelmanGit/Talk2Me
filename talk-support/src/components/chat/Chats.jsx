@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../../firebase_config";
 import { useUser } from "../../context/userContext";
 import { useChat } from "../../context/chatContext";
+import { chatCollection } from "../../redux/features/chatSlice";
 
 export default function Chats() {
   const { user } = useUser();
@@ -11,7 +12,7 @@ export default function Chats() {
 
   useEffect(() => {
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, "clientChats", user.uid), (doc) => {
+      const unsub = onSnapshot(doc(db, chatCollection, user.uid), (doc) => {
         if (doc.exists()) {
           setChats(doc.data());
         } else {

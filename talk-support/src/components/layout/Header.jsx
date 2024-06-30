@@ -1,11 +1,23 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import SignOut from "../auth/SignOut";
-import '../../styles/layout/header.css'
+import "../../styles/layout/header.css";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-const Header = ({user, userType}) => {
+const Header = ({ user, userType }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  console.log(user);
+  console.log(userType);
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -16,168 +28,171 @@ const Header = ({user, userType}) => {
     }, 200); // 200ms delay
   };
 
-  return (
-    <nav className="bg-white sticky dark:bg-gray-900 w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-      <div className="max-w-screen-xl flex flex-wrap items-center p-4">
-        <img src="" className="pr-2 h-8" alt="Lev Logo" />
-        <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-          תן-לי
-        </span>
+  const navigationClient = [
+    { name: "צ'אט", href: "/chat" },
+    { name: "תומכים", href: "/supporters" },
+    { name: "עזרה ומשאבים", href: "/resources" },
+  ];
 
-        <div className="absolute right-0 top-0 p-4">
-          <div className="flex items-center justify-end flex-1 space-x-3 ml-30">
-            <div className="relative">
-              <button
-                onClick={toggleDropdown}
-                type="button"
-                className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                aria-controls="navbar-sticky"
-                aria-expanded={isDropdownOpen}
-              >
-                <svg
-                  className="w-5 h-5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 17 14"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 1h15M1 7h15M1 13h15"
-                  />
-                </svg>
-              </button>
-              {isDropdownOpen && (
-                <div className="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-lg">
-                  <ul className="flex flex-col p-4 font-medium border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 text-right">
-                    {userType === "client" ? (
-                      <>
-                        <li>
-                          <Link to="/chat" onClick={handleLinkClick}>
-                            <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                              צ'אט
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/supporters" onClick={handleLinkClick}>
-                            <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                              תומכים
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/resources" onClick={handleLinkClick}>
-                            <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                              עזרה ומשאבים
-                            </span>
-                          </Link>
-                        </li>
-                      </>
-                    ) : (
-                      <>
-                        <li>
-                          <Link to="/chat" onClick={handleLinkClick}>
-                            <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                              צ'אט
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/supporters" onClick={handleLinkClick}>
-                            <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                              בית
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/resources" onClick={handleLinkClick}>
-                            <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                              עזרה
-                            </span>
-                          </Link>
-                        </li>
-                      </>
-                    )}
-                    {user && (
-                      <li className="mt-auto">
-                         <SignOut/>
-                      </li>
-                    )}
-                  </ul>
+  const navigationSupporter = [
+    { name: "צ'אט", href: "/chat" },
+    { name: "בית", href: "/home" },
+    { name: "עזרה", href: "/resources" },
+  ];
+
+  const navigation = navigationClient;
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(" ");
+  }
+
+  return (
+    <Disclosure as="nav" className="bg-gray-800" dir="rtl">
+      {({ open }) => (
+        <>
+          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div className="relative flex h-16 items-center justify-between">
+              <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
+                {/* Mobile menu button */}
+                <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                  <span className="sr-only">Open main menu</span>
+                  {open ? (
+                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                  ) : (
+                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                  )}
+                </DisclosureButton>
+              </div>
+              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                <div className="hidden sm:block">
+                  <div className="flex space-x-4 rtl:space-x-reverse">
+                    {navigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className={classNames(
+                          item.current
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "rounded-md px-3 py-2 text-sm font-medium"
+                        )}
+                        aria-current={item.current ? "page" : undefined}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              )}
-            </div>
-            <div
-              className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-              id="navbar-sticky"
-            >
-              <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                {user && (
-                  <li>
-                      <li className="mt-auto">
-                         <SignOut/>
-                      </li>
-                  </li>
-                )}
-                {userType === "client" ? (
-                  <>
-                    <li>
-                      <Link to="/chat">
-                        <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                        צ'אט
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/supporters">
-                        <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                        תומכים
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/resources">
-                        <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                        עזרה ומשאבים
-                        </span>
-                      </Link>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li>
-                      <Link to="/chat">
-                        <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                        צ'אט
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/home">
-                        <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                        בית
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/resources">
-                        <span className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                        עזרה
-                        </span>
-                      </Link>
-                    </li>
-                  </>
-                )}
-              </ul>
+              </div>
+              <div className="absolute inset-y-0 left-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <button
+                  type="button"
+                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 focus:outline-none"
+                >
+                  <span className="sr-only">View notifications</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-7"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
+                    />
+                  </svg>
+                </button>
+                <div className="mr-4">
+                  <SignOut/>
+                </div>
+
+                {/* Profile dropdown */}
+                {/* <Menu as="div" className="relative ml-3">
+                  <div>
+                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                      <span className="sr-only">Open user menu</span>
+                      <img
+                        className="h-8 w-8 rounded-full"
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt=""
+                      />
+                    </MenuButton>
+                  </div>
+                  <MenuItems
+                    transition
+                    className="absolute left-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  >
+                    <MenuItem>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          פרופיל
+                        </a>
+                      )}
+                    </MenuItem>
+                    <MenuItem>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          הגדרות
+                        </a>
+                      )}
+                    </MenuItem>
+                    <MenuItem>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          יציאה
+                        </a>
+                      )}
+                    </MenuItem>
+                  </MenuItems>
+                </Menu> */}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </nav>
+          <DisclosurePanel className="sm:hidden">
+            <div className="space-y-1 px-2 pb-3 pt-2">
+              {navigation.map((item) => (
+                <DisclosureButton
+                  key={item.name}
+                  as={Link}
+                  to={item.href}
+                  className={classNames(
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                    "block rounded-md px-3 py-2 text-base font-medium rtl:text-right"
+                  )}
+                  onClick={handleLinkClick}
+                  aria-current={item.current ? "page" : undefined}
+                >
+                  {item.name}
+                </DisclosureButton>
+              ))}
+            </div>
+          </DisclosurePanel>
+        </>
+      )}
+    </Disclosure>
   );
 };
 

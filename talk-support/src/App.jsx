@@ -7,20 +7,21 @@ import {
 } from "react-router-dom";
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
-import Registration from "./pages/Registration";
+
 import ChatPage from "./pages/ChatPage";
 import SupportersPage from "./pages/Supporters";
-import Header from './components/layout/Header';
+import Header from "./components/layout/Header";
 import { useSelector } from "react-redux";
 import { userTypeClient, userTypeSupporter } from "./redux/features/authSlice";
+import ClientRegistration from "./pages/ClientRegistration";
+import SupporterRegistration from "./pages/SupporterRegistration";
 
-
-const Root = ({user, userType}) => {
+const Root = ({ user, userType }) => {
   return (
     <>
-      {user.id && <Header user= {user} userType={userType}/>}
+      {user.id && <Header user={user} userType={userType} />}
       <div className="main-content">
-      <Outlet />
+        <Outlet />
       </div>
     </>
   );
@@ -35,11 +36,12 @@ const ProtectedRoute = ({ children, user }) => {
 
 function App() {
   const { user } = useSelector((state) => state.auth);
-  const userType = userTypeClient;
+  const { userType } = useSelector((state) => state.auth);
+  //const userType = userTypeClient;
   return (
     <Router>
       <Routes>
-        <Route element={<Root user={user} userType={userType}/>}> 
+        <Route element={<Root user={user} userType={userType} />}>
           <Route
             path="/chat"
             element={
@@ -59,7 +61,8 @@ function App() {
           <Route path="/" element={<Navigate to="/chat" />} />
         </Route>
         <Route path="/welcome" element={<Welcome />} />
-        <Route path="/register" element={<Registration />} />
+        <Route path="/register/client" element={<ClientRegistration />} />
+        <Route path="/register/supporter" element={<SupporterRegistration />} />
         <Route path="*" element={<Navigate to="/welcome" />} />
       </Routes>
       {/* <Footer /> */}
