@@ -41,11 +41,11 @@ const Sidebar = ({ onFilter }) => {
         <h2 className={`text-xl font-bold mb-4 ${isOpen ? 'hidden' : ''}`}>סינון</h2>
         <div className="mb-4">
           <label className="block font-medium mb-2">שם</label>
-          <input name="name" value={filters.name} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded" />
+          <input name="name" value={filters.name} onChange={handleChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">אופן פגישה</label>
-          <select name="meeting" value={filters.meeting} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded">
+          <select name="meeting" value={filters.meeting} onChange={handleChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <option value="">פיזי/וירטואלי</option>
             <option value="online">וירטואלי</option>
             <option value="offline">פיזי</option>
@@ -53,7 +53,7 @@ const Sidebar = ({ onFilter }) => {
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">מגדר</label>
-          <select name="gender" value={filters.gender} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded">
+          <select name="gender" value={filters.gender} onChange={handleChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <option value="">נשים/גברים</option>
             <option value="man">Man</option>
             <option value="woman">Woman</option>
@@ -61,11 +61,11 @@ const Sidebar = ({ onFilter }) => {
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">גיל</label>
-          <input name="age" min={18} value={filters.age} onChange={handleChange} type="number" className="w-full p-2 border border-gray-300 rounded" />
+          <input name="age" min={18} value={filters.age} onChange={handleChange} type="number" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">איזור</label>
-          <select name="location" value={filters.location} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded">
+          <select name="location" value={filters.location} onChange={handleChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <option value="">כל מקום</option>
             <option value="צפון">צפון</option>
             <option value="מרכז">מרכז</option>
@@ -74,7 +74,7 @@ const Sidebar = ({ onFilter }) => {
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">דת</label>
-          <select name="religious" value={filters.religious} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded">
+          <select name="religious" value={filters.religious} onChange={handleChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <option value="">לא משנה</option>
             <option value="yes">דתי/ה</option>
             <option value="no">לא דתי/ה</option>
@@ -82,7 +82,7 @@ const Sidebar = ({ onFilter }) => {
         </div>
         <div className="mb-4">
           <label className="block font-medium mb-2">שפה</label>
-          <select name="preferredLanguage" value={filters.preferredLanguage} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded">
+          <select name="preferredLanguage" value={filters.preferredLanguage} onChange={handleChange} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             <option value="hebrew">עברית</option>
             <option value="english">English</option>
           </select>

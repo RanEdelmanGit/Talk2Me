@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +8,6 @@ import {
   updateUser,
 } from "../../redux/features/authSlice";
 
-// import { addToFavorites } from "../../redux/features/clientsSlice";
 import profilePicPlaceholder from "./profile.jpg";
 import starSolid from "./star-solid.svg";
 import starRegular from "./star-regular.svg";
@@ -24,86 +23,79 @@ const SupporterCard = ({
     city,
     age,
     profilePic = profilePicPlaceholder,
-  }, // Default to placeholder if no profilePic is provided
+  },
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
   const handleFavoriteClick = () => {
-    console.log("added");
+    setIsFavorite(!isFavorite);
     if (!isFavorite) {
       dispatch(addFavorite(uid));
     } else {
       dispatch(removeFavorite(uid));
     }
     dispatch(updateUser());
-
-    setIsFavorite(!isFavorite);
   };
 
   const handleStartChatClick = () => {
-    console.log("navigated to chat");
-    // Navigate to the chat page with supporterId
-    // navigate(`/chat/${supporterId}`);
+    navigate(`/chat/${uid}`);
   };
+
+
 
   return (
     <div
-      className="w-full max-w-[380px] p-3 md:p-4 bg-gray-200 rounded-lg shadow-md relative m-2"
+      className="w-full mx-6 md:p-4 border-y border-gray-200 flex items-center justify-between"
       dir="rtl"
     >
-      <div className="absolute top-2 left-2">
-        <button
-          className="h-6 w-6 pt-1 focus:outline-none"
-          style={{ background: "transparent", border: "none", padding: 0 }}
-          onClick={handleFavoriteClick}
-        >
-          {isFavorite ? (
-            <img src={starSolid} alt="Favorite" className="h-6 w-6" />
-          ) : (
-            <img src={starRegular} alt="Not Favorite" className="h-6 w-6" />
-          )}
-        </button>
-      </div>
-      <div className="flex items-start">
-        <div className="flex items-start flex-col">
-          <img
-            src={profilePic}
-            alt="Profile"
-            className="size-24 md:size-32 rounded-md"
-          />
-        </div>
-        <div className="mr-4 md:mr-6">
-          <div className="text-base md:text-lg font-bold mb-1">{name} </div>
-          <div className="text-sm md:text-base">
-            <span className="text-sm font-bold">איזור: </span>
-            {area}
-          </div>
-          <div className="text-sm md:text-base">
-            <span className="text-sm font-bold border bg-slate-400 rounded-md px-1">
-              {" "}
-              {meeting}
-            </span>
-          </div>
-          <div className="text-sm md:text-base ">
-            <span className="text-sm font-bold">השכלה: </span>
-            {city}
-          </div>
-          <div className="text-sm md:text-base">
-            <span className="text-sm font-bold">מוסד לימודים: </span>
-            {age}
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-start mt-1 md:mt-4">
-        <button
-          className="bg-blue-500 text-white text-sm py-1.5 px-2 md:py-2 md:px-4 rounded w-24 md:w-32"
-          onClick={handleStartChatClick}
-        >
-          התחל שיחה
-        </button>
-      </div>
+      <img
+        src={profilePic}
+        alt="Profile"
+        className="w-16 h-16 rounded-full"
+      />
+
+      <span className="w-32 h-8 overflow-hidden text-ellipsis whitespace-nowrap">
+        <h2 className="text-lg font-bold">{name}</h2>
+      </span>
+   
+      <span className="flex justify-center items-center w-10">
+        <h3 className="text-sm text-gray-500">{age}</h3>
+      </span>
+
+      <span className="flex justify-center items-center w-40">
+      <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+        {meeting}
+      </span>
+      </span>
+
+      <span className="flex justify-center items-center w-10">
+        <h3 className="text-sm text-gray-500">{area}</h3>
+      </span>
+
+      <span className="flex justify-center items-center w-10">
+        <h3 className="text-sm text-gray-500">{city}</h3>
+      </span>
+
+      <button
+        className="rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        onClick={handleStartChatClick}
+      >
+        התחל שיחה
+      </button>
+      <button
+        className="h-6 w-6 focus:outline-none"
+        style={{ background: "transparent", border: "none", padding: 0 }}
+        onClick={handleFavoriteClick}
+      >
+        {isFavorite ? (
+          <img src={starSolid} alt="Favorite" className="h-6 w-6" />
+        ) : (
+          <img src={starRegular} alt="Not Favorite" className="h-6 w-6" />
+        )}
+      </button>
     </div>
   );
 };
