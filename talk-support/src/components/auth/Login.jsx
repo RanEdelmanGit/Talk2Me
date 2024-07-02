@@ -7,19 +7,14 @@ import { auth } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
 import "../../styles/loginPage.css";
 import { useDispatch } from "react-redux";
-import {
-  setUid,
-  fetchUser,
-  userTypeClient,
-  setUserType,
-} from "../../redux/features/authSlice";
+import { setUid, fetchUser, setUserType } from "../../redux/features/authSlice";
 
 const Login = ({ setIsLoginVisible }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const [logInUserType, setLoginUserType] = useState("client");
+  const [logInUserType, setLoginUserType] = useState("not-selected");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -39,6 +34,11 @@ const Login = ({ setIsLoginVisible }) => {
 
     if (!validateEmail(email)) {
       setError("Invalid email format.");
+      return;
+    }
+
+    if (logInUserType === "not-selected") {
+      setError(`Please select a valid option for user type`);
       return;
     }
 
@@ -101,7 +101,7 @@ const Login = ({ setIsLoginVisible }) => {
             name="userType"
             id="userType"
             onChange={handleTypeChange}
-            className="rounded-md  focus:ring-1 focus:ring-inset focus:ring-indigo-600"
+            className=" rounded-md focus:ring-1 focus:ring-inset focus:ring-indigo-600 text-sm border-gray-300"
           >
             <option value="not-selected">בחר</option>
             <option value="client">באתי לשתף</option>
@@ -160,6 +160,10 @@ const Login = ({ setIsLoginVisible }) => {
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
+        </div>
+
+        <div className="flex justify-center">
+          <h3>{error}</h3>
         </div>
 
         <div>
