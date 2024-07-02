@@ -20,7 +20,7 @@ const Root = ({ user, userType }) => {
   return (
     <>
       {user.id && <Header user={user} userType={userType} />}
-      <div className="main-content">
+      <div className="main-content h">
         <Outlet />
       </div>
     </>
