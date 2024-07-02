@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -11,6 +11,7 @@ import {
 import profilePicPlaceholder from "./profile.jpg";
 import starSolid from "./star-solid.svg";
 import starRegular from "./star-regular.svg";
+import store from "../../redux/store";
 
 const SupporterCard = ({
   supporter: {
@@ -25,13 +26,16 @@ const SupporterCard = ({
     profilePic = profilePicPlaceholder,
   },
 }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { user } = useSelector((store) => store.auth);
+  const [isFavorite, setIsFavorite] = useState(
+    user.favorites && user.favorites.includes(uid)
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
+
     if (!isFavorite) {
       dispatch(addFavorite(uid));
     } else {
@@ -44,31 +48,25 @@ const SupporterCard = ({
     navigate(`/chat/${uid}`);
   };
 
-
-
   return (
     <div
       className="w-full mx-6 md:p-4 border-y border-gray-200 flex items-center justify-between"
       dir="rtl"
     >
-      <img
-        src={profilePic}
-        alt="Profile"
-        className="w-16 h-16 rounded-full"
-      />
+      <img src={profilePic} alt="Profile" className="w-16 h-16 rounded-full" />
 
       <span className="w-32 h-8 overflow-hidden text-ellipsis whitespace-nowrap">
         <h2 className="text-lg font-bold">{name}</h2>
       </span>
-   
+
       <span className="flex justify-center items-center w-10">
         <h3 className="text-sm text-gray-500">{age}</h3>
       </span>
 
       <span className="flex justify-center items-center w-40">
-      <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
-        {meeting}
-      </span>
+        <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+          {meeting}
+        </span>
       </span>
 
       <span className="flex justify-center items-center w-10">

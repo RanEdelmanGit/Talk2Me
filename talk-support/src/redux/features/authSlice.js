@@ -21,7 +21,7 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
   const db = getFirestore();
   let userCollectionQuery;
 
-  try{
+  //try{
     if (userType === userTypeClient) {
       userCollectionQuery = doc(db, 'clients', uid);
     } else {
@@ -32,10 +32,11 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
     if(querySnapshot.exists()){
       return(querySnapshot.data())
     }
-    return {};
-  }catch(error){
-    console.log(error);
-  }
+    console.log('here');
+    throw new Error('user does not exist or incorrect type')
+  // }catch(error){
+  //   console.log(error);
+  // }
   
 });
 export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getState}) => {
@@ -43,12 +44,11 @@ export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getSt
   const state = getState();
   console.log('state', state);
   try{
-    await setDoc(doc(db, "clients", state.user.uid), state.user);
+    await setDoc(doc(db, "clients", state.auth.user.uid), state.auth.user);
     return {};
   }catch(error){
     console.log(error);
   }
-  
 });
 
 
@@ -64,10 +64,11 @@ export const authSlice = createSlice({
       state.userType = action.payload;
     },
     setUid:(state,action)=>{
-      state.user.id = action.payload;
+      state.user.uid = action.payload;
     },
     clearUser: (state) => {
       state.user = {}  
+      state.status="idle"
     },
     addFavorite:(state,action)=>{ // action.payload: supporter id
       if(!state.user.favorites){
@@ -76,7 +77,7 @@ export const authSlice = createSlice({
       state.user.favorites.push(action.payload);
     },
     removeFavorite:(state,action)=>{  // action.payload: supporter id
-      state.user.favorites =  state.user.favorites.filter(fav != action.payload)
+      state.user.favorites =  state.user.favorites.filter(fav =>fav != action.payload)
     },
   },
   extraReducers: (builder) => {
@@ -86,18 +87,17 @@ export const authSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log(action.payload);
         state.user = {...state.user, ...action.payload};
       })
       .addCase(fetchUser.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = action.error.message;
         state.error = action.error.message;
+        state.user = {}
       }).addCase(updateUser.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log(action.payload);
         state.user = {...state.user, ...action.payload};
       })
       .addCase(updateUser.rejected, (state, action) => {

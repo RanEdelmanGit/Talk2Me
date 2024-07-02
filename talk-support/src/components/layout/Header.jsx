@@ -16,8 +16,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 const Header = ({ user, userType }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  console.log(user);
-  console.log(userType);
+  // console.log(user);
+  // console.log(userType);
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -40,14 +40,19 @@ const Header = ({ user, userType }) => {
     { name: "עזרה", href: "/resources" },
   ];
 
-  const navigation = userType == 'client' ? navigationClient : navigationSupporter;
+  const navigation =
+    userType == "client" ? navigationClient : navigationSupporter;
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
   return (
-    <Disclosure as="nav" className="bg-gray-800 fixed top-0 left-0 right-0" dir="rtl">
+    <Disclosure
+      as="nav"
+      className="bg-gray-800 fixed top-0 left-0 right-0"
+      dir="rtl"
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -94,19 +99,19 @@ const Header = ({ user, userType }) => {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke="currentColor"
-                    class="size-7"
+                    className="size-7"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
                     />
                   </svg>
                 </button>
                 <div className="mr-4">
-                  <SignOut/>
+                  <SignOut />
                 </div>
 
                 {/* Profile dropdown */}

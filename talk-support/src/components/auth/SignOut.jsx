@@ -14,16 +14,20 @@ export default function SignOut() {
     try {
       await signOut(auth);
       dispatch(clearUser());
-      navigate("/login");
+      navigate("/welcome");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
-  if (!user.id) {
-    navigate("/login");
+  if (!user.uid) {
+    navigate("/welcome");
     return null;
   }
 
-  return <button onClick={handleSignOut} className="text-white hover:text-red-500">יציאה</button>;
+  return (
+    <button onClick={handleSignOut} className="text-white hover:text-red-500">
+      יציאה
+    </button>
+  );
 }

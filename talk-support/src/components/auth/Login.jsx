@@ -6,7 +6,7 @@ import {
 import { auth } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
 import "../../styles/loginPage.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUid, fetchUser, setUserType } from "../../redux/features/authSlice";
 
 const Login = ({ setIsLoginVisible }) => {
@@ -17,6 +17,7 @@ const Login = ({ setIsLoginVisible }) => {
   const [logInUserType, setLoginUserType] = useState("not-selected");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user, status } = useSelector((store) => store.auth);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,9 +47,8 @@ const Login = ({ setIsLoginVisible }) => {
       await signInWithEmailAndPassword(auth, email, password);
       const uid = auth.currentUser.uid;
       dispatch(setUid(uid));
-      dispatch(setUserType(logInUserType));
       dispatch(fetchUser({ uid, userType: logInUserType }));
-      navigate("/chat");
+      dispatch(setUserType(logInUserType));
     } catch (error) {
       console.log(error);
       setError(error.message);
@@ -56,12 +56,21 @@ const Login = ({ setIsLoginVisible }) => {
   };
 
   useEffect(() => {
-    if (auth.currentUser) {
-      const uid = auth.currentUser.uid;
-      dispatch(setUid(uid));
+    if (user && user.email) {
       navigate("/chat");
     }
-  }, []);
+  }, [user]);
+
+  // useEffect(() => {
+  //   if (auth.currentUser) {
+  //     const uid = auth.currentUser.uid;
+  //     dispatch(setUid(uid));
+  //     dispatch(setUserType("client")); //TODO detect usertype in autologin fetchuser
+  //     dispatch(fetchUser({ uid, userType: "client" }));
+  //     navigate("/chat");
+  //   }
+  // }, []);
+
   const handlePasswordReset = async () => {
     setError(null);
     setMessage(null);
@@ -100,6 +109,7 @@ const Login = ({ setIsLoginVisible }) => {
           <select
             name="userType"
             id="userType"
+            value={logInUserType}
             onChange={handleTypeChange}
             className=" rounded-md focus:ring-1 focus:ring-inset focus:ring-indigo-600 text-sm border-gray-300"
           >
@@ -163,7 +173,8 @@ const Login = ({ setIsLoginVisible }) => {
         </div>
 
         <div className="flex justify-center">
-          <h3>{error}</h3>
+          {error && <h3>{error}</h3>}
+          {status !== "idle" && <h3>{status}</h3>}
         </div>
         <div>
           <button

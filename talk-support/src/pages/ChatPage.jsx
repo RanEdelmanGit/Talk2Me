@@ -60,15 +60,13 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex h-[88vh] w-screen">
+    <div className="flex h-[91vh] w-screen mt-16">
       <Sidebar isMenuOpen={isMenuOpen} handleMenuToggle={handleMenuToggle} />
       <div className="flex-1 flex flex-col ">
         <ChatHeader contactName="Alice" />
-        
           <div className="overflow-y-scroll flex-1">
             <ChatMessages messages={messages} />
           </div>
-       
         <ChatInput handleSendMessage={handleSendMessage} />
       </div>
     </div>

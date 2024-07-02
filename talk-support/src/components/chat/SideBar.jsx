@@ -25,7 +25,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
          
         </div>
       </header>
-      <div className="overflow-auto h-[78vh] p-3 mb-9 pb-5">
+      <div className="overflow-auto h-[80vh] p-3 mb-9 pb-5">
         {[
           { name: "Alice", message: "Hoorayy!!", color: "ffa8e4" },
           { name: "Martin", message: "That pizza place was amazing!", color: "ad922e" },

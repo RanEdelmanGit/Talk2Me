@@ -1,17 +1,20 @@
+import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
   Outlet,
+  useNavigate,
 } from "react-router-dom";
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
-
+import { setUid, fetchUser, setUserType } from "./redux/features/authSlice";
+import { auth } from "./firebase_config";
 import ChatPage from "./pages/ChatPage";
 import SupportersPage from "./pages/Supporters";
 import Header from "./components/layout/Header";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { userTypeClient, userTypeSupporter } from "./redux/features/authSlice";
 import ClientRegistration from "./pages/ClientRegistration";
 import SupporterRegistration from "./pages/SupporterRegistration";
@@ -19,7 +22,7 @@ import SupporterRegistration from "./pages/SupporterRegistration";
 const Root = ({ user, userType }) => {
   return (
     <>
-      {user.id && <Header user={user} userType={userType} />}
+      {user.uid && <Header user={user} userType={userType} />}
       <div className="main-content ">
         <Outlet />
       </div>
@@ -28,45 +31,55 @@ const Root = ({ user, userType }) => {
 };
 
 const ProtectedRoute = ({ children, user }) => {
-  if (!user.id) {
+  if (!user.uid) {
     return <Navigate to="/welcome" />;
   }
   return children;
 };
 
 function App() {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { userType } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      const uid = auth.currentUser.uid;
+      dispatch(setUid(uid));
+      dispatch(setUserType("client")); //TODO detect usertype in autologin fetchuser
+      dispatch(fetchUser({ uid, userType: "client" }));
+      navigate("/chat");
+    }
+  }, []);
   //const userType = userTypeClient;
   return (
-    <Router>
-      <Routes>
-        <Route element={<Root user={user} userType={userType} />}>
-          <Route
-            path="/chat"
-            element={
-              <ProtectedRoute user={user}>
-                <ChatPage userType={userType} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/supporters"
-            element={
-              <ProtectedRoute user={user}>
-                <SupportersPage userType={userType} />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/chat" />} />
-        </Route>
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/register/client" element={<ClientRegistration />} />
-        <Route path="/register/supporter" element={<SupporterRegistration />} />
-        <Route path="*" element={<Navigate to="/welcome" />} />
-      </Routes>
+    <Routes>
+      <Route element={<Root user={user} userType={userType} />}>
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute user={user}>
+              <ChatPage userType={userType} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/supporters"
+          element={
+            <ProtectedRoute user={user}>
+              <SupportersPage userType={userType} />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/chat" />} />
+      </Route>
+      <Route path="/welcome" element={<Welcome />} />
+      <Route path="/register/client" element={<ClientRegistration />} />
+      <Route path="/register/supporter" element={<SupporterRegistration />} />
+      <Route path="*" element={<Navigate to="/welcome" />} />
       {/* <Footer /> */}
-    </Router>
+    </Routes>
   );
 }
 
