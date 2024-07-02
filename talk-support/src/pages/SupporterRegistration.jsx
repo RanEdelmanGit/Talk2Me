@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import {
   setFormDetails,
   setUserType,
-  meetingAll,
+  phoneCall,
   meetingOffline,
   meetingOnline,
   userTypeSupporter,
@@ -236,6 +236,8 @@ const SupporterRegistration = () => {
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                {" "}
+                <span className="text-red-500 ml-1">*</span>
                 שם פרטי
               </label>
               <div className="mt-2">
@@ -256,6 +258,7 @@ const SupporterRegistration = () => {
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שם משפחה
               </label>
               <div className="mt-2">
@@ -276,6 +279,7 @@ const SupporterRegistration = () => {
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 דוא"ל
               </label>
               <div className="mt-2" dir="ltr">
@@ -297,6 +301,7 @@ const SupporterRegistration = () => {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 סיסמא
               </label>
               <div className="mt-2">
@@ -317,6 +322,7 @@ const SupporterRegistration = () => {
                 htmlFor="phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 טלפון
               </label>
               <div className="mt-2">
@@ -337,6 +343,7 @@ const SupporterRegistration = () => {
                 htmlFor="birthYear"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שנת לידה
               </label>
               <div className="mt-2">
@@ -365,6 +372,7 @@ const SupporterRegistration = () => {
                 htmlFor="gender"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 מגדר
               </label>
               <div className="mt-2">
@@ -389,6 +397,7 @@ const SupporterRegistration = () => {
                 htmlFor="location"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 איזור
               </label>
               <div className="mt-2">
@@ -413,6 +422,7 @@ const SupporterRegistration = () => {
                 htmlFor="location"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 עיר
               </label>
               <div className="mt-2">
@@ -455,6 +465,7 @@ const SupporterRegistration = () => {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 כתובת
               </label>
               <div className="mt-2">
@@ -476,6 +487,7 @@ const SupporterRegistration = () => {
                 htmlFor="preferredLanguage"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שפה מועדפת?
               </label>
               <div className="mt-2">
@@ -498,6 +510,7 @@ const SupporterRegistration = () => {
                 htmlFor="meeting"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 אופן המפגש
               </label>
               <div className="mt-2">
@@ -511,9 +524,9 @@ const SupporterRegistration = () => {
                   required
                 >
                   <option value="not-selected">בחר אופן מפגש</option>
-                  <option value={meetingOffline}>מפגש פנים אל פנים</option>
-                  <option value={meetingOnline}>מרחוק</option>
-                  <option value={meetingAll}>שניהם</option>
+                  <option value={meetingOffline}>מפגש</option>
+                  <option value={meetingOnline}>וידיאו</option>
+                  <option value={phoneCall}>טלפון</option>
                 </select>
               </div>
             </div>
@@ -523,6 +536,7 @@ const SupporterRegistration = () => {
                 htmlFor="referralSource"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 איך הגעת אלינו
               </label>
               <div className="mt-2">
@@ -535,12 +549,14 @@ const SupporterRegistration = () => {
                   required
                 >
                   <option value="not-selected">בחר</option>
-                  <option value="אינסטגרם">אינסטגרם</option>
-                  <option value="פייסבוק">פייסבוק</option>
-                  <option value="חיפוש בגוגל">חיפוש בגוגל</option>
-                  <option value="חבר או בן משפחה">חבר או בן משפחה</option>
-                  <option value="ארגון">ארגון</option>
-                  <option value="אחר">אחר</option>
+                  <option value="Instagram">אינסטגרם</option>
+                  <option value="Facebook">פייסבוק</option>
+                  <option value="Google Search">חיפוש בגוגל</option>
+                  <option value="Friend or Family">
+                    חבר או בן משפחה
+                  </option>
+                  <option value="Organization">ארגון</option>
+                  <option value="Other">אחר</option>
                 </select>
               </div>
             </div>
@@ -590,7 +606,10 @@ const SupporterRegistration = () => {
                   className="flex items-center cursor-pointer"
                   onClick={() => handleClick(studentApprovalRef)}
                 >
-                  <FileInput text={"אישור סטודנט"} file={registration.studentApproval} />
+                  <FileInput
+                    text={"אישור סטודנט"}
+                    file={registration.studentApproval}
+                  />
                 </div>
               </div>
             </div>
@@ -610,7 +629,10 @@ const SupporterRegistration = () => {
                   className="flex items-center cursor-pointer"
                   onClick={() => handleClick(gradesRef)}
                 >
-                  <FileInput text={"גיליון ציונים"} file={registration.grades} />
+                  <FileInput
+                    text={"גיליון ציונים"}
+                    file={registration.grades}
+                  />
                 </div>
               </div>
             </div>
@@ -630,7 +652,10 @@ const SupporterRegistration = () => {
                   className="flex items-center cursor-pointer"
                   onClick={() => handleClick(profilePicRef)}
                 >
-                  <FileInput text={"תמונת פרופיל"} file={registration.profilePic} />
+                  <FileInput
+                    text={"תמונת פרופיל"}
+                    file={registration.profilePic}
+                  />
                 </div>
               </div>
             </div>

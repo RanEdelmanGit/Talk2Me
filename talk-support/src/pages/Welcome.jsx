@@ -6,18 +6,18 @@ const WelcomePage = () => {
   const [isLoginVisible, setIsLoginVisible] = useState(false);
 
   return (
-    <div className="min-h-scree flex items-center justify-center" dir="rtl">
+    <div className="min-h-screen flex items-center justify-center" dir="rtl">
       <div className="p-6 bg-white rounded-lg flex flex-col justify-start min-h-screen">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-2xl">
           <img
             className="mx-auto h-10 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
           />
-          <h2 className="mt-10 mb-6 text-center text-5xl  font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-10 mb-6 text-center text-5xl md:text-7xl font-bold leading-9 tracking-tight text-gray-900">
             ברוכים הבאים
           </h2>
-          <p className="mt-4 text-center text-xl tracking-wide leading-relaxed font-semibold">
+          <p className="mt-4 text-center text-xl md:text-2xl tracking-wide leading-relaxed font-semibold">
             פלטפורמה המחברת אנשים המחפשים תמיכה רגשית עם סטודנטים לפסיכולוגיה
             שרוצים להקשיב ולתמוך. בהתנדבות.
           </p>
@@ -27,7 +27,7 @@ const WelcomePage = () => {
           <Login setIsLoginVisible={setIsLoginVisible} />
         ) : (
           <div className="space-y-16 max-md:space-y-16 flex flex-col justify-between">
-            <div className="flex max-md:flex-col max-md:space-y-4 justify-around mb-2 mx-auto mt-10">
+            <div className="flex max-md:flex-col max-md:mx-auto max-md:space-y-4 justify-around mb-2 mt-10">
               <Link
                 to="/register/supporter"
                 className="btn btn-wide bg-indigo-500 hover:bg-indigo-300 opacity-90 text-base text-white mx-2"
@@ -55,14 +55,16 @@ const WelcomePage = () => {
           </div>
         )}
 
-        <div className="mt-auto flex justify-center">
-          <div className="text-center mb-2 leading-relaxed font-semibold flex ">
-            {/* <p>
-              אם אתם זקוקים לעזרה מיידית, לחצו על הכפתור למטה לצפייה.
-            </p> */}
-            <div className="text-center mb-6">
-              <button
-                className="bg-slate-500 text-white px-4 py-2 rounded mb-4"
+        <div className="mt-auto flex justify-center w-full items-center">
+              <div className="flex items-center justify-between md:px-10 w-full">
+                <div className="flex text-lg max-md:text-sm">
+                <h2 className="pl-2">לפניות ולתמיכה:</h2>
+                <button className="text-blue-500 font-semibold underline">
+                  צור איתנו קשר
+                </button>
+                </div>
+                <button
+                className="bg-slate-500 text-white px-2 md:px-4 py-1 md:py-2 rounded max-md:text-sm"
                 onClick={() =>
                   window.open(
                     "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE",
@@ -70,17 +72,10 @@ const WelcomePage = () => {
                   )
                 }
               >
-                עזרה ומשאבים{" "}
+                עזרה ומשאבים
               </button>
-              <div className="text-center flex items-center text-lg">
-                <h2 className="pl-2">לפניות ולתמיכה:</h2>
-                <button className="text-blue-500 font-semibold underline">
-                  צור איתנו קשר
-                </button>
               </div>
-            </div>
           </div>
-        </div>
       </div>
     </div>
   );

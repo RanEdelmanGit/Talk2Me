@@ -4,9 +4,9 @@ import { doc, getDoc,setDoc, getFirestore } from 'firebase/firestore';
 export const userTypeSupporter = "supporter";
 export const userTypeClient = "client";
 
-export const meetingOnline = "online";
-export const meetingOffline = "offline";
-export const meetingAll = "online_and_offline";
+export const meetingOnline = "וידיאו";
+export const meetingOffline = "מפגש";
+export const phoneCall = "טלפון";
 
 
 const initialState = {

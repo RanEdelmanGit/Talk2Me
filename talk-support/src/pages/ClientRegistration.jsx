@@ -28,7 +28,6 @@ const ClientRegistration = () => {
     city: "not-selected",
     address: "",
     area: "not-selected",
-    relationshipStatus: "not-selected",
     recentStatus: "not-selected",
     referralSource: "not-selected",
     preferredLanguage: "hebrew",
@@ -169,6 +168,7 @@ const ClientRegistration = () => {
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שם משתמש
               </label>
               <div className="mt-2">
@@ -190,6 +190,7 @@ const ClientRegistration = () => {
                 htmlFor="recentStatus"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 מצבך לאחרונה
               </label>
               <div className="mt-2">
@@ -215,6 +216,7 @@ const ClientRegistration = () => {
                 htmlFor="gender"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 מגדר
               </label>
               <div className="mt-2">
@@ -238,6 +240,7 @@ const ClientRegistration = () => {
                 htmlFor="birthYear"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שנת לידה
               </label>
               <div className="mt-2">
@@ -277,6 +280,7 @@ const ClientRegistration = () => {
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שם פרטי
               </label>
               <div className="mt-2">
@@ -297,6 +301,7 @@ const ClientRegistration = () => {
                 htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שם משפחה
               </label>
               <div className="mt-2">
@@ -319,6 +324,7 @@ const ClientRegistration = () => {
                 htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 דוא"ל
               </label>
               <div className="mt-2" dir="ltr">
@@ -340,6 +346,7 @@ const ClientRegistration = () => {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 סיסמא
               </label>
               <div className="mt-2">
@@ -361,6 +368,7 @@ const ClientRegistration = () => {
                 htmlFor="location"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 איזור
               </label>
               <div className="mt-2">
@@ -385,6 +393,7 @@ const ClientRegistration = () => {
                 htmlFor="location"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 עיר
               </label>
               <div className="mt-2">
@@ -427,6 +436,7 @@ const ClientRegistration = () => {
                 htmlFor="password"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 כתובת
               </label>
               <div className="mt-2">
@@ -445,36 +455,10 @@ const ClientRegistration = () => {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="relationshipStatus"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                סטטוס יחסים
-              </label>
-              <div className="mt-2">
-                <select
-                  id="relationshipStatus"
-                  name="relationshipStatus"
-                  value={registration.relationshipStatus}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  required
-                >
-                  <option value="not-selected">בחר</option>
-                  <option value="רווק/ה">רווק/ה</option>
-                  <option value="בזוגיות">בזוגיות</option>
-                  <option value="נשוי/ה">נשוי/ה</option>
-                  <option value="גרוש/ה">גרוש/ה</option>
-                  <option value="אלמן/ה">אלמן/ה</option>
-                  <option value="אחר">אחר</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
                 htmlFor="referralSource"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 איך הגעת אלינו
               </label>
               <div className="mt-2">
@@ -486,13 +470,15 @@ const ClientRegistration = () => {
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   required
                 >
-                  <option value="not-selected">בחר</option>
-                  <option value="אינסטגרם">אינסטגרם</option>
-                  <option value="פייסבוק">פייסבוק</option>
-                  <option value="חיפוש בגוגל">חיפוש בגוגל</option>
-                  <option value="חבר או בן משפחה">חבר או בן משפחה</option>
-                  <option value="ארגון">ארגון</option>
-                  <option value="אחר">אחר</option>
+                 <option value="not-selected">בחר</option>
+                  <option value="Instagram">אינסטגרם</option>
+                  <option value="Facebook">פייסבוק</option>
+                  <option value="Google Search">חיפוש בגוגל</option>
+                  <option value="Friend or Family">
+                    חבר או בן משפחה
+                  </option>
+                  <option value="Organization">ארגון</option>
+                  <option value="Other">אחר</option>
                 </select>
               </div>
             </div>
@@ -502,6 +488,7 @@ const ClientRegistration = () => {
                 htmlFor="preferredLanguage"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
+                <span className="text-red-500 ml-1">*</span>
                 שפה מועדפת
               </label>
               <div className="mt-2">

@@ -85,46 +85,13 @@ const Login = ({ setIsLoginVisible }) => {
 
   return (
     <div className="my-14 sm:mx-auto sm:w-full sm:max-w-sm relative">
-      <button
-        className="absolute -top-12 left-[45%] mt-4 mr-4 bg-gray-200 text-gray-700 px-3 py-1 rounded"
-        onClick={() => setIsLoginVisible(false)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3"
-          />
-        </svg>
-      </button>
       <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
-        <div className="mt-2">
-          <select
-            name="userType"
-            id="userType"
-            value={logInUserType}
-            onChange={handleTypeChange}
-            className=" rounded-md focus:ring-1 focus:ring-inset focus:ring-indigo-600 text-sm border-gray-300"
-          >
-            <option value="not-selected">בחר</option>
-            <option value="client">באתי לשתף</option>
-            <option value="supporter">באתי להקשיב</option>
-          </select>
-        </div>
-
         <div>
           <label
             htmlFor="email"
             className="block text-sm font-medium leading-6 text-gray-900"
           >
-            אימייל:
+            אימייל
           </label>
           <div className="mt-2">
             <input
@@ -172,11 +139,58 @@ const Login = ({ setIsLoginVisible }) => {
           </div>
         </div>
 
-        <div className="flex justify-center">
-          {error && <h3>{error}</h3>}
-          {status !== "idle" && <h3>{status}</h3>}
+        <div className="flex justify-between items-end">
+          <div className="">
+            <button
+              className="border border-gray-300 hover:bg-gray-400 px-3 py-1 md:py-1.5 rounded"
+              onClick={() => setIsLoginVisible(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              סוג
+            </label>
+            <div className="mt-2">
+              <select
+                name="userType"
+                id="userType"
+                value={logInUserType}
+                onChange={handleTypeChange}
+                className=" rounded-md focus:ring-1 focus:ring-inset focus:ring-indigo-600 text-sm border-gray-300"
+              >
+                <option value="not-selected">בחר</option>
+                <option value="client">באתי לשתף</option>
+                <option value="supporter">באתי להקשיב</option>
+              </select>
+            </div>
+          </div>
         </div>
+
         <div>
+          <div className="flex justify-center mb-2">
+            {error && <h3>{error}</h3>}
+            {status !== "idle" && <h3>{status}</h3>}
+          </div>
+
           <button
             type="submit"
             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
