@@ -6,10 +6,7 @@ const WelcomePage = () => {
   const [isLoginVisible, setIsLoginVisible] = useState(false);
 
   return (
-    <div
-      className="min-h-screen bg-gray-100 flex items-center justify-center"
-      dir="rtl"
-    >
+    <div className="min-h-scree flex items-center justify-center" dir="rtl">
       <div className="p-6 bg-white rounded-lg flex flex-col justify-start min-h-screen">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -17,7 +14,7 @@ const WelcomePage = () => {
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
           />
-          <h2 className="mt-10 mb-6 text-center text-5xl font-bold leading-9 tracking-tight text-gray-900">
+          <h2 className="mt-10 mb-6 text-center text-5xl  font-bold leading-9 tracking-tight text-gray-900">
             ברוכים הבאים
           </h2>
           <p className="mt-4 text-center text-xl tracking-wide leading-relaxed font-semibold">
@@ -31,11 +28,11 @@ const WelcomePage = () => {
         ) : (
           <div className="space-y-16 max-md:space-y-16 flex flex-col justify-between">
             <div className="flex max-md:flex-col max-md:space-y-4 justify-around mb-2 mx-auto mt-10">
-            <Link
+              <Link
                 to="/register/supporter"
                 className="btn btn-wide bg-indigo-500 hover:bg-indigo-300 opacity-90 text-base text-white mx-2"
               >
-               באתי להקשיב
+                באתי להקשיב
               </Link>
               <Link
                 to="/register/client"

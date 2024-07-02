@@ -78,7 +78,7 @@ const SupportersPage = ({ userType }) => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row pt-4" dir="rtl">
+    <div className="min-h-screen flex flex-col md:flex-row mt-16" dir="rtl">
       <div className="order-1 w-full md:w-64 md:fixed md:right-5">
         <Sidebar onFilter={handleFilter} />
       </div>

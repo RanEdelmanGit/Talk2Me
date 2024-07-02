@@ -165,7 +165,6 @@ const Login = ({ setIsLoginVisible }) => {
         <div className="flex justify-center">
           <h3>{error}</h3>
         </div>
-
         <div>
           <button
             type="submit"

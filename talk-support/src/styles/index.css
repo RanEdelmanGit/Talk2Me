@@ -3,25 +3,4 @@
 @tailwind utilities;
 
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
-body {
-  @apply flex items-center justify-center min-h-screen bg-white;
-}
-  
-
-
-  
-  /* Container holding the main content */
-  .container {
-    border: 1px solid white;
-    border-radius: 10px;
-    width: 65%;
-    height: 80%;
-    display: flex;
-    overflow: hidden;
-  }
   
