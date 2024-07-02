@@ -40,7 +40,7 @@ const Header = ({ user, userType }) => {
     { name: "עזרה", href: "/resources" },
   ];
 
-  const navigation = navigationClient;
+  const navigation = userType == 'client' ? navigationClient : navigationSupporter;
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");

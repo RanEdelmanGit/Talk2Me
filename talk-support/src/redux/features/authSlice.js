@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { doc, getDoc,setDoc, getFirestore } from 'firebase/firestore';
 
 export const userTypeSupporter = "supporter";
 export const userTypeClient = "client";
@@ -38,6 +38,20 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
   }
   
 });
+export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getState}) => {
+  const db = getFirestore();
+  const state = getState();
+  console.log('state', state);
+  try{
+    await setDoc(doc(db, "clients", state.user.uid), state.user);
+    return {};
+  }catch(error){
+    console.log(error);
+  }
+  
+});
+
+
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -54,7 +68,16 @@ export const authSlice = createSlice({
     },
     clearUser: (state) => {
       state.user = {}  
-    }
+    },
+    addFavorite:(state,action)=>{ // action.payload: supporter id
+      if(!state.user.favorites){
+        state.user.favorites= []
+      }
+      state.user.favorites.push(action.payload);
+    },
+    removeFavorite:(state,action)=>{  // action.payload: supporter id
+      state.user.favorites =  state.user.favorites.filter(fav != action.payload)
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -69,11 +92,22 @@ export const authSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      }).addCase(updateUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        console.log(action.payload);
+        state.user = {...state.user, ...action.payload};
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   }
 })
 
 // Action creators are generated for each case reducer function
-export const {setFormDetails, setUserType, setUid, clearUser } = authSlice.actions
+export const {setFormDetails, setUserType, setUid, clearUser, addFavorite, removeFavorite } = authSlice.actions
 
 export default authSlice.reducer

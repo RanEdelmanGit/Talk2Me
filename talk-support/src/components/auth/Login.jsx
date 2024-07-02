@@ -19,19 +19,35 @@ const Login = ({ setIsLoginVisible }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+  const [logInUserType, setLoginUserType] = useState("client");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleTypeChange = ({ target: { value } }) => {
+    setLoginUserType(value);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
     setMessage(null);
+
+    if (!validateEmail(email)) {
+      setError("Invalid email format.");
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       const uid = auth.currentUser.uid;
       dispatch(setUid(uid));
-      dispatch(setUserType(userTypeClient));
-      dispatch(fetchUser({ uid, userType: userTypeClient }));
+      dispatch(setUserType(logInUserType));
+      dispatch(fetchUser({ uid, userType: logInUserType }));
       navigate("/chat");
     } catch (error) {
       console.log(error);
@@ -59,7 +75,7 @@ const Login = ({ setIsLoginVisible }) => {
   };
 
   return (
-    <div className="mt-14 sm:mx-auto sm:w-full sm:max-w-sm relative">
+    <div className="my-14 sm:mx-auto sm:w-full sm:max-w-sm relative">
       <button
         className="absolute -top-12 left-[45%] mt-4 mr-4 bg-gray-200 text-gray-700 px-3 py-1 rounded"
         onClick={() => setIsLoginVisible(false)}
@@ -80,6 +96,19 @@ const Login = ({ setIsLoginVisible }) => {
         </svg>
       </button>
       <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
+        <div className="mt-2">
+          <select
+            name="userType"
+            id="userType"
+            onChange={handleTypeChange}
+            className="rounded-md  focus:ring-1 focus:ring-inset focus:ring-indigo-600"
+          >
+            <option value="not-selected">בחר</option>
+            <option value="client">באתי לשתף</option>
+            <option value="supporter">באתי להקשיב</option>
+          </select>
+        </div>
+
         <div>
           <label
             htmlFor="email"
@@ -97,6 +126,7 @@ const Login = ({ setIsLoginVisible }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              dir="ltr"
             />
           </div>
         </div>

@@ -1,33 +1,49 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; 
-// import { addToFavorites } from "../../redux/features/clientsSlice"; 
+import { useNavigate } from "react-router-dom";
+
+import {
+  addFavorite,
+  removeFavorite,
+  updateUser,
+} from "../../redux/features/authSlice";
+
+// import { addToFavorites } from "../../redux/features/clientsSlice";
 import profilePicPlaceholder from "./profile.jpg";
 import starSolid from "./star-solid.svg";
 import starRegular from "./star-regular.svg";
 
 const SupporterCard = ({
-  name,
-  location,
-  meeting,
-  education,
-  school,
-  profilePic = profilePicPlaceholder, // Default to placeholder if no profilePic is provided
+  supporter: {
+    uid,
+    firstName,
+    lastName,
+    name = firstName + " " + lastName,
+    area,
+    meeting,
+    city,
+    age,
+    profilePic = profilePicPlaceholder,
+  }, // Default to placeholder if no profilePic is provided
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleFavoriteClick = () => {
-    console.log('added')
+    console.log("added");
+    if (!isFavorite) {
+      dispatch(addFavorite(uid));
+    } else {
+      dispatch(removeFavorite(uid));
+    }
+    dispatch(updateUser());
+
     setIsFavorite(!isFavorite);
-    // // Replace 'client_id' with the actual client ID from your state or props
-    // const clientId = "client_id"; 
-    // dispatch(addToFavorites({ clientId, supporterId }));
   };
 
   const handleStartChatClick = () => {
-    console.log('navigated to chat')
+    console.log("navigated to chat");
     // Navigate to the chat page with supporterId
     // navigate(`/chat/${supporterId}`);
   };
@@ -62,18 +78,21 @@ const SupporterCard = ({
           <div className="text-base md:text-lg font-bold mb-1">{name} </div>
           <div className="text-sm md:text-base">
             <span className="text-sm font-bold">איזור: </span>
-            {location}
+            {area}
           </div>
           <div className="text-sm md:text-base">
-            <span className="text-sm font-bold border bg-slate-400 rounded-md px-1"> {meeting}</span>
+            <span className="text-sm font-bold border bg-slate-400 rounded-md px-1">
+              {" "}
+              {meeting}
+            </span>
           </div>
           <div className="text-sm md:text-base ">
             <span className="text-sm font-bold">השכלה: </span>
-            {education}
+            {city}
           </div>
           <div className="text-sm md:text-base">
             <span className="text-sm font-bold">מוסד לימודים: </span>
-            {school}
+            {age}
           </div>
         </div>
       </div>

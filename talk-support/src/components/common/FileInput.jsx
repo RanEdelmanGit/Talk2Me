@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
 
 
-const FileInput = ({text}) => {
+const FileInput = ({text, file}) => {
 
   return (
     <div className=" flex justify-between items-center pr-2 w-full h-12 bg-white border border-gray-300 rounded-lg">
-    <p className="opacity-75 font-semibold"> {text}</p>
+    <p className="opacity-75 font-semibold">{file ? file.name : text}</p>
 
-    <div className="w-[20%] h-full flex justify-center items-center bg-gray-200 hover:bg-gray-400 rounded-l-lg">
+    <div className={`w-[20%] h-full flex justify-center items-center ${file ? 'bg-green-200' : 'bg-gray-200 hover:bg-gray-400'} rounded-l-lg`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

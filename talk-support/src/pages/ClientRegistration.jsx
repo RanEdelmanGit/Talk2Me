@@ -13,8 +13,6 @@ import {
 
 const ClientRegistration = () => {
   const [registrationComplete, setRegistrationComplete] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [confirmEmail, setConfirmEmail] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -53,18 +51,40 @@ const ClientRegistration = () => {
     }
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
 
+    if (!validateEmail(registration.email)) {
+      setError("Invalid email format.");
+      return;
+    }
+
+    if (!validatePhone(registration.phone)) {
+      setError("Invalid phone format. Please enter a 10-digit phone number.");
+      return;
+    }
+
     // Validation for "not-selected" options
     const requiredFields = [
       { key: "gender", label: "Gender" },
-      { key: "location", label: "Location" },
+      { key: "birthYear", label: "Birth Year" },
+      { key: "area", label: "Area" },
+      { key: "city", label: "City" },
       { key: "relationshipStatus", label: "Relationship Status" },
       { key: "recentStatus", label: "Recent Status" },
-      { key: "religious", label: "Religious Status" },
       { key: "referralSource", label: "Referral Source" },
+      { key: "preferredLanguage", label: "Language" },
     ];
 
     for (let field of requiredFields) {
@@ -84,9 +104,9 @@ const ClientRegistration = () => {
       const user = { ...registration, uid: userId };
 
       await updateProfile(userCredential.user, {
-        displayName: registration.name,
+        displayName: registration.firstName + " " + registration.lastName,
       });
-      await setDoc(doc(db, "clientChats", userId), {});
+
       await setDoc(doc(db, "clients", userId), user);
 
       // Update Redux

@@ -12,10 +12,18 @@ const supportersSlice = createSlice({
   name: 'supporters',
   initialState: {
     supporters: [],
+    showFavorites:false,
     status: 'idle',
     error: null,
   },
-  reducers: {},
+  reducers: {
+    displayFavorites:(state, action) =>{
+      state.showFavorites = true;
+    },
+    displayAll:(state, action) =>{
+      state.showFavorites = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchSupporters.pending, (state) => {
@@ -32,4 +40,5 @@ const supportersSlice = createSlice({
   },
 });
 
+export const {displayFavorites, displayAll} = supportersSlice.actions;
 export default supportersSlice.reducer;

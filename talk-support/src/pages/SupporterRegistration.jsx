@@ -23,19 +23,17 @@ import FileInput from "../components/common/FileInput";
 
 const SupporterRegistration = () => {
   const [error, setError] = useState(null);
-  const [idDoc, setIdDoc] = useState(null);
-  const [studentApproval, setStudentApproval] = useState(null);
-  const [grades, setGrades] = useState(null);
-  const [profilePic, setProfilePic] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  const fileInputRef = useRef(null);
+  const idDocRef = useRef(null);
+  const studentApprovalRef = useRef(null);
+  const gradesRef = useRef(null);
+  const profilePicRef = useRef(null);
 
-  const handleClick = () => {
-    fileInputRef.current.click();
+  const handleClick = (ref) => {
+    ref.current.click();
   };
 
   const handleChange = ({ target }) => {
@@ -63,31 +61,56 @@ const SupporterRegistration = () => {
     gender: "not-selected",
     age: 18,
     birthYear: "not-selected",
-    location: "not-selected",
     city: "not-selected",
     address: "",
     area: "not-selected",
     referralSource: "not-selected",
     preferredLanguage: "hebrew",
     approved: false,
+    idDoc: "",
+    studentApproval: "",
+    grades: "",
+    profilePic: "",
   });
 
-  const handleFileUpload = (e, setFile) => {
+  const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFile(file);
+    const fieldName = e.target.id;
+    setRegistration((prev) => ({ ...prev, [fieldName]: file }));
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
 
+    if (!validateEmail(registration.email)) {
+      setError("Invalid email format.");
+      return;
+    }
+
+    if (!validatePhone(registration.phone)) {
+      setError("Invalid phone format. Please enter a 10-digit phone number.");
+      return;
+    }
+
     const requiredFields = [
       { key: "gender", label: "Gender" },
-      { key: "location", label: "Location" },
-      { key: "relationshipStatus", label: "Relationship Status" },
-      { key: "religious", label: "Religious Status" },
+      { key: "birthYear", label: "Birth Year" },
+      { key: "area", label: "Area" },
+      { key: "city", label: "City" },
       { key: "referralSource", label: "Referral Source" },
       { key: "meeting", label: "Meeting Preference" },
+      { key: "preferredLanguage", label: "Language" },
     ];
 
     for (let field of requiredFields) {
@@ -106,9 +129,8 @@ const SupporterRegistration = () => {
       const userId = userCredential.user.uid;
 
       await updateProfile(userCredential.user, {
-        displayName: registration.firstName + registration.lastName,
+        displayName: registration.firstName + " " + registration.lastName,
       });
-      await setDoc(doc(db, "userChats", userId), {});
 
       const uploadFile = async (file, filePath) => {
         const fileRef = storageRef(storage, filePath);
@@ -116,39 +138,51 @@ const SupporterRegistration = () => {
         return await getDownloadURL(fileRef);
       };
 
-      if (idDoc) {
-        registration.idDocURL = await uploadFile(
-          idDoc,
+      const user = { ...registration, uid: userId };
+
+      if (user.idDoc) {
+        const idDocURL = await uploadFile(
+          user.idDoc,
           `supporters/${userId}/idDoc`
         );
+        user.idDoc = idDocURL;
       }
-      if (studentApproval) {
-        registration.studentApprovalURL = await uploadFile(
-          studentApproval,
+      if (user.studentApproval) {
+        const studentApprovalURL = await uploadFile(
+          user.studentApproval,
           `supporters/${userId}/studentApproval`
         );
+        user.studentApproval = studentApprovalURL;
       }
-      if (grades) {
-        registration.gradesURL = await uploadFile(
-          grades,
+      if (user.grades) {
+        const gradesURL = await uploadFile(
+          user.grades,
           `supporters/${userId}/grades`
         );
+        user.grades = gradesURL;
       }
-      if (profilePic) {
-        registration.profilePicURL = await uploadFile(
-          profilePic,
+      if (user.profilePic) {
+        const profilePicURL = await uploadFile(
+          user.profilePic,
           `supporters/${userId}/profilePic`
         );
+        user.profilePic = profilePicURL;
       }
 
-      await setDoc(doc(db, "supporters", userId), registration);
+      await setDoc(doc(db, "supporters", userId), user);
+
       dispatch(setUserType(userTypeSupporter));
-      dispatch(setFormDetails(registration));
+      dispatch(setFormDetails(user));
       dispatch(setUid(userId));
       navigate("/");
-      setShowModal(true);
     } catch (error) {
-      setError(error.message);
+      if (error.code === "auth/email-already-in-use") {
+        setError("Email already exists");
+      } else if (error.code === "invalid-argument") {
+        setError("Missing data");
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -170,7 +204,7 @@ const SupporterRegistration = () => {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
             />
           </svg>
         </Link>
@@ -483,6 +517,33 @@ const SupporterRegistration = () => {
                 </select>
               </div>
             </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="referralSource"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                איך הגעת אלינו
+              </label>
+              <div className="mt-2">
+                <select
+                  id="referralSource"
+                  name="referralSource"
+                  value={registration.referralSource}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  required
+                >
+                  <option value="not-selected">בחר</option>
+                  <option value="אינסטגרם">אינסטגרם</option>
+                  <option value="פייסבוק">פייסבוק</option>
+                  <option value="חיפוש בגוגל">חיפוש בגוגל</option>
+                  <option value="חבר או בן משפחה">חבר או בן משפחה</option>
+                  <option value="ארגון">ארגון</option>
+                  <option value="אחר">אחר</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -501,14 +562,15 @@ const SupporterRegistration = () => {
                   name="idDoc"
                   type="file"
                   className="hidden"
-                  onChange={(e) => handleFileUpload(e, setIdDoc)}
+                  ref={idDocRef}
+                  onChange={handleFileUpload}
                   accept=".pdf,.jpg,.jpeg,.png"
                 />
                 <div
                   className="flex items-center cursor-pointer"
-                  onClick={handleClick}
+                  onClick={() => handleClick(idDocRef)}
                 >
-                  <FileInput text={"תעודת זהות"} />
+                  <FileInput text={"תעודת זהות"} file={registration.idDoc} />
                 </div>
               </div>
             </div>
@@ -520,14 +582,15 @@ const SupporterRegistration = () => {
                   name="studentApproval"
                   type="file"
                   className="hidden"
-                  onChange={(e) => handleFileUpload(e, setStudentApproval)}
+                  ref={studentApprovalRef}
+                  onChange={handleFileUpload}
                   accept=".pdf,.jpg,.jpeg,.png"
                 />
                 <div
                   className="flex items-center cursor-pointer"
-                  onClick={handleClick}
+                  onClick={() => handleClick(studentApprovalRef)}
                 >
-                  <FileInput text={"אישור סטודנט"} />
+                  <FileInput text={"אישור סטודנט"} file={registration.studentApproval} />
                 </div>
               </div>
             </div>
@@ -539,14 +602,15 @@ const SupporterRegistration = () => {
                   name="grades"
                   type="file"
                   className="hidden"
-                  onChange={(e) => handleFileUpload(e, setGrades)}
+                  ref={gradesRef}
+                  onChange={handleFileUpload}
                   accept=".pdf,.jpg,.jpeg,.png"
                 />
                 <div
                   className="flex items-center cursor-pointer"
-                  onClick={handleClick}
+                  onClick={() => handleClick(gradesRef)}
                 >
-                  <FileInput text={"גיליון ציונים"} />
+                  <FileInput text={"גיליון ציונים"} file={registration.grades} />
                 </div>
               </div>
             </div>
@@ -554,24 +618,25 @@ const SupporterRegistration = () => {
             <div className="sm:col-span-3">
               <div className="mt-2">
                 <input
+                  id="profilePic"
                   name="profilePic"
                   type="file"
-                  ref={fileInputRef}
                   className="hidden"
+                  ref={profilePicRef}
                   onChange={handleFileUpload}
                   accept=".jpg,.jpeg,.png"
                 />
                 <div
                   className="flex items-center cursor-pointer"
-                  onClick={handleClick}
+                  onClick={() => handleClick(profilePicRef)}
                 >
-                  <FileInput text={"תמונת פרופיל"} />
+                  <FileInput text={"תמונת פרופיל"} file={registration.profilePic} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-
+        {error && <h3>{error}</h3>}
         <div className="mt-6 flex items-center justify-center gap-x-6">
           <Link
             to="/welcome"
@@ -579,6 +644,7 @@ const SupporterRegistration = () => {
           >
             בטל
           </Link>
+
           <button
             type="submit"
             className="rounded-md btn-wide bg-indigo-600 px-3 py-2 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
