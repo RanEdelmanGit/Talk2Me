@@ -1,32 +1,28 @@
-import React, { useEffect, useState } from "react";
-import Message from "./Message";
-import { useChat } from "../../context/chatContext";
-import { onSnapshot, doc } from "firebase/firestore";
-import { db } from "../../firebase_config";
+import React from "react";
 
-export default function Messages() {
-  const { data } = useChat();
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", data.chatId), (docSnapshot) => {
-      if (docSnapshot.exists()) {
-        const fetchedMessages = docSnapshot.data().messages || [];
-        setMessages(fetchedMessages);
-      } else {
-        setMessages([]);
-      }
-    });
-    return () => {
-      unSub();
-    };
-  }, [data.chatId]);
-
+const ChatMessages = ({ messages }) => {
   return (
-    <div className="messages">
-      {messages.map((message) => (
-        <Message key={message.id} message={message} />
+    <div className="flex-1 overflow-y-auto p-4 pb-4">
+      {messages.map((msg, index) => (
+        <div
+          key={index}
+          className={`flex ${
+            msg.type === "outgoing" ? "justify-end" : "justify-start"
+          } mb-4`}
+        >
+          <div
+            className={`rounded-lg p-4 ${
+              msg.type === "outgoing"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300 text-gray-800"
+            }`}
+          >
+            <p>{msg.text}</p>
+          </div>
+        </div>
       ))}
     </div>
   );
-}
+};
+
+export default ChatMessages;
