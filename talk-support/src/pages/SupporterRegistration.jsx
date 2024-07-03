@@ -590,7 +590,7 @@ const SupporterRegistration = () => {
                 <span
                   className={`relative inline-flex items-center rounded-md bg-blue-50 px-8 py-2 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer ${
                     registration.meeting.includes(meetingOffline)
-                      ? "bg-blue-200"
+                      ? ""
                       : ""
                   }`}
                   onClick={() => handleBadgeClick(meetingOffline)}
@@ -616,7 +616,7 @@ const SupporterRegistration = () => {
                 <span
                   className={`relative inline-flex items-center rounded-md bg-indigo-50 px-8 py-2  text-sm font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 cursor-pointer ${
                     registration.meeting.includes(meetingOnline)
-                      ? "bg-indigo-200"
+                      ? ""
                       : ""
                   }`}
                   onClick={() => handleBadgeClick(meetingOnline)}
@@ -642,7 +642,7 @@ const SupporterRegistration = () => {
                 <span
                   className={`relative inline-flex items-center rounded-md bg-purple-50  px-8 py-2  text-sm font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 cursor-pointer ${
                     registration.meeting.includes(phoneCall)
-                      ? "bg-purple-200"
+                      ? ""
                       : ""
                   }`}
                   onClick={() => handleBadgeClick(phoneCall)}
