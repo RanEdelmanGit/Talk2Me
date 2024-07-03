@@ -27,7 +27,7 @@ const WelcomePage = () => {
           <Login setIsLoginVisible={setIsLoginVisible} />
         ) : (
           <div className="space-y-16 max-md:space-y-16 flex flex-col justify-between">
-            <div className="flex max-md:flex-col max-md:mx-auto max-md:space-y-4 justify-around mb-2 mt-10">
+            <div className="flex max-md:flex-col max-md:mx-auto max-md:space-y-4 justify-around mb-2 mt-24">
               <Link
                 to="/register/supporter"
                 className="btn btn-wide bg-indigo-500 hover:bg-indigo-300 opacity-90 text-base text-white mx-2"

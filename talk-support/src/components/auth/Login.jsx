@@ -39,7 +39,7 @@ const Login = ({ setIsLoginVisible }) => {
     }
 
     if (logInUserType === "not-selected") {
-      setError(`Please select a valid option for user type`);
+      setError("Please select a valid option for user type.");
       return;
     }
 
@@ -60,16 +60,6 @@ const Login = ({ setIsLoginVisible }) => {
       navigate("/chat");
     }
   }, [user]);
-
-  // useEffect(() => {
-  //   if (auth.currentUser) {
-  //     const uid = auth.currentUser.uid;
-  //     dispatch(setUid(uid));
-  //     dispatch(setUserType("client")); //TODO detect usertype in autologin fetchuser
-  //     dispatch(fetchUser({ uid, userType: "client" }));
-  //     navigate("/chat");
-  //   }
-  // }, []);
 
   const handlePasswordReset = async () => {
     setError(null);
@@ -139,7 +129,7 @@ const Login = ({ setIsLoginVisible }) => {
           </div>
         </div>
 
-        <div className="flex justify-between items-end">
+        <div className="flex justify-between items-center">
           <div className="">
             <button
               className="border border-gray-300 hover:bg-gray-400 px-3 py-1 md:py-1.5 rounded"
@@ -162,26 +152,45 @@ const Login = ({ setIsLoginVisible }) => {
             </button>
           </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              סוג
-            </label>
-            <div className="mt-2">
-              <select
-                name="userType"
-                id="userType"
-                value={logInUserType}
-                onChange={handleTypeChange}
-                className=" rounded-md focus:ring-1 focus:ring-inset focus:ring-indigo-600 text-sm border-gray-300"
-              >
-                <option value="not-selected">בחר</option>
-                <option value="client">באתי לשתף</option>
-                <option value="supporter">באתי להקשיב</option>
-              </select>
-            </div>
+          <div className="mt-2 flex items-center">
+            <fieldset>
+              <div className="flex ">
+                <div className="flex items-center">
+                  <input
+                    id="client"
+                    name="userType"
+                    type="radio"
+                    value="client"
+                    checked={logInUserType === "client"}
+                    onChange={handleTypeChange}
+                    className="focus:ring-indigo-600 h-4 w-4 text-indigo-600 border-gray-300"
+                  />
+                  <label
+                    htmlFor="client"
+                    className="mr-2 ml-4 block text-base font-medium text-gray-700"
+                  >
+                    באתי לשתף
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="supporter"
+                    name="userType"
+                    type="radio"
+                    value="supporter"
+                    checked={logInUserType === "supporter"}
+                    onChange={handleTypeChange}
+                    className="focus:ring-indigo-600 h-4 w-4 text-indigo-600 border-gray-300"
+                  />
+                  <label
+                    htmlFor="supporter"
+                    className="mr-2 ml-4 block text-base font-medium text-gray-700"
+                  >
+                    באתי להקשיב
+                  </label>
+                </div>
+              </div>
+            </fieldset>
           </div>
         </div>
 
