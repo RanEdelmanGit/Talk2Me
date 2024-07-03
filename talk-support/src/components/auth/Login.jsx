@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/loginPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setUid, fetchUser, setUserType } from "../../redux/features/authSlice";
+import Loading from "../common/Loading";
 
 const Login = ({ setIsLoginVisible }) => {
   const [email, setEmail] = useState("");
@@ -197,14 +198,14 @@ const Login = ({ setIsLoginVisible }) => {
         <div>
           <div className="flex justify-center mb-2">
             {error && <h3>{error}</h3>}
-            {status !== "idle" && <h3>{status}</h3>}
+            {status !== "idle" && status !== "loading" && <h3>{status}</h3>}
           </div>
 
           <button
             type="submit"
-            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-base font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-lg font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            התחבר
+            <p className="mx-2">התחבר</p> <Loading show={status == "loading"}/>
           </button>
         </div>
       </form>

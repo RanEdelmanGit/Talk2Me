@@ -2,7 +2,47 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 
 export const chatCollection = "chats"
-
+const dummyMessages = [
+  { type: "incoming", text: "Hey Bob, how's it going?", sender: "Alice" },
+    {
+      type: "outgoing",
+      text: "Hi Alice! I'm good, just finished a great book. How about you?",
+      sender: "Bob",
+    },
+    {
+      type: "incoming",
+      text: "That book sounds interesting! What's it about?",
+      sender: "Alice",
+    },
+    {
+      type: "outgoing",
+      text: "It's about an astronaut stranded on Mars, trying to survive. Gripping stuff!",
+      sender: "Bob",
+    },
+    {
+      type: "incoming",
+      text: "I'm intrigued! Maybe I'll borrow it from you when you're done?",
+      sender: "Alice",
+    },
+    {
+      type: "outgoing",
+      text: "Of course! I'll drop it off at your place tomorrow.",
+      sender: "Bob",
+    },
+    { type: "incoming", text: "Thanks, you're the best!", sender: "Alice" },
+    {
+      type: "outgoing",
+      text: "Anytime! Let me know how you like it. 😊",
+      sender: "Bob",
+    },
+    { type: "incoming", text: "So, pizza next week, right?", sender: "Alice" },
+    {
+      type: "outgoing",
+      text: "Absolutely! Can't wait for our pizza date. 🍕",
+      sender: "Bob",
+    },
+    { type: "incoming", text: "Hoorayy!!", sender: "Alice" },
+];
 const initialState = {
   status:'ready',
   error:'',
@@ -11,7 +51,7 @@ const initialState = {
     id: "", //supporter.id + client.id
     supporterId:"", //supporterId
     clientId: "",  //supporterId
-    massages:[],  // message: {timestamp, text, sender,}
+    massages:dummyMessages,  // message: {timestamp, text, sender,}
   },
  //supporterChats:[{cliehtId:'', chatId:'', lastMessage:''}]
 }

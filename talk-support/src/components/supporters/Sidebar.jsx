@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
+import heartSolid from "./heart-solid.svg";
+import HeartRegular from "./heart-regular.svg";
 
-const Sidebar = ({ onFilter }) => {
+const Sidebar = ({
+  onFilter,
+  onToggleFavorites,
+  showFavorites,
+  onClearFilters,
+}) => {
   const [filters, setFilters] = useState({
     name: "",
     meeting: "not-selected",
@@ -32,38 +39,97 @@ const Sidebar = ({ onFilter }) => {
       preferredLanguage: "not-selected",
     };
     setFilters(initialFilters);
+    onClearFilters(); // Reset show favorites
   };
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  const areFiltersActive = () => {
+    return Object.values(filters).some(value => value !== "" && value !== "not-selected");
+  };
+
   return (
-    <div className="w-full md:w-64 bg-gray-100 p-4 shadow-md h-full rounded-md">
-      <button
-        onClick={toggleDropdown}
-        className="md:hidden flex items-center justify-between w-full p-2 bg-blue-500 text-white rounded mb-4"
-      >
-        סינון
-        <span
-          className={`transform transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
+    <div className="w-full md:w-72 bg-gray-100 p-4 shadow-md md:min-h-svh rounded-md md:pr-6">
+      <div className="flex justify-between items-center md:hidden">
+        <button
+          onClick={toggleDropdown}
+          className="md:hidden flex items-center justify-between text-black rounded"
         >
-          ▼
-        </span>
-      </button>
-      <div className={`md:block ${isOpen ? "block" : "hidden"}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">סינון</h2>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className={`size-8 transition-transform duration-300 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          >
+            {isOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            )}
+          </svg>
+        </button>
+
+        {areFiltersActive() && (
           <button
             onClick={handleClearFilters}
-            className="border border-gray-300 hover:bg-gray-400 px-3 py-1 rounded-md"
+            className="border border-gray-300 hover:ring-2 hover:ring-indigo-600 px-3 py-1 rounded-md my-2.5"
           >
             נקה בחירה
           </button>
+        )}
+
+        <button onClick={onToggleFavorites} className="flex items-center">
+          <img
+            src={showFavorites ? heartSolid : HeartRegular}
+            alt="Favorites"
+            className="h-6 w-6 mr-2"
+          />
+        </button>
+      </div>
+      <div
+        className={`md:block ${
+          isOpen ? "block space-y-6 pt-6 min-h-screen" : "hidden"
+        }`}
+      >
+        <div className="flex justify-between items-center mb-4 border-b pb-6 border-gray-400 max-md:hidden">
+          <h2 className="text-xl font-bold ">סינון</h2>
+          {areFiltersActive() && (
+            <button
+              onClick={handleClearFilters}
+              className=" flex gap-2 border border-gray-400 hover:ring-2 hover:ring-indigo-600 px-3 py-1 rounded-md my-2.5"
+            >
+              נקה בחירה
+        
+            </button>
+          )}
         </div>
-        <div className="mb-4">
+
+        <div className="flex justify-end max-md:hidden">
+          <button onClick={onToggleFavorites} className="flex items-center">
+            <span>הצג מועדפים</span>
+            <img
+              src={showFavorites ? heartSolid : HeartRegular}
+              alt="Favorites"
+              className="h-6 w-6 mr-2"
+            />
+          </button>
+        </div>
+
+        <div className="mb-2">
           <label className="block font-medium mb-2">שם</label>
           <input
             name="name"
@@ -72,7 +138,8 @@ const Sidebar = ({ onFilter }) => {
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
-        <div className="mb-4">
+
+        <div className="mb-2">
           <label className="block font-medium mb-2">אופן פגישה</label>
           <select
             name="meeting"
@@ -86,7 +153,7 @@ const Sidebar = ({ onFilter }) => {
             <option value="both">שניהם</option>
           </select>
         </div>
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="block font-medium mb-2">מגדר</label>
           <select
             name="gender"
@@ -99,7 +166,7 @@ const Sidebar = ({ onFilter }) => {
             <option value="woman">אישה</option>
           </select>
         </div>
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="block font-medium mb-2">גיל</label>
           <select
             name="age"
@@ -120,7 +187,7 @@ const Sidebar = ({ onFilter }) => {
             <option value="65+">65+</option>
           </select>
         </div>
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="block font-medium mb-2">איזור</label>
           <select
             name="area"
@@ -134,7 +201,7 @@ const Sidebar = ({ onFilter }) => {
             <option value="south">דרום</option>
           </select>
         </div>
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="block font-medium mb-2">עיר</label>
           <select
             name="city"
@@ -166,7 +233,7 @@ const Sidebar = ({ onFilter }) => {
             <option value="Tel Aviv-Jaffa">תל אביב-יפו</option>
           </select>
         </div>
-        <div className="mb-4">
+        <div className="mb-2">
           <label className="block font-medium mb-2">שפה</label>
           <select
             name="preferredLanguage"

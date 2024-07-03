@@ -9,8 +9,8 @@ import {
 } from "../../redux/features/authSlice";
 
 import profilePicPlaceholder from "./profile.jpg";
-import starSolid from "./star-solid.svg";
-import starRegular from "./star-regular.svg";
+import heartSolid from './heart-solid.svg';
+import HeartRegular from './heart-regular.svg';
 import store from "../../redux/store";
 
 const SupporterCard = ({
@@ -50,9 +50,10 @@ const SupporterCard = ({
 
   return (
     <div
-      className="w-full mx-6 md:p-4 border-y border-gray-200 flex items-center justify-between"
+      className="w-full mx-auto md:p-4 border-y border-gray-200"
       dir="rtl"
     >
+      <div className="flex items-center justify-between w-full px-10">
       <img src={profilePic} alt="Profile" className="w-16 h-16 rounded-full" />
 
       <span className="w-32 h-8 overflow-hidden text-ellipsis whitespace-nowrap">
@@ -89,11 +90,12 @@ const SupporterCard = ({
         onClick={handleFavoriteClick}
       >
         {isFavorite ? (
-          <img src={starSolid} alt="Favorite" className="h-6 w-6" />
+          <img src={heartSolid} alt="Favorite" className="h-6 w-6" />
         ) : (
-          <img src={starRegular} alt="Not Favorite" className="h-6 w-6" />
+          <img src={HeartRegular} alt="Not Favorite" className="h-6 w-6" />
         )}
       </button>
+      </div>
     </div>
   );
 };

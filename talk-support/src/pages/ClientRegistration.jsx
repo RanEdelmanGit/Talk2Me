@@ -3,7 +3,8 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase_config";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "../components/common/Loading";
 import {
   setFormDetails,
   setUserType,
@@ -13,8 +14,10 @@ import {
 
 const ClientRegistration = () => {
   const [registrationComplete, setRegistrationComplete] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { status } = useSelector((store) => store.auth);
 
   const [registration, setRegistration] = useState({
     email: "",
@@ -50,15 +53,18 @@ const ClientRegistration = () => {
     }
   };
 
+
+
+const togglePasswordVisibility = () => {
+  setPasswordVisible(!passwordVisible);
+};
+
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const validatePhone = (phone) => {
-    const phoneRegex = /^[0-9]{10}$/;
-    return phoneRegex.test(phone);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -69,11 +75,7 @@ const ClientRegistration = () => {
       return;
     }
 
-    if (!validatePhone(registration.phone)) {
-      setError("Invalid phone format. Please enter a 10-digit phone number.");
-      return;
-    }
-
+  
     // Validation for "not-selected" options
     const requiredFields = [
       { key: "gender", label: "Gender" },
@@ -349,17 +351,59 @@ const ClientRegistration = () => {
                 <span className="text-red-500 ml-1">*</span>
                 סיסמא
               </label>
-              <div className="mt-2">
+              <div className="mt-2 relative">
                 <input
                   id="password"
                   name="password"
-                  type="password"
-                  autoComplete="current-password"
+                  type={passwordVisible ? "text" : "password"}
+                  autoComplete="new-password"
+                  className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   value={registration.password}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   required
                 />
+                <span
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={togglePasswordVisibility}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                >
+                  {passwordVisible ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="size-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="size-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
+                      />
+                    </svg>
+                  )}
+                </span>
               </div>
             </div>
 
@@ -521,6 +565,7 @@ const ClientRegistration = () => {
         </div>
 
         {error && <div className="text-red-500 mb-4">{error}</div>}
+      
 
         <div className="mt-6 flex items-center justify-center gap-x-6">
           <Link
@@ -531,9 +576,9 @@ const ClientRegistration = () => {
           </Link>
           <button
             type="submit"
-            className=" btn-wide rounded-md bg-indigo-600 px-3 py-2 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className=" btn-wide flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            הירשם
+           <p className="mx-2"> הירשם </p> <Loading show={status=='loading'}/>
           </button>
         </div>
       </form>

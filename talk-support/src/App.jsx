@@ -10,6 +10,7 @@ import {
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
 import { setUid, fetchUser, setUserType } from "./redux/features/authSlice";
+import { onAuthStateChanged} from "firebase/auth";
 import { auth } from "./firebase_config";
 import ChatPage from "./pages/ChatPage";
 import SupportersPage from "./pages/Supporters";
@@ -44,15 +45,23 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (auth.currentUser) {
-      const uid = auth.currentUser.uid;
-      dispatch(setUid(uid));
-      dispatch(setUserType("client")); //TODO detect usertype in autologin fetchuser
-      dispatch(fetchUser({ uid, userType: "client" }));
-      navigate("/chat");
-    }
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        const uid = currentUser.uid;
+        dispatch(setUid(uid));
+        dispatch(setUserType("client")); //TODO detect usertype in autologin fetchuser
+        dispatch(fetchUser({ uid, userType: "client" }));
+        navigate("/chat");
+      } else {
+        navigate("/welcome");
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
-  //const userType = userTypeClient;
+
+
   return (
     <Routes>
       <Route element={<Root user={user} userType={userType} />}>

@@ -1,15 +1,11 @@
 import React, { useState, useRef } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase_config";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setFormDetails,
   setUserType,
@@ -20,14 +16,16 @@ import {
   setUid,
 } from "../redux/features/authSlice";
 import FileInput from "../components/common/FileInput";
+import Loading from "../components/common/Loading";
 
 const SupporterRegistration = () => {
   const [error, setError] = useState(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
-
+  const { status } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
 
-  const idDocRef = useRef(null);
+  const moreFilesRef = useRef(null);
   const studentApprovalRef = useRef(null);
   const gradesRef = useRef(null);
   const profilePicRef = useRef(null);
@@ -36,11 +34,38 @@ const SupporterRegistration = () => {
     ref.current.click();
   };
 
+  const handleBadgeClick = (value) => {
+    setRegistration((prevState) => {
+      const { meeting } = prevState;
+      if (meeting.includes(value)) {
+        return {
+          ...prevState,
+          meeting: meeting.filter((v) => v !== value),
+        };
+      } else {
+        return {
+          ...prevState,
+          meeting: [...meeting, value],
+        };
+      }
+    });
+  };
+
   const handleChange = ({ target }) => {
     const key = target.id;
     const value = target.value;
 
-    if (key === "birthYear") {
+    if (key === "meeting") {
+      const options = target.options;
+      const selectedValues = [];
+
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].selected) {
+          selectedValues.push(options[i].value);
+        }
+      }
+      setRegistration({ ...registration, [key]: selectedValues });
+    } else if (key === "birthYear") {
       const currentYear = new Date().getFullYear();
       const calculatedAge = currentYear - value;
       if (calculatedAge >= 18) {
@@ -57,7 +82,7 @@ const SupporterRegistration = () => {
     password: "",
     firstName: "",
     lastName: "",
-    meeting: "not-selected",
+    meeting: [],
     gender: "not-selected",
     age: 18,
     birthYear: "not-selected",
@@ -67,11 +92,15 @@ const SupporterRegistration = () => {
     referralSource: "not-selected",
     preferredLanguage: "hebrew",
     approved: false,
-    idDoc: "",
+    moreFiles: "",
     studentApproval: "",
     grades: "",
     profilePic: "",
   });
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -140,12 +169,12 @@ const SupporterRegistration = () => {
 
       const user = { ...registration, uid: userId };
 
-      if (user.idDoc) {
-        const idDocURL = await uploadFile(
-          user.idDoc,
-          `supporters/${userId}/idDoc`
+      if (user.moreFiles) {
+        const moreFilesURL = await uploadFile(
+          user.moreFiles,
+          `supporters/${userId}/moreFiles`
         );
-        user.idDoc = idDocURL;
+        user.moreFiles = moreFilesURL;
       }
       if (user.studentApproval) {
         const studentApprovalURL = await uploadFile(
@@ -304,19 +333,62 @@ const SupporterRegistration = () => {
                 <span className="text-red-500 ml-1">*</span>
                 סיסמא
               </label>
-              <div className="mt-2">
+              <div className="mt-2 relative">
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={passwordVisible ? "text" : "password"}
                   autoComplete="new-password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   value={registration.password}
                   onChange={handleChange}
                   required
                 />
+                <span
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={togglePasswordVisibility}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                >
+                  {passwordVisible ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="size-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="size-4"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
+                      />
+                    </svg>
+                  )}
+                </span>
               </div>
             </div>
+
             <div className="sm:col-span-4">
               <label
                 htmlFor="phone"
@@ -505,6 +577,7 @@ const SupporterRegistration = () => {
                 </select>
               </div>
             </div>
+
             <div className="sm:col-span-4">
               <label
                 htmlFor="meeting"
@@ -513,21 +586,85 @@ const SupporterRegistration = () => {
                 <span className="text-red-500 ml-1">*</span>
                 אופן המפגש
               </label>
-              <div className="mt-2">
-                <select
-                  id="meeting"
-                  name="meeting"
-                  autoComplete="meeting"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  value={registration.meeting}
-                  onChange={handleChange}
-                  required
+              <div className="mt-2 flex justify-around items-center">
+                <span
+                  className={`relative inline-flex items-center rounded-md bg-blue-50 px-8 py-2 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer ${
+                    registration.meeting.includes(meetingOffline)
+                      ? "bg-blue-200"
+                      : ""
+                  }`}
+                  onClick={() => handleBadgeClick(meetingOffline)}
                 >
-                  <option value="not-selected">בחר אופן מפגש</option>
-                  <option value={meetingOffline}>מפגש</option>
-                  <option value={meetingOnline}>וידיאו</option>
-                  <option value={phoneCall}>טלפון</option>
-                </select>
+                  מפגש
+                  {registration.meeting.includes(meetingOffline) && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="absolute p-1 top-0 left-0 size-6 text-gray-700"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m4.5 12.75 6 6 9-13.5"
+                      />
+                    </svg>
+                  )}
+                </span>
+                <span
+                  className={`relative inline-flex items-center rounded-md bg-indigo-50 px-8 py-2  text-sm font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 cursor-pointer ${
+                    registration.meeting.includes(meetingOnline)
+                      ? "bg-indigo-200"
+                      : ""
+                  }`}
+                  onClick={() => handleBadgeClick(meetingOnline)}
+                >
+                  וידיאו
+                  {registration.meeting.includes(meetingOnline) && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="absolute p-1 top-0 left-0 size-6 text-gray-700"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m4.5 12.75 6 6 9-13.5"
+                      />
+                    </svg>
+                  )}
+                </span>
+                <span
+                  className={`relative inline-flex items-center rounded-md bg-purple-50  px-8 py-2  text-sm font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 cursor-pointer ${
+                    registration.meeting.includes(phoneCall)
+                      ? "bg-purple-200"
+                      : ""
+                  }`}
+                  onClick={() => handleBadgeClick(phoneCall)}
+                >
+                  טלפון
+                  {registration.meeting.includes(phoneCall) && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="absolute p-1 top-0 left-0 size-6 text-gray-700"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m4.5 12.75 6 6 9-13.5"
+                      />
+                    </svg>
+                  )}
+                </span>
               </div>
             </div>
 
@@ -552,9 +689,7 @@ const SupporterRegistration = () => {
                   <option value="Instagram">אינסטגרם</option>
                   <option value="Facebook">פייסבוק</option>
                   <option value="Google Search">חיפוש בגוגל</option>
-                  <option value="Friend or Family">
-                    חבר או בן משפחה
-                  </option>
+                  <option value="Friend or Family">חבר או בן משפחה</option>
                   <option value="Organization">ארגון</option>
                   <option value="Other">אחר</option>
                 </select>
@@ -571,26 +706,6 @@ const SupporterRegistration = () => {
             העלאת מסמכים אלו הכרחיים על מנת שנוכל לבצע תהליך אישור כראוי
           </p>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <div className="mt-2">
-                <input
-                  id="idDoc"
-                  name="idDoc"
-                  type="file"
-                  className="hidden"
-                  ref={idDocRef}
-                  onChange={handleFileUpload}
-                  accept=".pdf,.jpg,.jpeg,.png"
-                />
-                <div
-                  className="flex items-center cursor-pointer"
-                  onClick={() => handleClick(idDocRef)}
-                >
-                  <FileInput text={"תעודת זהות"} file={registration.idDoc} />
-                </div>
-              </div>
-            </div>
-
             <div className="sm:col-span-3">
               <div className="mt-2">
                 <input
@@ -659,6 +774,29 @@ const SupporterRegistration = () => {
                 </div>
               </div>
             </div>
+
+            <div className="sm:col-span-3">
+              <div className="mt-2">
+                <input
+                  id="moreFiles"
+                  name="moreFiles"
+                  type="file"
+                  className="hidden"
+                  ref={moreFilesRef}
+                  onChange={handleFileUpload}
+                  accept=".pdf,.jpg,.jpeg,.png"
+                />
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() => handleClick(moreFilesRef)}
+                >
+                  <FileInput
+                    text={"מסמכים נוספים"}
+                    file={registration.moreFiles}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         {error && <h3>{error}</h3>}
@@ -672,9 +810,10 @@ const SupporterRegistration = () => {
 
           <button
             type="submit"
-            className="rounded-md btn-wide bg-indigo-600 px-3 py-2 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="btn-wide flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            הרשמה
+            <p className="mx-2"> הירשם </p>{" "}
+            <Loading show={status == "loading"} />
           </button>
         </div>
       </form>
