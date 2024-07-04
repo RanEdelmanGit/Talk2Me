@@ -1,15 +1,34 @@
-
 import React from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase_config";
-import { useUser } from "../../context/userContext";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "../../redux/features/authSlice";
 
 export default function SignOut() {
-  const { user } = useUser();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
-  if (!user) {
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      dispatch(clearUser());
+      localStorage.removeItem("userType")
+      navigate("/welcome");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  if (!user.uid) {
+    navigate("/welcome");
     return null;
   }
 
-  return <button onClick={() => signOut(auth)} className="logout">Sign Out</button>;
+  return (
+    <button onClick={handleSignOut} className="text-white hover:text-red-500">
+      יציאה
+    </button>
+  );
 }

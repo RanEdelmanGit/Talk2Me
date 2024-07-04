@@ -1,57 +1,40 @@
 import React, { useState } from "react";
-import { useUser } from "../../context/userContext";
-import { useChat } from "../../context/chatContext";
-import {
-  arrayUnion,
-  doc,
-  updateDoc,
-  Timestamp,
-  serverTimestamp,
-} from "firebase/firestore";
-import { db } from "../../firebase_config";
-import { v4 as uuid } from "uuid";
+import { useSelector, useDispatch } from "react-redux";
+import { addMassage, saveChat } from "../../redux/features/chatSlice";
 
-export default function Input() {
-  const [text, setText] = useState("");
-  const { user } = useUser();
-  const { data } = useChat();
+const ChatInput = () => {
+  const [message, setMessage] = useState("");
+  const { uid } = useSelector((store) => store.auth.user);
+  const dispatch = useDispatch();
 
-  const handleSend = async () => {
-    if (text.trim() === "") return;
-    await updateDoc(doc(db, "chats", data.chatId), {
-      messages: arrayUnion({
-        id: uuid(),
-        text,
-        senderId: user.uid,
-        date: Timestamp.now(),
-      }),
-    });
-    await updateDoc(doc(db, "userChats", user.uid), {
-      [data.chatId + ".lastMessage"]: {
-        text,
-      },
-      [data.chatId + ".date"]: serverTimestamp(),
-    });
-    setText("");
-  };
-
-  const handleKey = (e) => {
-    if (e.code === "Enter") {
-      e.preventDefault();
-      handleSend();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (message.trim()) {
+      dispatch(addMassage({ text: message, senderId: uid }));
+      dispatch(saveChat());
+      setMessage("");
     }
   };
 
   return (
-    <div className="input">
-      <input
-        type="text"
-        placeholder="Type Something..."
-        onChange={(e) => setText(e.target.value)}
-        value={text}
-        onKeyDown={handleKey}
-      />
-      <button onClick={handleSend}>Send</button>
-    </div>
+    <footer className="bg-white border-t border-gray-300 p-4">
+      <form onSubmit={handleSubmit} className="flex items-center">
+        <input
+          type="text"
+          placeholder="Type a message..."
+          className="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-2"
+        >
+          Send
+        </button>
+      </form>
+    </footer>
   );
-}
+};
+
+export default ChatInput;

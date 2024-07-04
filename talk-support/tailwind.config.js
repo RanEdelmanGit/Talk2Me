@@ -1,12 +1,23 @@
+const daisyui = require('daisyui');
+
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      daisyui: {
+        themes: ["light", "dark", "cupcake"],
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    daisyui,
+    require('@tailwindcss/forms'),
+  ],
+  daisyui: {
+    themes: [{}],
+  },
 }
-

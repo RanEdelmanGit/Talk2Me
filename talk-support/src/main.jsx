@@ -2,15 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./styles/index.css";
-import { UserProvider, useUser } from "./context/userContext";
-import { ChatContextProvider } from "./context/chatContext";
+import { BrowserRouter as Router } from "react-router-dom";
+import { store } from "./redux/store.js";
+import { Provider } from "react-redux";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <UserProvider>
-    <ChatContextProvider>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </ChatContextProvider>
-  </UserProvider>
+  <Provider store={store}>
+    <Router>
+          <App />
+    </Router>
+  </Provider>
 );
