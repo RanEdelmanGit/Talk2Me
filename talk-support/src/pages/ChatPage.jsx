@@ -52,15 +52,32 @@ const ChatPage = () => {
           }
         }
       );
-      //return unsubscribe();
+      return () => unsubscribe();
     }
   }, [params]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div className="flex h-[91vh] w-screen mt-16">
       <Sidebar isMenuOpen={isMenuOpen} handleMenuToggle={handleMenuToggle} />
-      <div className="flex-1 flex flex-col ">
-        <ChatHeader contactName="Alice" />
+      <div className={`flex-1 flex flex-col ${isMenuOpen ? 'hidden md:flex' : 'flex'}`}>
+        <ChatHeader
+          contactName="Alice"
+          isMenuOpen={isMenuOpen}
+          handleMenuToggle={handleMenuToggle}
+        />
         <div className="overflow-y-scroll flex-1">
           <ChatMessages messages={mapMassageType()} />
         </div>
