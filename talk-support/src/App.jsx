@@ -10,7 +10,7 @@ import {
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
 import { setUid, fetchUser, setUserType } from "./redux/features/authSlice";
-import { onAuthStateChanged} from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase_config";
 import ChatPage from "./pages/ChatPage";
 import SupportersPage from "./pages/Supporters";
@@ -48,11 +48,13 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         const uid = currentUser.uid;
+        const userType = localStorage.getItem("userType");
         dispatch(setUid(uid));
-        dispatch(setUserType("client")); //TODO detect usertype in autologin fetchuser
-        dispatch(fetchUser({ uid, userType: "client" }));
+        dispatch(setUserType(userType)); //TODO detect usertype in autologin fetchuser
+        dispatch(fetchUser({ uid, userType }));
         navigate("/chat");
       } else {
+        localStorage.removeItem("userType");
         navigate("/welcome");
       }
     });
@@ -61,10 +63,17 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-
   return (
     <Routes>
       <Route element={<Root user={user} userType={userType} />}>
+        <Route
+          path="/chat/:chatId"
+          element={
+            <ProtectedRoute user={user}>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/chat"
           element={

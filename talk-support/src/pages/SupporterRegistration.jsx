@@ -1,6 +1,10 @@
 import React, { useState, useRef } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db, storage } from "../firebase_config";
 import { useNavigate } from "react-router-dom";
@@ -203,6 +207,7 @@ const SupporterRegistration = () => {
       dispatch(setUserType(userTypeSupporter));
       dispatch(setFormDetails(user));
       dispatch(setUid(userId));
+      localStorage.setItem("userType", userTypeSupporter);
       navigate("/");
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
@@ -589,9 +594,7 @@ const SupporterRegistration = () => {
               <div className="mt-2 flex justify-around items-center">
                 <span
                   className={`relative inline-flex items-center rounded-md bg-blue-50 px-8 py-2 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer ${
-                    registration.meeting.includes(meetingOffline)
-                      ? ""
-                      : ""
+                    registration.meeting.includes(meetingOffline) ? "" : ""
                   }`}
                   onClick={() => handleBadgeClick(meetingOffline)}
                 >
@@ -615,9 +618,7 @@ const SupporterRegistration = () => {
                 </span>
                 <span
                   className={`relative inline-flex items-center rounded-md bg-indigo-50 px-8 py-2  text-sm font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 cursor-pointer ${
-                    registration.meeting.includes(meetingOnline)
-                      ? ""
-                      : ""
+                    registration.meeting.includes(meetingOnline) ? "" : ""
                   }`}
                   onClick={() => handleBadgeClick(meetingOnline)}
                 >
@@ -641,9 +642,7 @@ const SupporterRegistration = () => {
                 </span>
                 <span
                   className={`relative inline-flex items-center rounded-md bg-purple-50  px-8 py-2  text-sm font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 cursor-pointer ${
-                    registration.meeting.includes(phoneCall)
-                      ? ""
-                      : ""
+                    registration.meeting.includes(phoneCall) ? "" : ""
                   }`}
                   onClick={() => handleBadgeClick(phoneCall)}
                 >

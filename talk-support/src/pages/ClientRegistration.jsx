@@ -53,18 +53,14 @@ const ClientRegistration = () => {
     }
   };
 
-
-
-const togglePasswordVisibility = () => {
-  setPasswordVisible(!passwordVisible);
-};
-
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -75,7 +71,6 @@ const togglePasswordVisibility = () => {
       return;
     }
 
-  
     // Validation for "not-selected" options
     const requiredFields = [
       { key: "gender", label: "Gender" },
@@ -115,6 +110,7 @@ const togglePasswordVisibility = () => {
       dispatch(setFormDetails(registration));
       setRegistrationComplete(true);
       dispatch(setUid(userId));
+      localStorage.setItem("userType", userTypeClient);
       navigate("/");
     } catch (error) {
       setError(error.message);
@@ -514,13 +510,11 @@ const togglePasswordVisibility = () => {
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   required
                 >
-                 <option value="not-selected">בחר</option>
+                  <option value="not-selected">בחר</option>
                   <option value="Instagram">אינסטגרם</option>
                   <option value="Facebook">פייסבוק</option>
                   <option value="Google Search">חיפוש בגוגל</option>
-                  <option value="Friend or Family">
-                    חבר או בן משפחה
-                  </option>
+                  <option value="Friend or Family">חבר או בן משפחה</option>
                   <option value="Organization">ארגון</option>
                   <option value="Other">אחר</option>
                 </select>
@@ -565,7 +559,6 @@ const togglePasswordVisibility = () => {
         </div>
 
         {error && <div className="text-red-500 mb-4">{error}</div>}
-      
 
         <div className="mt-6 flex items-center justify-center gap-x-6">
           <Link
@@ -578,7 +571,8 @@ const togglePasswordVisibility = () => {
             type="submit"
             className=" btn-wide flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-           <p className="mx-2"> הירשם </p> <Loading show={status=='loading'}/>
+            <p className="mx-2"> הירשם </p>{" "}
+            <Loading show={status == "loading"} />
           </button>
         </div>
       </form>

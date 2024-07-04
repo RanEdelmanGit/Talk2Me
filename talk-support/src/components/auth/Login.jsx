@@ -51,6 +51,7 @@ const Login = ({ setIsLoginVisible }) => {
       dispatch(setUid(uid));
       dispatch(fetchUser({ uid, userType: logInUserType }));
       dispatch(setUserType(logInUserType));
+      localStorage.setItem("userType", logInUserType);
     } catch (error) {
       console.log(error);
       setError(error.message);
@@ -252,7 +253,7 @@ const Login = ({ setIsLoginVisible }) => {
             type="submit"
             className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-lg font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            <p className="mx-2">התחבר</p> <Loading show={status == "loading"}/>
+            <p className="mx-2">התחבר</p> <Loading show={status == "loading"} />
           </button>
         </div>
       </form>

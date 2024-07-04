@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addMassage, saveChat } from "../../redux/features/chatSlice";
 
-const ChatInput = ({ handleSendMessage }) => {
+const ChatInput = () => {
   const [message, setMessage] = useState("");
+  const { uid } = useSelector((store) => store.auth.user);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (message.trim()) {
-      handleSendMessage(message);
+      dispatch(addMassage({ text: message, senderId: uid }));
+      dispatch(saveChat());
       setMessage("");
     }
   };
@@ -21,7 +26,10 @@ const ChatInput = ({ handleSendMessage }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button type="submit" className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-2">
+        <button
+          type="submit"
+          className="bg-indigo-500 text-white px-4 py-2 rounded-md ml-2"
+        >
           Send
         </button>
       </form>

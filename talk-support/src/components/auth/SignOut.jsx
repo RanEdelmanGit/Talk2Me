@@ -14,6 +14,7 @@ export default function SignOut() {
     try {
       await signOut(auth);
       dispatch(clearUser());
+      localStorage.removeItem("userType")
       navigate("/welcome");
     } catch (error) {
       console.error("Error signing out:", error);

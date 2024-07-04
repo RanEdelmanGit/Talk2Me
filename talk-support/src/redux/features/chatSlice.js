@@ -49,9 +49,9 @@ const initialState = {
   chat:{
     isVisible:false,
     id: "", //supporter.id + client.id
-    supporterId:"", //supporterId
+    supporterId:"xwOsupvBN3UTc0uHKmfRKeY13aa2", //supporterId
     clientId: "",  //supporterId
-    massages:dummyMessages,  // message: {timestamp, text, sender,}
+    massages:[],  // message: {timestamp, text, sender,}
   },
  //supporterChats:[{cliehtId:'', chatId:'', lastMessage:''}]
 }
@@ -70,18 +70,22 @@ export const resumeChat = createAsyncThunk('chat/resumeChat', async ({ supporter
   }
 })
 
-export const saveChat = createAsyncThunk('chat/saveChat', async ({ chat }) => {
+export const saveChat = createAsyncThunk('chat/saveChat', async (arg, {getState}) => {
   const db = getFirestore();
-
-  try{
-    await setDoc(doc(db, chatCollection, userId), chat);
-    //TODO if supporter has a chat with clientId, update its lastMessage field, else add to supporter a new document to db, "supporters", chat.supporterId, 'supporterChats'
-    //TODO make supporterChatSlice and ClientChatSlice
-    //await setDoc(doc(db, "supporters", chat.supporterId, 'supporterChats'), chat);
-    return chat;
-  }catch(error){
-    console.log(error);
+  const state = getState();
+  const chat = {...state.chat.chat}
+  const {uid} = state.auth.user;
+  chat.clientId = uid;
+  if(chat.id === ""){
+    chat.id = chat.supporterId + chat.clientId
   }
+  console.log('chat', chat);
+  await setDoc(doc(db, chatCollection, chat.id), chat);
+  //TODO if supporter has a chat with clientId, update its lastMessage field, else add to supporter a new document to db, "supporters", chat.supporterId, 'supporterChats'
+  //TODO make supporterChatSlice and ClientChatSlice
+  //await setDoc(doc(db, "supporters", chat.supporterId, 'supporterChats'), chat);
+  return chat;
+ 
 })
 
 export const chatSlice = createSlice({
@@ -91,7 +95,15 @@ export const chatSlice = createSlice({
     addMassage:(state,action) =>{
         state.chat.massages.push(action.payload);
     },
- 
+    startChat:(state,action) => {
+      state.chat.clientId = action.payload.clientId;
+      state.chat.supporterId = action.payload.supporterId;
+      state.chat.id = action.payload.chatId;
+    },
+
+    updateChat: (state, action) => {
+      state.chat = action.payload;
+    }
   },extraReducers: (builder) => {
     builder
       .addCase(saveChat.pending, (state) => {
@@ -121,6 +133,6 @@ export const chatSlice = createSlice({
   }
 })
 // Action creators are generated for each case reducer function
-export const { addMassage} = chatSlice.actions
+export const { addMassage, updateChat, startChat} = chatSlice.actions
 
 export default chatSlice.reducer

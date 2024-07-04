@@ -42,7 +42,7 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
 export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getState}) => {
   const db = getFirestore();
   const state = getState();
-  console.log('state', state);
+  
   try{
     await setDoc(doc(db, "clients", state.auth.user.uid), state.auth.user);
     return {};

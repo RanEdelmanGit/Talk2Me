@@ -4,7 +4,7 @@ import SupporterList from "../components/supporters/SupporterList";
 import Sidebar from "../components/supporters/Sidebar";
 import { fetchSupporters, displayFavorites, displayAll } from "../redux/features/supportersSlice";
 
-const SupportersPage = ({ userType }) => {
+const SupportersPage = () => {
   const dispatch = useDispatch();
   const supporters = useSelector((state) => state.supporters.supporters);
   const status = useSelector((state) => state.supporters.status);

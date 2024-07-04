@@ -22,21 +22,46 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
               <path d="M2 10a2 2 0 012-2h12a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z" />
             </svg>
           </button>
-         
         </div>
       </header>
       <div className="overflow-auto h-[80vh] p-3 mb-9 pb-5">
         {[
+          {
+            name: "Alice",
+            message: "Hoorayy!!",
+            color: "ffa8e4",
+            chatId: "xwOsupvBN3UTc0uHKmfRKeY13aa2GInubgcAXUbiZKu4iJhdULX1r9h1",
+          },
+          {
+            name: "Martin",
+            message: "That pizza place was amazing!",
+            color: "ad922e",
+            chatId: "xwOsupvBN3UTc0uHKmfRKeY13aa2GInubgcAXUbiZKu4iJhdULX1r9h1",
+          },
           { name: "Alice", message: "Hoorayy!!", color: "ffa8e4" },
-          { name: "Martin", message: "That pizza place was amazing!", color: "ad922e" },
+          {
+            name: "Martin",
+            message: "That pizza place was amazing!",
+            color: "ad922e",
+          },
           { name: "Alice", message: "Hoorayy!!", color: "ffa8e4" },
-          { name: "Martin", message: "That pizza place was amazing!", color: "ad922e" },
+          {
+            name: "Martin",
+            message: "That pizza place was amazing!",
+            color: "ad922e",
+          },
           { name: "Alice", message: "Hoorayy!!", color: "ffa8e4" },
-          { name: "Martin", message: "That pizza place was amazing!", color: "ad922e" },
+          {
+            name: "Martin",
+            message: "That pizza place was amazing!",
+            color: "ad922e",
+          },
           { name: "Alice", message: "Hoorayy!!", color: "ffa8e4" },
-          { name: "Martin", message: "That pizza place was amazing!", color: "ad922e" },
-          { name: "Alice", message: "Hoorayy!!", color: "ffa8e4" },
-          { name: "Martin", message: "That pizza place was amazing!", color: "ad922e" },
+          {
+            name: "Martin",
+            message: "That pizza place was amazing!",
+            color: "ad922e",
+          },
           // Add more contacts here
         ].map((contact, index) => (
           <Chats contact={contact} key={index} />
