@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { doc, getDoc,setDoc, getFirestore } from 'firebase/firestore';
+import { doc, getDoc,setDoc, getFirestore, updateDoc, arrayUnion } from 'firebase/firestore';
+import {db} from '../../firebase_config'
 
 export const userTypeSupporter = "supporter";
 export const userTypeClient = "client";
@@ -15,10 +16,10 @@ const initialState = {
   user:{},
   status: 'idle',
   error: null,
+  isAuth:false
 }
 
 export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userType }) => {
-  const db = getFirestore();
   let userCollectionQuery;
 
   //try{
@@ -39,18 +40,25 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
   // }
   
 });
+
 export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getState}) => {
-  const db = getFirestore();
   const state = getState();
+
+    await setDoc(doc(db, state.auth.userType+"s", state.auth.user.uid), state.auth.user);
+    return {};
+ 
+});
+
+export const updateSupporter = createAsyncThunk('auth/updateSupporter', async ({supporterId, chatId}) => {
   
   try{
-    await setDoc(doc(db, "clients", state.auth.user.uid), state.auth.user);
+    const supporterRef = doc(db, 'supporters', supporterId);
+    await updateDoc(supporterRef, {chats: arrayUnion(chatId)})
     return {};
   }catch(error){
     console.log(error);
   }
 });
-
 
 
 export const authSlice = createSlice({
@@ -65,10 +73,12 @@ export const authSlice = createSlice({
     },
     setUid:(state,action)=>{
       state.user.uid = action.payload;
+      state.isAuth = true;
     },
     clearUser: (state) => {
       state.user = {}  
       state.status="idle"
+      state.isAuth = false;
     },
     addFavorite:(state,action)=>{ // action.payload: supporter id
       if(!state.user.favorites){
@@ -79,6 +89,12 @@ export const authSlice = createSlice({
     removeFavorite:(state,action)=>{  // action.payload: supporter id
       state.user.favorites =  state.user.favorites.filter(fav =>fav != action.payload)
     },
+    initChat:(state, action)=>{
+      if(!state.user.chats){
+        state.user.chats = [];
+      }
+      state.user.chats.push({chatId: action.payload.chatId, isVisible: false})
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -97,17 +113,29 @@ export const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = 'succeeded'; 
         state.user = {...state.user, ...action.payload};
+        console.log('fulfilled', state.user);
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-      });
+        console.log('aaaa', action.error.message)
+      })
+      .addCase(updateSupporter.pending, (state) =>{
+        state.status = 'loading';
+      })
+      .addCase(updateSupporter.fulfilled, (state) => {
+        state.status = 'succeeded'; 
+      })
+      .addCase(updateSupporter.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
   }
 })
 
 // Action creators are generated for each case reducer function
-export const {setFormDetails, setUserType, setUid, clearUser, addFavorite, removeFavorite } = authSlice.actions
+export const {setFormDetails, setUserType, setUid, clearUser, addFavorite, removeFavorite, initChat } = authSlice.actions
 
 export default authSlice.reducer

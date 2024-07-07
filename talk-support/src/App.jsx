@@ -31,8 +31,10 @@ const Root = ({ user, userType }) => {
   );
 };
 
-const ProtectedRoute = ({ children, user }) => {
-  if (!user.uid) {
+const ProtectedRoute = ({ children }) => {
+  const { user, isAuth } = useSelector((state) => state.auth);
+  if (!isAuth) {
+    console.log("protected route", isAuth);
     return <Navigate to="/welcome" />;
   }
   return children;
@@ -40,7 +42,7 @@ const ProtectedRoute = ({ children, user }) => {
 
 function App() {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuth } = useSelector((state) => state.auth);
   const { userType } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
@@ -52,7 +54,6 @@ function App() {
         dispatch(setUid(uid));
         dispatch(setUserType(userType)); //TODO detect usertype in autologin fetchuser
         dispatch(fetchUser({ uid, userType }));
-        navigate("/chat");
       } else {
         localStorage.removeItem("userType");
         navigate("/welcome");
@@ -62,6 +63,15 @@ function App() {
     // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (isAuth) {
+      console.log("app", user);
+      navigate("/chat");
+    } else {
+      navigate("/welcome");
+    }
+  }, [isAuth]);
 
   return (
     <Routes>
@@ -78,7 +88,7 @@ function App() {
           path="/chat"
           element={
             <ProtectedRoute user={user}>
-              <ChatPage userType={userType} />
+              <ChatPage />
             </ProtectedRoute>
           }
         />
@@ -86,7 +96,7 @@ function App() {
           path="/supporters"
           element={
             <ProtectedRoute user={user}>
-              <SupportersPage userType={userType} />
+              <SupportersPage />
             </ProtectedRoute>
           }
         />
@@ -100,5 +110,4 @@ function App() {
     </Routes>
   );
 }
-
 export default App;

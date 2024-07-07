@@ -11,6 +11,9 @@ import {
   userTypeClient,
   setUid,
 } from "../redux/features/authSlice";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { cities } from "../cities";
 
 const ClientRegistration = () => {
   const [registrationComplete, setRegistrationComplete] = useState(false);
@@ -19,16 +22,17 @@ const ClientRegistration = () => {
   const navigate = useNavigate();
   const { status } = useSelector((store) => store.auth);
 
+
   const [registration, setRegistration] = useState({
     email: "",
     password: "",
     firstName: "",
     lastName: "",
-    username: "",
+    nickname: "",
     gender: "not-selected",
     age: 18,
     birthYear: "not-selected",
-    city: "not-selected",
+    city: null,
     address: "",
     area: "not-selected",
     recentStatus: "not-selected",
@@ -71,6 +75,15 @@ const ClientRegistration = () => {
       return;
     }
 
+    if (
+      registration.nickname.toLowerCase().includes(registration.firstName.toLowerCase()) ||
+      registration.nickname.toLowerCase().includes(registration.lastName.toLowerCase())
+    ) {
+      setError("Nickname should not contain your first or last name.");
+      return;
+    }
+
+
     // Validation for "not-selected" options
     const requiredFields = [
       { key: "gender", label: "Gender" },
@@ -84,7 +97,11 @@ const ClientRegistration = () => {
     ];
 
     for (let field of requiredFields) {
-      if (registration[field.key] === "not-selected") {
+      if (
+        registration[field.key] === "not-selected" ||
+        registration[field.key] === "" ||
+        registration[field.key] === null
+      ) {
         setError(`Please select a valid option for ${field.label}`);
         return;
       }
@@ -98,7 +115,7 @@ const ClientRegistration = () => {
       );
       const userId = userCredential.user.uid;
       const user = { ...registration, uid: userId };
-
+      user.chats =[];
       await updateProfile(userCredential.user, {
         displayName: registration.firstName + " " + registration.lastName,
       });
@@ -118,8 +135,9 @@ const ClientRegistration = () => {
   };
 
   return (
-    <div className="flex items-center justify-center" dir="rtl">
-      <form className="space-y-12 my-8 max-md:px-4" onSubmit={handleSubmit}>
+    <div className="flex items-center justify-center h-screen" dir="rtl">
+    <div className="w-full h-full overflow-y-scroll flex justify-center">
+      <form className="w-fit space-y-12 max-md:px-4 pt-10 " onSubmit={handleSubmit}>
         <Link
           to="/welcome"
           className="flex justify-end text-base font-semibold text-gray-900"
@@ -141,7 +159,7 @@ const ClientRegistration = () => {
         </Link>
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-2xl mb-4 font-semibold leading-7 text-gray-900 underline">
-            הרשמה באתי לדבר
+            הרשמה באתי לשתף
           </h2>
           <p className="mt-1 text-base leading-6 max-w-[500px] text-gray-600">
             מילוי הפרטים הבאים הזהות והשיחות שלך יישארו אנונימיים, ויוצגו רק
@@ -167,15 +185,15 @@ const ClientRegistration = () => {
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
-                שם משתמש
+               שם משתמש (כינוי)  
               </label>
               <div className="mt-2">
                 <input
                   type="text"
-                  name="username"
-                  id="username"
-                  autoComplete="username"
-                  value={registration.username}
+                  name="nickname"
+                  id="nickname"
+                  autoComplete="nickname"
+                  value={registration.nickname}
                   onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   required
@@ -429,47 +447,75 @@ const ClientRegistration = () => {
             </div>
 
             <div className="sm:col-span-3">
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                <span className="text-red-500 ml-1">*</span>
-                עיר
-              </label>
-              <div className="mt-2">
-                <select
-                  id="city"
-                  name="city"
-                  value={registration.city}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  required
+                <label
+                  htmlFor="city"
+                  className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  <option value="not-selected">בחר</option>
-                  <option value="אילת">אילת</option>
-                  <option value="אשדוד">אשדוד</option>
-                  <option value="אשקלון">אשקלון</option>
-                  <option value="באר שבע">באר שבע</option>
-                  <option value="גבעתיים">גבעתיים</option>
-                  <option value="דימונה">דימונה</option>
-                  <option value="הרצליה">הרצליה</option>
-                  <option value="חיפה">חיפה</option>
-                  <option value="טבריה">טבריה</option>
-                  <option value="ירוחם">ירוחם</option>
-                  <option value="כפר סבא">כפר סבא</option>
-                  <option value="קרית גת">קרית גת</option>
-                  <option value="קרית שמונה">קרית שמונה</option>
-                  <option value="נהריה">נהריה</option>
-                  <option value="נצרת">נצרת</option>
-                  <option value="נתניה">נתניה</option>
-                  <option value="עכו">עכו</option>
-                  <option value="עפולה">עפולה</option>
-                  <option value="פתח תקווה">פתח תקווה</option>
-                  <option value="רמת גן">רמת גן</option>
-                  <option value="תל אביב-יפו">תל אביב-יפו</option>
-                </select>
+                  <span className="text-red-500 ml-1">*</span>
+                  עיר
+                </label>
+                <div className="mt-2">
+                  <Autocomplete
+                    id="city"
+                    options={cities}
+                    getOptionLabel={(option) => option}
+                    value={registration.city}
+                    onChange={(event, newValue) => {
+                      setRegistration((prevState) => ({
+                        ...prevState,
+                        city: newValue || null,
+                      }));
+                    }}
+                    isOptionEqualToValue={(option, value) =>
+                      option === value || value === null
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                      {...params}
+                      variant="outlined"
+                      fullWidth
+                      required
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          width: '100%',
+                          borderRadius: '0.375rem',
+                          border: '0',
+                          paddingY: '0.001rem', // Adjust paddingY to make the input height smaller
+                          color: '#1f2937',
+                          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                          backgroundColor: '#ffffff',
+                          '&:hover': {
+                            backgroundColor: '#ffffff',
+                          },
+                          '&.Mui-focused': {
+                            backgroundColor: '#ffffff',
+                            boxShadow: '0 0 0 2px rgba(67, 56, 202, 0.3)',
+                            outline: 'none', // Remove the default focus ring
+                          },
+                        },
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderWidth: '1px',
+                          borderColor: '#d1d5db',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#d1d5db', // Keep the border color the same on hover
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#d1d5db', // Keep the border color the same when focused
+                          borderWidth: '1px',
+                        },
+                        '& .MuiInputBase-input': {
+                          outline: 'none', // Ensure no outline on the input element itself
+                        },
+                        fontSize: '0.875rem',
+                        lineHeight: '1.25rem', // Adjust lineHeight to make the input height smaller
+                      }}
+                    />
+                    
+                    )}
+                  />
+                </div>
               </div>
-            </div>
 
             <div className="sm:col-span-6">
               <label
@@ -563,19 +609,21 @@ const ClientRegistration = () => {
         <div className="mt-6 flex items-center justify-center gap-x-6">
           <Link
             to="/welcome"
-            className="text-base font-semibold leading-6 text-gray-900"
+            className="text-lg font-semibold leading-6 text-gray-900 mb-20 max-md:mb-28"
           >
             בטל
           </Link>
           <button
             type="submit"
-            className=" btn-wide flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className=" btn-wide flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 mb-20 max-md:mb-28 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             <p className="mx-2"> הירשם </p>{" "}
             <Loading show={status == "loading"} />
           </button>
         </div>
+   
       </form>
+    </div>
     </div>
   );
 };

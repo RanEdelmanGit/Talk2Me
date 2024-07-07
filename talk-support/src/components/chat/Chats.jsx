@@ -1,12 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Chats({ contact }) {
+export default function Chats({ contact, handleMenuToggle }) {
   const nav = useNavigate();
   return (
-    <div className="flex items-center mb-4 cursor-pointer hover:bg-gray-100 p-2 rounded-md">
+    <div
+      className="flex items-center py-3 px-2 md:px-6 cursor-pointer hover:bg-gray-100 rounded-md"
+      onClick={handleMenuToggle}
+    >
       <div
-        className={`w-12 h-12 bg-gray-300 rounded-full mr-3`}
+        className={`w-12 h-12 bg-gray-300 rounded-full ml-4`}
         onClick={() => nav(`/chat/${contact.chatId}`)}
       >
         <img

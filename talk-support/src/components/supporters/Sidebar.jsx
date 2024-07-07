@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import heartSolid from "./heart-solid.svg";
 import HeartRegular from "./heart-regular.svg";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import { cities } from "../../cities";
 
 const Sidebar = ({
   onFilter,
@@ -14,7 +17,7 @@ const Sidebar = ({
     gender: "not-selected",
     age: "not-selected",
     area: "not-selected",
-    city: "not-selected",
+    city: null,
     preferredLanguage: "not-selected",
   });
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +38,7 @@ const Sidebar = ({
       gender: "not-selected",
       age: "not-selected",
       area: "not-selected",
-      city: "not-selected",
+      city: null,
       preferredLanguage: "not-selected",
     };
     setFilters(initialFilters);
@@ -47,12 +50,14 @@ const Sidebar = ({
   };
 
   const areFiltersActive = () => {
-    return Object.values(filters).some(value => value !== "" && value !== "not-selected");
+    return Object.values(filters).some(
+      (value) => value !== "" && value !== "not-selected" && value !== null
+    );
   };
 
   return (
-    <div className="w-full md:w-72 bg-gray-100 p-4 shadow-md md:min-h-svh rounded-md md:pr-6">
-      <div className="flex justify-between items-center md:hidden">
+    <div className="w-full md:w-72 bg-gray-200 px-4 md:py-4 shadow-md md:min-h-svh  max-md:fixed max-md:top-16 rounded-md md:pr-6 z-10">
+      <div className="flex justify-between items-center md:hidden p-4 ">
         <button
           onClick={toggleDropdown}
           className="md:hidden flex items-center justify-between text-black rounded"
@@ -75,9 +80,9 @@ const Sidebar = ({
               />
             ) : (
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+                d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
               />
             )}
           </svg>
@@ -86,7 +91,7 @@ const Sidebar = ({
         {areFiltersActive() && (
           <button
             onClick={handleClearFilters}
-            className="border border-gray-300 hover:ring-2 hover:ring-indigo-600 px-3 py-1 rounded-md my-2.5"
+            className="border border-gray-300 hover:ring-2 hover:ring-indigo-600 px-3 py-1 rounded-md md:my-2.5"
           >
             נקה בחירה
           </button>
@@ -102,18 +107,19 @@ const Sidebar = ({
       </div>
       <div
         className={`md:block ${
-          isOpen ? "block space-y-6 pt-6 min-h-screen" : "hidden"
+          isOpen
+            ? "block  pb-6 md:pt-4 px-4 md:px-2  min-h-screen"
+            : "hidden"
         }`}
       >
         <div className="flex justify-between items-center mb-4 border-b pb-6 border-gray-400 max-md:hidden">
-          <h2 className="text-xl font-bold ">סינון</h2>
+          <h2 className="text-2xl font-bold ">סינון</h2>
           {areFiltersActive() && (
             <button
               onClick={handleClearFilters}
               className=" flex gap-2 border border-gray-400 hover:ring-2 hover:ring-indigo-600 px-3 py-1 rounded-md my-2.5"
             >
               נקה בחירה
-        
             </button>
           )}
         </div>
@@ -129,6 +135,7 @@ const Sidebar = ({
           </button>
         </div>
 
+          <div className="">
         <div className="mb-2">
           <label className="block font-medium mb-2">שם</label>
           <input
@@ -196,43 +203,74 @@ const Sidebar = ({
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           >
             <option value="not-selected">בחר</option>
-            <option value="north">צפון</option>
-            <option value="center">מרכז</option>
-            <option value="south">דרום</option>
+            <option value="צפון">צפון</option>
+            <option value="מרכז">מרכז</option>
+            <option value="דרום">דרום</option>
           </select>
         </div>
+
         <div className="mb-2">
           <label className="block font-medium mb-2">עיר</label>
-          <select
-            name="city"
+          <Autocomplete
+            id="city"
+            options={cities}
+            getOptionLabel={(option) => option}
             value={filters.city}
-            onChange={handleChange}
-            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          >
-            <option value="not-selected">בחר</option>
-            <option value="Eilat">אילת</option>
-            <option value="Ashdod">אשדוד</option>
-            <option value="Ashkelon">אשקלון</option>
-            <option value="Beer Sheva">באר שבע</option>
-            <option value="Givatayim">גבעתיים</option>
-            <option value="Dimona">דימונה</option>
-            <option value="Herzliya">הרצליה</option>
-            <option value="Haifa">חיפה</option>
-            <option value="Tiberias">טבריה</option>
-            <option value="Yeruham">ירוחם</option>
-            <option value="Kfar Saba">כפר סבא</option>
-            <option value="Kiryat Gat">קרית גת</option>
-            <option value="Kiryat Shmona">קרית שמונה</option>
-            <option value="Nahariya">נהריה</option>
-            <option value="Nazareth">נצרת</option>
-            <option value="Netanya">נתניה</option>
-            <option value="Akko">עכו</option>
-            <option value="Afula">עפולה</option>
-            <option value="Petah Tikva">פתח תקווה</option>
-            <option value="Ramat Gan">רמת גן</option>
-            <option value="Tel Aviv-Jaffa">תל אביב-יפו</option>
-          </select>
+            onChange={(event, newValue) => {
+              setFilters((prevFilters) => ({
+                ...prevFilters,
+                city: newValue || null,
+              }));
+            }}
+            isOptionEqualToValue={(option, value) =>
+              option === value || value === null
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                fullWidth
+                required
+                sx={{
+                  "& .MuiInputBase-root": {
+                    width: "100%",
+                    borderRadius: "0.375rem",
+                    border: "0",
+                    paddingY: "0.001rem", // Adjust paddingY to make the input height smaller
+                    color: "#1f2937",
+                    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                    backgroundColor: "#ffffff",
+                    "&:hover": {
+                      backgroundColor: "#ffffff",
+                    },
+                    "&.Mui-focused": {
+                      backgroundColor: "#ffffff",
+                      boxShadow: "0 0 0 2px rgba(67, 56, 202, 0.3)",
+                      outline: "none", // Remove the default focus ring
+                    },
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderWidth: "1px",
+                    borderColor: "#d1d5db",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#d1d5db", // Keep the border color the same on hover
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#d1d5db", // Keep the border color the same when focused
+                    borderWidth: "1px",
+                  },
+                  "& .MuiInputBase-input": {
+                    outline: "none", // Ensure no outline on the input element itself
+                  },
+                  fontSize: "0.875rem",
+                  lineHeight: "1.25rem", // Adjust lineHeight to make the input height smaller
+                }}
+              />
+            )}
+          />
         </div>
+
         <div className="mb-2">
           <label className="block font-medium mb-2">שפה</label>
           <select
@@ -245,6 +283,7 @@ const Sidebar = ({
             <option value="hebrew">עברית</option>
             <option value="english">אנגלית</option>
           </select>
+        </div>
         </div>
       </div>
     </div>

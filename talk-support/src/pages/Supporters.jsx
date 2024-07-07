@@ -12,6 +12,7 @@ const SupportersPage = () => {
   const showFavorites = useSelector((state) => state.supporters.showFavorites);
   const user = useSelector((state) => state.auth.user);
   const [filteredSupporters, setFilteredSupporters] = useState([]);
+  const { userType } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchSupporters());
@@ -71,7 +72,7 @@ const SupportersPage = () => {
         (filters.gender === "not-selected" || supporter.gender === filters.gender) &&
         (filters.age === "not-selected" || (supporter.age >= minAge && supporter.age <= maxAge)) &&
         (filters.area === "not-selected" || supporter.area === filters.area) &&
-        (filters.city === "not-selected" || supporter.city === filters.city) &&
+        (!filters.city || supporter.city === filters.city) &&
         (filters.preferredLanguage === "not-selected" || supporter.preferredLanguage === filters.preferredLanguage) &&
         isFavorite
       );
@@ -105,6 +106,7 @@ const SupportersPage = () => {
     return <div>Error: {error}</div>;
   }
 
+  console.log(filteredSupporters);
   return (
     <div className="min-h-screen flex flex-col md:flex-row mt-16" dir="rtl">
       <div className="order-1 w-full md:w-72 md:fixed">
@@ -115,7 +117,7 @@ const SupportersPage = () => {
           onClearFilters={handleClearFilters} // Pass the handleClearFilters function
         />
       </div>
-      <div className="order-2 w-full md:mr-72 flex-1 flex flex-col items-center">
+      <div className="order-2 w-full md:mr-72 flex-1 flex flex-col items-center max-md:fixed top-32">
         <div className="w-full">
           <SupporterList supporters={filteredSupporters} />
         </div>

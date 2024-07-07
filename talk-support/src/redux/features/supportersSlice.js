@@ -1,10 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 
 // Fetch supporters
 export const fetchSupporters = createAsyncThunk('supporters/fetchSupporters', async () => {
   const db = getFirestore();
-  const supportersCollection = await getDocs(collection(db, 'supporters'));
+  const supportersRef = collection(db, "supporters");
+  const q = query(supportersRef, where('approved', "==", true))
+  const supportersCollection = await getDocs(q);
+  console.log(supportersCollection);
+  // const supportersCollection = await getDocs(collection(db, 'supporters'));
   return supportersCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });
 

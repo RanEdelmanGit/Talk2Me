@@ -58,11 +58,12 @@ const Login = ({ setIsLoginVisible }) => {
     }
   };
 
-  useEffect(() => {
-    if (user && user.email) {
-      navigate("/chat");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user && user.email) {
+  //     console.log("login", user);
+  //     navigate("/chat");
+  //   }
+  // }, [user]);
 
   const handlePasswordReset = async () => {
     setError(null);
@@ -81,7 +82,7 @@ const Login = ({ setIsLoginVisible }) => {
   };
 
   return (
-    <div className="my-14 sm:mx-auto sm:w-full sm:max-w-sm relative">
+    <div className="mt-4 mb-8 md:my-14 sm:mx-auto sm:w-full sm:max-w-sm relative">
       <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
         <div>
           <label
@@ -99,7 +100,7 @@ const Login = ({ setIsLoginVisible }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
               dir="ltr"
             />
           </div>
@@ -116,7 +117,7 @@ const Login = ({ setIsLoginVisible }) => {
             <div className="text-sm">
               <button
                 onClick={handlePasswordReset}
-                className="font-semibold text-indigo-600 hover:text-indigo-500"
+                className="font-semibold text-indigo-500 hover:text-indigo-500"
               >
                 שכחת סיסמה?
               </button>
@@ -131,7 +132,7 @@ const Login = ({ setIsLoginVisible }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
             />
             <span
               onMouseDown={(e) => e.preventDefault()}
@@ -212,7 +213,7 @@ const Login = ({ setIsLoginVisible }) => {
                     value="client"
                     checked={logInUserType === "client"}
                     onChange={handleTypeChange}
-                    className="focus:ring-indigo-600 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-500 border-gray-300"
                   />
                   <label
                     htmlFor="client"
@@ -229,7 +230,7 @@ const Login = ({ setIsLoginVisible }) => {
                     value="supporter"
                     checked={logInUserType === "supporter"}
                     onChange={handleTypeChange}
-                    className="focus:ring-indigo-600 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-500 border-gray-300"
                   />
                   <label
                     htmlFor="supporter"
@@ -251,7 +252,7 @@ const Login = ({ setIsLoginVisible }) => {
 
           <button
             type="submit"
-            className="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-lg font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="flex w-full justify-center items-center rounded-md bg-indigo-500 hover:bg-indigo-300 px-3 py-1.5 text-lg font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
             <p className="mx-2">התחבר</p> <Loading show={status == "loading"} />
           </button>
