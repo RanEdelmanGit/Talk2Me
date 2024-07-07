@@ -6,11 +6,9 @@ import ChatInput from "../components/chat/Input";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { doc, onSnapshot } from "firebase/firestore";
-import {
-  updateChat,
-  chatCollection,
-} from "../redux/features/chatSlice";
+import { updateChat, chatCollection } from "../redux/features/chatSlice";
 import { db } from "../firebase_config";
+
 
 const ChatPage = () => {
   const { massages } = useSelector((store) => store.chat.chat);
@@ -18,6 +16,7 @@ const ChatPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(window.innerWidth < 640);
+
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -50,25 +49,27 @@ const ChatPage = () => {
     return () => unsubscribe();
   }, [params, dispatch]);
 
-
-
   return (
+    <>
     <div className="flex h-[91vh] w-screen mt-16">
-        <div className="flex-1 flex flex-col">
-          <div dir="rtl">
-            <ChatHeader contactName="אליס"
+      <div className="flex-1 flex flex-col">
+        <div dir="rtl">
+          <ChatHeader
+            contactName="אליס"
             isMenuOpen={isMenuOpen}
-            handleMenuToggle={handleMenuToggle} />
-          </div>
-          <div className="overflow-y-scroll flex-1 bg-gray-100">
-            <ChatMessages messages={mapMassageType()} />
-          </div>
-          <ChatInput />
+            handleMenuToggle={handleMenuToggle}
+          />
         </div>
-        <div className="">
-      <Sidebar isMenuOpen={isMenuOpen} handleMenuToggle={handleMenuToggle} />
+        <div className="overflow-y-scroll flex-1 bg-gray-100">
+          <ChatMessages messages={mapMassageType()} />
+        </div>
+        <ChatInput />
+      </div>
+      <div className="">
+        <Sidebar isMenuOpen={isMenuOpen} handleMenuToggle={handleMenuToggle} />
       </div>
     </div>
+    </>
   );
 };
 

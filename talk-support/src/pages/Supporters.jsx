@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import SupporterList from "../components/supporters/SupporterList";
 import Sidebar from "../components/supporters/Sidebar";
 import { fetchSupporters, displayFavorites, displayAll } from "../redux/features/supportersSlice";
+import Header from "../components/layout/Header";
+import Loading from "../components/common/Loading";
 
 const SupportersPage = () => {
   const dispatch = useDispatch();
@@ -10,9 +12,8 @@ const SupportersPage = () => {
   const status = useSelector((state) => state.supporters.status);
   const error = useSelector((state) => state.supporters.error);
   const showFavorites = useSelector((state) => state.supporters.showFavorites);
-  const user = useSelector((state) => state.auth.user);
   const [filteredSupporters, setFilteredSupporters] = useState([]);
-  const { userType } = useSelector((state) => state.auth);
+  const { userType, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchSupporters());
@@ -99,30 +100,43 @@ const SupportersPage = () => {
   };
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <div className="flex w-full min-h-screen justify-center items-center"> <Loading show={true} /></div>;
   }
 
   if (status === "failed") {
-    return <div>Error: {error}</div>;
+    return <div>Error:{error}</div>;
   }
 
   console.log(filteredSupporters);
   return (
-    <div className="min-h-screen flex flex-col md:flex-row mt-16" dir="rtl">
-      <div className="order-1 w-full md:w-72 md:fixed">
-        <Sidebar
-          onFilter={handleFilter}
-          onToggleFavorites={handleToggleFavorites}
-          showFavorites={showFavorites}
-          onClearFilters={handleClearFilters} // Pass the handleClearFilters function
-        />
+    <>
+      {user.uid && <Header user={user} userType={userType} />}
+      <div className="min-h-screen flex flex-col md:flex-row mt-16" dir="rtl">
+        {userType === "client" && (
+          <>
+            <div className="order-1 w-full md:w-72 md:fixed">
+              <Sidebar
+                onFilter={handleFilter}
+                onToggleFavorites={handleToggleFavorites}
+                showFavorites={showFavorites}
+                onClearFilters={handleClearFilters}
+              />
+            </div>
+            <div className="order-2 w-full md:mr-72 flex-1 flex flex-col items-center max-md:fixed top-32">
+              <div className="w-full">
+                <SupporterList supporters={filteredSupporters} />
+              </div>
+            </div>
+          </>
+        )}
+        {userType === "supporter" && (
+          <div className="flex flex-col items-center justify-center w-full">
+            {/* Your content for supporters */}
+            <p>Welcome, Supporter! Here is your specific content.</p>
+          </div>
+        )}
       </div>
-      <div className="order-2 w-full md:mr-72 flex-1 flex flex-col items-center max-md:fixed top-32">
-        <div className="w-full">
-          <SupporterList supporters={filteredSupporters} />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

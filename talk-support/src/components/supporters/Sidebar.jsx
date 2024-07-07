@@ -68,7 +68,7 @@ const Sidebar = ({
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className={`size-8 transition-transform duration-300 ${
+            className={`size-7 transition-transform duration-300 ${
               isOpen ? "rotate-180" : ""
             }`}
           >

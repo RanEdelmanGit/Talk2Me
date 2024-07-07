@@ -20,10 +20,9 @@ import { userTypeClient, userTypeSupporter } from "./redux/features/authSlice";
 import ClientRegistration from "./pages/ClientRegistration";
 import SupporterRegistration from "./pages/SupporterRegistration";
 
-const Root = ({ user, userType }) => {
+const Root = () => {
   return (
     <>
-      {user.uid && <Header user={user} userType={userType} />}
       <div className="main-content ">
         <Outlet />
       </div>
@@ -75,7 +74,7 @@ function App() {
 
   return (
     <Routes>
-      <Route element={<Root user={user} userType={userType} />}>
+      <Route element={<Root/>}>
         <Route
           path="/chat/:chatId"
           element={

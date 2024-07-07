@@ -28,13 +28,13 @@ const Header = () => {
   const navigationClient = [
     { name: "צ'אט", href: "/chat" },
     { name: "תומכים", href: "/supporters" },
-    { name: "עזרה ומשאבים", href: "/resources" },
+    { name: "עזרה ומשאבים", href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE", external: true },
   ];
 
   const navigationSupporter = [
     { name: "צ'אט", href: "/chat" },
     { name: "בית", href: "/supporters" },
-    { name: "עזרה", href: "/resources" },
+    { name: "עזרה ומשאבים", href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE", external: true },
   ];
 
   const navigation =
@@ -47,7 +47,7 @@ const Header = () => {
   return (
     <Disclosure
       as="nav"
-      className="bg-white fixed top-0 left-0 right-0 border-b "
+      className="bg-white fixed top-0 left-0 right-0 border-b z-50 "
       dir="rtl"
     >
       {({ open }) => (
@@ -69,26 +69,44 @@ const Header = () => {
                 <div className="hidden sm:block">
                   <div className="flex space-x-24 rtl:space-x-reverse">
                     {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        className={classNames(
-                          item.current
-                            ? " "
-                            : "text-gray-700 hover:text-indigo-500",
-                          "rounded-md px-3 py-2 text-sm font-medium"
-                        )}
-                        aria-current={item.current ? "page" : undefined}
-                      >
-                        {item.name}
-                      </Link>
+                      item.external ? (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={classNames(
+                            item.current
+                              ? " "
+                              : "text-gray-700 hover:text-indigo-500 hover:underline",
+                            "rounded-md px-3 py-2 text-sm font-medium"
+                          )}
+                          aria-current={item.current ? "page" : undefined}
+                        >
+                          {item.name}
+                        </a>
+                      ) : (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          className={classNames(
+                            item.current
+                              ? " "
+                              : "text-gray-700 hover:text-indigo-500 hover:underline",
+                            "rounded-md px-3 py-2 text-sm font-medium"
+                          )}
+                          aria-current={item.current ? "page" : undefined}
+                        >
+                          {item.name}
+                        </Link>
+                      )
                     ))}
                   </div>
                 </div>
               </div>
-                <div className=" flex items-center justify-center mr-4">
-                  <SignOut />
-                </div>
+              <div className=" flex items-center justify-center mr-4">
+                <SignOut />
+              </div>
             </div>
           </div>
           <DisclosurePanel className="sm:hidden">
@@ -96,12 +114,15 @@ const Header = () => {
               {navigation.map((item) => (
                 <DisclosureButton
                   key={item.name}
-                  as={Link}
-                  to={item.href}
+                  as={item.external ? "a" : Link}
+                  to={item.external ? undefined : item.href}
+                  href={item.external ? item.href : undefined}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
                   className={classNames(
                     item.current
                       ? ""
-                      : "text-gray-700 hover:text-indigo-500",
+                      : "text-gray-700 hover:text-indigo-500 hover:underline",
                     "block rounded-md px-3 py-2 text-base font-medium rtl:text-right"
                   )}
                   onClick={handleLinkClick}

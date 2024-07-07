@@ -3,15 +3,31 @@ import Chats from "./Chats";
 import Header from "../layout/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { loadChats } from "../../redux/features/chatSlice";
+import colors from "../../profileColors";
+
 
 const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
   const { chats } = useSelector((store) => store.chat);
   const userChats = useSelector((store) => store.auth.user.chats);
+  const { userType, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(loadChats({ userChats }));
   }, []);
+
+  const contacts = [
+    { name: "אליס", message: "יששש!!", chatId: "1" },
+    { name: "מרטין", message: "המקום לפיצה היה מדהים!", chatId: "2" },
+    { name: "דניאלה", message: "הצלחתי לסיים את הפרויקט!", chatId: "3" },
+    { name: "יוסי", message: "נפגשנו בבית הקפה והיה מצוין.", chatId: "4" },
+    { name: "ליאת", message: "השיעור היה ממש מעניין!", chatId: "5" },
+    { name: "אורן", message: "ראיתי סרט נהדר אתמול.", chatId: "6" },
+    { name: "מירב", message: "מצאתי מתכון חדש לניסוי!", chatId: "7" },
+    { name: "דוד", message: "הטיול ליער היה כיף!", chatId: "8" },
+    { name: "נועה", message: "קניתי ספר חדש והוא מעולה.", chatId: "9" },
+    { name: "אבי", message: "המסעדה הייתה ממש מוצלחת.", chatId: "10" },
+  ];
 
   return (
     <div>
@@ -23,7 +39,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
             : "hidden md:block"
         } bg-white z-40`}
       >
-        <Header />
+         {user.uid && <Header user={user} userType={userType} />}
         <header
           className="p-4 border-b max-md:mt-16 border-gray-300 flex justify-between items-center bg-gray-200"
           dir="rtl"
@@ -40,64 +56,15 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
           className="overflow-auto h-[83vh] max-md:h-[73vh] mb-9 pb-5 border-l border-gray-300"
           dir="rtl"
         >
-          {[
-            {
-              name: "אליס",
-              message: "יששש!!",
-              color: "ffa8e4",
-              chatId:
-                "xwOsupvBN3UTc0uHKmfRKeY13aa2GInubgcAXUbiZKu4iJhdULX1r9h1",
-            },
-            {
-              name: "מרטין",
-              message: "המקום לפיצה היה מדהים!",
-              color: "ad922e",
-              chatId:
-                "xwOsupvBN3UTc0uHKmfRKeY13aa2GInubgcAXUbiZKu4iJhdULX1r9h1",
-            },
-            {
-              name: "דניאלה",
-              message: "הצלחתי לסיים את הפרויקט!",
-              color: "34a8e4",
-            },
-            {
-              name: "יוסי",
-              message: "נפגשנו בבית הקפה והיה מצוין.",
-              color: "b9225e",
-            },
-            {
-              name: "ליאת",
-              message: "השיעור היה ממש מעניין!",
-              color: "ef128e",
-            },
-            {
-              name: "אורן",
-              message: "ראיתי סרט נהדר אתמול.",
-              color: "12ad9e",
-            },
-            {
-              name: "מירב",
-              message: "מצאתי מתכון חדש לניסוי!",
-              color: "d4a8e4",
-            },
-            {
-              name: "דוד",
-              message: "הטיול ליער היה כיף!",
-              color: "ad123e",
-            },
-            {
-              name: "נועה",
-              message: "קניתי ספר חדש והוא מעולה.",
-              color: "ffa1e4",
-            },
-            {
-              name: "אבי",
-              message: "המסעדה הייתה ממש מוצלחת.",
-              color: "ad7e2e",
-            },
-          ].map((contact, index) => (
+          {contacts.map((contact, index) => (
             <div key={index} className="border-b border-gray-200">
-              <Chats contact={contact} handleMenuToggle={handleMenuToggle} />
+              <Chats
+                contact={{
+                  ...contact,
+                  color: colors[index % colors.length],
+                }}
+                handleMenuToggle={handleMenuToggle}
+              />
             </div>
           ))}
         </div>
