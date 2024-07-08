@@ -33,14 +33,12 @@ const SupporterRegistration = () => {
   const { status } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
 
-  // const moreFilesRef = useRef(null);
-  // const studentApprovalRef = useRef(null);
-  // const gradesRef = useRef(null);
-  // const profilePicRef = useRef(null);
+  const resumeRef = useRef(null);
+  const studentApprovalRef = useRef(null);
 
-  // const handleClick = (ref) => {
-  //   ref.current.click();
-  // };
+  const handleClick = (ref) => {
+    ref.current.click();
+  };
 
   const handleBadgeClick = (value) => {
     setRegistration((prevState) => {
@@ -102,10 +100,8 @@ const SupporterRegistration = () => {
     referralSource: "not-selected",
     preferredLanguage: "hebrew",
     approved: false,
-    // moreFiles: "",
-    // studentApproval: "",
-    // grades: "",
-    // profilePic: "",
+    resume: "",
+    studentApproval: "",
     about: "",
   });
 
@@ -113,11 +109,17 @@ const SupporterRegistration = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  // const handleFileUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   const fieldName = e.target.id;
-  //   setRegistration((prev) => ({ ...prev, [fieldName]: file }));
-  // };
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    const fieldName = e.target.id;
+    setRegistration((prev) => ({ ...prev, [fieldName]: file }));
+  };
+
+  const uploadFile = async (file, filePath) => {
+    const fileRef = storageRef(storage, filePath);
+    await uploadBytes(fileRef, file);
+    return await getDownloadURL(fileRef);
+  };
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -176,42 +178,23 @@ const SupporterRegistration = () => {
         displayName: registration.firstName + " " + registration.lastName,
       });
 
-      // const uploadFile = async (file, filePath) => {
-      //   const fileRef = storageRef(storage, filePath);
-      //   await uploadBytes(fileRef, file);
-      //   return await getDownloadURL(fileRef);
-      // };
-
       const user = { ...registration, uid: userId };
 
-      // if (user.moreFiles) {
-      //   const moreFilesURL = await uploadFile(
-      //     user.moreFiles,
-      //     `supporters/${userId}/moreFiles`
-      //   );
-      //   user.moreFiles = moreFilesURL;
-      // }
-      // if (user.studentApproval) {
-      //   const studentApprovalURL = await uploadFile(
-      //     user.studentApproval,
-      //     `supporters/${userId}/studentApproval`
-      //   );
-      //   user.studentApproval = studentApprovalURL;
-      // }
-      // if (user.grades) {
-      //   const gradesURL = await uploadFile(
-      //     user.grades,
-      //     `supporters/${userId}/grades`
-      //   );
-      //   user.grades = gradesURL;
-      // }
-      // if (user.profilePic) {
-      //   const profilePicURL = await uploadFile(
-      //     user.profilePic,
-      //     `supporters/${userId}/profilePic`
-      //   );
-      //   user.profilePic = profilePicURL;
-      // }
+      if (user.resume) {
+        const resumeURL = await uploadFile(
+          user.resume,
+          `supporters/${userId}/resume`
+        );
+        user.resume = resumeURL;
+      }
+      if (user.studentApproval) {
+        const studentApprovalURL = await uploadFile(
+          user.studentApproval,
+          `supporters/${userId}/studentApproval`
+        );
+        user.studentApproval = studentApprovalURL;
+      }
+
       user.chats = [];
       user.approved = false;
       await setDoc(doc(db, "supporters", userId), user);
@@ -757,16 +740,17 @@ const SupporterRegistration = () => {
                     maxLength={200} // Set the maximum character limit here
                     onChange={handleChange}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    defaultValue={""}
+                    placeholder="כתבו בקצרה על עצמכם: שם, גיל, עיר מגורים, רקע אקדמי, סוג התמיכה שאתם מציעים.
+**לדוגמה**: אני נועה, בת 36 מרעננה, בעלת תואר שני בפסיכולוגיה קלינית. התמחיתי בהתמודדות עם משברים אישיים. אשמח להכיר אותך ולעזור לך להתגבר על האתגרים שאתה חווה."
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                <p className="mt-3 text-sm leading-6 text-gray-600">
-                  כתוב על עצמך בכמה משפטים
-                </p>
-                <p className="mt-1 text-sm leading-6 text-gray-600">
-                 200 / {charCount}
-                </p>
+                  <p className="mt-3 text-sm leading-6 text-gray-600">
+                    כתוב על עצמך בכמה משפטים
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-gray-600">
+                    200 / {charCount}
+                  </p>
                 </div>
               </div>
             </div>
@@ -780,7 +764,7 @@ const SupporterRegistration = () => {
               העלאת מסמכים אלו הכרחיים על מנת שנוכל לבצע תהליך אישור כראוי
             </p>
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              {/* <div className="sm:col-span-3">
+              <div className="sm:col-span-3">
                 <div className="mt-2">
                   <input
                     id="studentApproval"
@@ -796,7 +780,7 @@ const SupporterRegistration = () => {
                     onClick={() => handleClick(studentApprovalRef)}
                   >
                     <FileInput
-                      text={"אישור סטודנט"}
+                      text={"אישור לימודים/סיום לימודים"}
                       file={registration.studentApproval}
                     />
                   </div>
@@ -806,71 +790,22 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <div className="mt-2">
                   <input
-                    id="grades"
-                    name="grades"
+                    id="resume"
+                    name="resume"
                     type="file"
                     className="hidden"
-                    ref={gradesRef}
+                    ref={resumeRef}
                     onChange={handleFileUpload}
                     accept=".pdf,.jpg,.jpeg,.png"
                   />
                   <div
                     className="flex items-center cursor-pointer"
-                    onClick={() => handleClick(gradesRef)}
+                    onClick={() => handleClick(resumeRef)}
                   >
-                    <FileInput
-                      text={"גיליון ציונים"}
-                      file={registration.grades}
-                    />
+                    <FileInput text={"קורות חיים"} file={registration.resume} />
                   </div>
                 </div>
               </div>
-
-              <div className="sm:col-span-3">
-                <div className="mt-2">
-                  <input
-                    id="profilePic"
-                    name="profilePic"
-                    type="file"
-                    className="hidden"
-                    ref={profilePicRef}
-                    onChange={handleFileUpload}
-                    accept=".jpg,.jpeg,.png"
-                  />
-                  <div
-                    className="flex items-center cursor-pointer"
-                    onClick={() => handleClick(profilePicRef)}
-                  >
-                    <FileInput
-                      text={"תמונת פרופיל"}
-                      file={registration.profilePic}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="sm:col-span-3">
-                <div className="mt-2">
-                  <input
-                    id="moreFiles"
-                    name="moreFiles"
-                    type="file"
-                    className="hidden"
-                    ref={moreFilesRef}
-                    onChange={handleFileUpload}
-                    accept=".pdf,.jpg,.jpeg,.png"
-                  />
-                  <div
-                    className="flex items-center cursor-pointer"
-                    onClick={() => handleClick(moreFilesRef)}
-                  >
-                    <FileInput
-                      text={"מסמכים נוספים"}
-                      file={registration.moreFiles}
-                    />
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
 

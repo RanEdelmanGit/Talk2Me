@@ -18,25 +18,24 @@ const initialState = {
  //supporterChats:[{cliehtId:'', chatId:'', lastMessage:''}]
 }
 
-export const resumeChat = createAsyncThunk('chat/resumeChat', async ({ supporterId, clientId }) => {
+export const resumeChat = createAsyncThunk('chat/resumeChat', async ({ chatId }) => {
 
-  try{  
-    const chat = doc(db, chatCollection, supporterId+clientId);
-    
-    const querySnapshot = await getDoc(chat);
-    if(querySnapshot.exists()){
-      return(querySnapshot.data())
-    }
-    return {};
-  }catch(error){
-    console.log(error);
+  const chat = doc(db, chatCollection, chatId);
+  
+  const querySnapshot = await getDoc(chat);
+  if(querySnapshot.exists()){
+    return(querySnapshot.data())
   }
+  return {};
+
 })
+
 export const loadChats = createAsyncThunk('chat/loadChats', async ({ userChats }) => {
   const chatQuery = query(collection(db, chatCollection), where(documentId(), 'in', userChats))
   const chats = await getDocs(chatQuery);
-  console.log('loadChats', chats);
-  return chats;
+  //console.log('loadChats', chats);
+  
+  return chats.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
 })
 
@@ -69,7 +68,11 @@ export const chatSlice = createSlice({
       state.chat.supporterId = action.payload.supporterId;
       state.chat.id = action.payload.chatId;
     },
-
+    currentChat:(state, action) => {
+      console.log('sdfds', state);
+      const chat = state.chats.find(chat => chat.id == action.payload)
+      state.chat   = chat;
+    },
     updateChat: (state, action) => {
       state.chat = action.payload;
     }
@@ -104,7 +107,7 @@ export const chatSlice = createSlice({
       })
       .addCase(loadChats.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log('fulfilled', action.payload);
+        console.log('loadChats fulfilled', action.payload);
         state.chats = {...action.payload};
       })
       .addCase(loadChats.rejected, (state, action) => {
@@ -114,6 +117,6 @@ export const chatSlice = createSlice({
   }
 })
 // Action creators are generated for each case reducer function
-export const { addMassage, updateChat, startChat} = chatSlice.actions
+export const { addMassage, updateChat, startChat, currentChat} = chatSlice.actions
 
 export default chatSlice.reducer

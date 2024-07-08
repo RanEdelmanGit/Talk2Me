@@ -4,31 +4,33 @@ import Header from "../layout/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { loadChats } from "../../redux/features/chatSlice";
 import colors from "../../profileColors";
-
+import { loadSupporterByChats } from "../../redux/features/supportersSlice";
 
 const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
-  const { chats } = useSelector((store) => store.chat);
+  
+  const { contactedSupporters } = useSelector((store) => store.supporters);
   const userChats = useSelector((store) => store.auth.user.chats);
   const { userType, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadChats({ userChats }));
-  }, []);
+    if (!userChats) return;
 
-  const contacts = [
-    { name: "אליס", message: "יששש!!", chatId: "1" },
-    { name: "מרטין", message: "המקום לפיצה היה מדהים!", chatId: "2" },
-    { name: "דניאלה", message: "הצלחתי לסיים את הפרויקט!", chatId: "3" },
-    { name: "יוסי", message: "נפגשנו בבית הקפה והיה מצוין.", chatId: "4" },
-    { name: "ליאת", message: "השיעור היה ממש מעניין!", chatId: "5" },
-    { name: "אורן", message: "ראיתי סרט נהדר אתמול.", chatId: "6" },
-    { name: "מירב", message: "מצאתי מתכון חדש לניסוי!", chatId: "7" },
-    { name: "דוד", message: "הטיול ליער היה כיף!", chatId: "8" },
-    { name: "נועה", message: "קניתי ספר חדש והוא מעולה.", chatId: "9" },
-    { name: "אבי", message: "המסעדה הייתה ממש מוצלחת.", chatId: "10" },
-  ];
+    dispatch(loadChats({ userChats: userChats.map((c) => c.chatId) }))
+      .unwrap()
+      .then((chats) => {
+        const supporterIds = [];
 
+        for (let index = 0; index < chats.length; index++) {
+          const element = chats[index];
+          supporterIds.push(element.supporterId);
+        }
+        dispatch(loadSupporterByChats({ supporterIds }));
+      });
+  }, [userChats]);
+
+
+  
   return (
     <div>
       {/* Sidebar */}
@@ -39,12 +41,12 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
             : "hidden md:block"
         } bg-white z-40`}
       >
-         {user.uid && <Header user={user} userType={userType} />}
+        {user.uid && <Header user={user} userType={userType} />}
         <header
           className="p-4 border-b max-md:mt-16 border-gray-300 flex justify-between items-center bg-gray-200"
           dir="rtl"
         >
-          <h1 className="text-2xl font-semibold">שיחות</h1>
+          <h1 className="text-2xl font-semibold ml-4">שיחות</h1>
           {/* Close button in header */}
           <input
             type="search"
@@ -56,7 +58,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
           className="overflow-auto h-[83vh] max-md:h-[73vh] mb-9 pb-5 border-l border-gray-300"
           dir="rtl"
         >
-          {contacts.map((contact, index) => (
+          {contactedSupporters.map((contact, index) => (
             <div key={index} className="border-b border-gray-200">
               <Chats
                 contact={{
@@ -64,6 +66,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
                   color: colors[index % colors.length],
                 }}
                 handleMenuToggle={handleMenuToggle}
+                chatId={contact.uid + user.uid}
               />
             </div>
           ))}

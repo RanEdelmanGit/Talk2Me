@@ -28,6 +28,7 @@ const SupporterCard = ({
     age,
     profilePic = profilePicPlaceholder,
     about,
+    chats,
   },
   aboutOpen,
   toggleAbout,
@@ -56,17 +57,19 @@ const SupporterCard = ({
   const handleStartChatClick = (e) => {
     e.stopPropagation();
     const chatId = uid + user.uid;
-    dispatch(
-      startChat({
-        clientId: user.uid,
-        supporterId: uid,
-        chatId: chatId,
-      })
-    );
-    dispatch(saveChat());
-    dispatch(initChat({ chatId: chatId }));
-    dispatch(updateUser());
-    dispatch(updateSupporter({ supporterId: uid, chatId: chatId }));
+    if(!chats.includes(chatId)){
+      dispatch(
+        startChat({
+          clientId: user.uid,
+          supporterId: uid,
+          chatId: chatId,
+        })
+      );
+      dispatch(saveChat());
+      dispatch(initChat({ chatId: chatId }));
+      dispatch(updateUser());
+      dispatch(updateSupporter({ supporterId: uid, chatId: chatId }));
+    }
     navigate(`/chat/${chatId}`, { state: { supporterId: uid } });
   };
 
@@ -166,7 +169,7 @@ const SupporterCard = ({
               className="rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={handleStartChatClick}
             >
-              התחל שיחה
+              {chats.includes(chatId)?"המשך שיחה":"התחל שיחה"}
             </button>
           </div>
         </div>
