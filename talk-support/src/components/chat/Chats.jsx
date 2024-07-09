@@ -6,8 +6,11 @@ export default function Chats({ contact, handleMenuToggle, chatId }) {
   return (
     <div
       className="flex items-center py-3 px-2 md:px-6 cursor-pointer hover:bg-gray-100 rounded-md"
-      // onClick={handleMenuToggle}
-      onClick={() => nav(`/chat/${chatId}`)}
+    
+      onClick={() => {
+        nav(`/chat/${chatId}`);
+        handleMenuToggle();
+      }}
     >
       <div className={`w-12 h-12 bg-gray-300 rounded-full ml-4`}>
         <img

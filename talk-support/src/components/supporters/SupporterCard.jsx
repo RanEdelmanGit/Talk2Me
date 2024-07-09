@@ -40,7 +40,8 @@ const SupporterCard = ({
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 925px)" });
+  const chatId = uid + user.uid;
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
@@ -56,7 +57,7 @@ const SupporterCard = ({
 
   const handleStartChatClick = (e) => {
     e.stopPropagation();
-    const chatId = uid + user.uid;
+   
     if(!chats.includes(chatId)){
       dispatch(
         startChat({
@@ -179,7 +180,7 @@ const SupporterCard = ({
 
   return (
     <div className="w-full mx-auto md:p-3 border-b border-gray-300 flex flex-col" dir="rtl" onClick={toggleAbout}>
-      <div className="flex items-center justify-between w-full px-10">
+      <div className="flex items-center justify-between w-full px-10 sm:p-3 sm:gap-3 ">
         <img
           src={avatarUrl}
           alt="User Avatar"

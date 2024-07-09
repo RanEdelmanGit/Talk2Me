@@ -12,6 +12,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
   const userChats = useSelector((store) => store.auth.user.chats);
   const { userType, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+ 
 
   useEffect(() => {
     if (!userChats) return;
@@ -52,6 +53,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
             type="search"
             className="rounded-lg h-8 border-gray-300 focus:ring-indigo-500"
             placeholder="חפש לפי שם ..."
+           
           />
         </header>
         <div

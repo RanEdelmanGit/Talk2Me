@@ -20,10 +20,14 @@ const ChatPage = () => {
   const { chats } = useSelector((store) => store.chat);
   const params = useParams();
   const dispatch = useDispatch();
-  const [isMenuOpen, setIsMenuOpen] = useState(window.innerWidth < 640);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuToggle = () => {
-    setIsMenuOpen(!isMenuOpen);
+    if (window.innerWidth > 640) {
+      setIsMenuOpen(false);
+    } else {
+      setIsMenuOpen(!isMenuOpen);
+    }
   };
 
   const mapMassageType = () => {
@@ -56,7 +60,7 @@ const ChatPage = () => {
 
     return () => unsubscribe();
   }, [params, dispatch]);
-
+  console.log(isMenuOpen);
   return (
     <>
       <div className="flex h-[91vh] w-screen mt-16">
