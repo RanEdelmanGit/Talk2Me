@@ -132,7 +132,7 @@ const Sidebar = ({
             />
           </button>
         </div>
-          
+
         <div className=" h-[600px] overflow-y-scroll">
           <div className="mb-2 ">
             <label className="block font-medium mb-2">שם</label>
@@ -267,7 +267,6 @@ const Sidebar = ({
                 />
               )}
             />
-          
           </div>
 
           <div className="mb-2">
@@ -282,16 +281,17 @@ const Sidebar = ({
               <option value="hebrew">עברית</option>
               <option value="english">אנגלית</option>
             </select>
-          
           </div>
           <div className="self-center flex items-center justify-center my-5">
-          <button onClick={toggleDropdown} className="btn w-full flex  items-center justify-center rounded-md bg-indigo-600 px-3  py-2 mb-20 max-md:mb-28 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ">
-            סנן
-          </button>
+            <button
+              onClick={toggleDropdown}
+              className="btn w-full flex  items-center justify-center rounded-md bg-indigo-600 px-3  py-2 mb-20 max-md:mb-28 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 "
+            >
+              סנן
+            </button>
           </div>
           <div className="md:h-[100px]"></div>
         </div>
-      
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import React from "react";
 
 const ChatHeader = ({ contactName, isMenuOpen, handleMenuToggle }) => {
   return (
-    <header className="bg-white px-2 max-md:py-4 md:p-4 text-gray-700 border-b flex justify-between items-center max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0">
+    <header className="bg-white px-2 max-md:py-4 md:p-4 text-gray-700 border-b flex justify-between items-center">
        <h1 className="text-2xl font-semibold max-md:pr-4">{contactName}</h1>
       <button
         className="md:hidden p-2 text-black rounded"

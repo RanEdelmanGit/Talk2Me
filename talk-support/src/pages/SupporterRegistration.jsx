@@ -23,11 +23,13 @@ import FileInput from "../components/common/FileInput";
 import Loading from "../components/common/Loading";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { Field, Label, Switch } from "@headlessui/react";
 import { cities } from "../cities";
 
 const SupporterRegistration = () => {
   const [error, setError] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const [charCount, setCharCount] = useState(200);
   const navigate = useNavigate();
   const { status } = useSelector((store) => store.auth);
@@ -131,9 +133,30 @@ const SupporterRegistration = () => {
     return phoneRegex.test(phone);
   };
 
+  const requiredFields = [
+    { key: "firstName", label: "First Name" },
+    { key: "lastName", label: "Last Name" },
+    { key: "email", label: "Email" },
+    { key: "phone", label: "Phone" },
+    { key: "password", label: "Password" },
+    { key: "birthYear", label: "Birth Year" },
+    { key: "gender", label: "Gender" },
+    { key: "area", label: "Area" },
+    { key: "city", label: "City" },
+    { key: "address", label: "Address" },
+    { key: "referralSource", label: "Referral Source" },
+    { key: "preferredLanguage", label: "Language" },
+    { key: "meeting", label: "Meeting Preference" },
+  ];
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
+
+    if (!agreed) {
+      setError("You must agree to the terms and conditions to register.");
+      return;
+    }
 
     if (!validateEmail(registration.email)) {
       setError("Invalid email format.");
@@ -145,21 +168,14 @@ const SupporterRegistration = () => {
       return;
     }
 
-    const requiredFields = [
-      { key: "gender", label: "Gender" },
-      { key: "birthYear", label: "Birth Year" },
-      { key: "area", label: "Area" },
-      { key: "city", label: "City" },
-      { key: "referralSource", label: "Referral Source" },
-      { key: "meeting", label: "Meeting Preference" },
-      { key: "preferredLanguage", label: "Language" },
-    ];
-
+    // Validation for required fields
     for (let field of requiredFields) {
       if (
         registration[field.key] === "not-selected" ||
         registration[field.key] === "" ||
-        registration[field.key] === null
+        registration[field.key] === null ||
+        (Array.isArray(registration[field.key]) &&
+          registration[field.key].length === 0)
       ) {
         setError(`Please select a valid option for ${field.label}`);
         return;
@@ -216,7 +232,7 @@ const SupporterRegistration = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen" dir="rtl">
+    <div className="flex items-center justify-center h-screen " dir="rtl">
       <div className="w-full h-full overflow-y-scroll flex justify-center">
         <form
           className="w-fit space-y-12 pt-10 max-md:px-4"
@@ -224,7 +240,7 @@ const SupporterRegistration = () => {
         >
           <Link
             to="/welcome"
-            className="flex justify-end text-base font-semibold text-gray-900"
+            className=" absolute top-4 left-4 m-4 flex justify-end text-base font-semibold text-gray-900"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -243,10 +259,10 @@ const SupporterRegistration = () => {
           </Link>
 
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-2xl mb-4 font-semibold leading-7 text-gray-900 underline">
+            <h2 className="text-3xl mb-4 font-semibold leading-7 text-gray-900 underline">
               הרשמה באתי להקשיב
             </h2>
-            <p className="mt-1 text-base leading-6 max-w-[500px] text-gray-600">
+            <p className="mt-1 text-lg leading-6 max-w-[500px] text-gray-600">
               תודה רבה לכם על הרשמתכם לאפליקציה שלנו! כל עזרה מצדכם תתקבל בברכה
               ובשמחה. אנו מאמינים כי בעזרתכם נוכל לסייע לקרובים שלנו ולחברה
               כולה, ולהקל על אנשים החווים קשיים בתקופה זו. ההשתתפות שלכם
@@ -258,7 +274,7 @@ const SupporterRegistration = () => {
             <h2 className="text-xl font-semibold leading-7 text-gray-900">
               פרופיל
             </h2>
-            <p className="mt-1 text-sm leading-6 max-w-[500px] text-gray-600">
+            <p className="mt-1 text-base leading-6 max-w-[500px] text-gray-600">
               ההרשמה תשלח לאישור ולאחר מכן נוכל לאפשר לכם כניסה לאפליקציה ולעזור
               לאנשים למצוא אתכם. תהליך האישור נועד להבטיח שכל תומך מתאים
               ומשמעותי, וכך נוכל להציע את העזרה הטובה ביותר למי שזקוק לה.
@@ -267,7 +283,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   {" "}
                   <span className="text-red-500 ml-1">*</span>
@@ -281,7 +297,7 @@ const SupporterRegistration = () => {
                     autoComplete="firstName"
                     value={registration.firstName}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   />
                 </div>
@@ -289,7 +305,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   שם משפחה
@@ -302,7 +318,7 @@ const SupporterRegistration = () => {
                     autoComplete="lastName"
                     value={registration.lastName}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   />
                 </div>
@@ -310,7 +326,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-4">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   דוא"ל
@@ -323,7 +339,7 @@ const SupporterRegistration = () => {
                     autoComplete="email"
                     value={registration.email}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   />
                 </div>
@@ -332,7 +348,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   סיסמא
@@ -343,7 +359,7 @@ const SupporterRegistration = () => {
                     name="password"
                     type={passwordVisible ? "text" : "password"}
                     autoComplete="new-password"
-                    className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     value={registration.password}
                     onChange={handleChange}
                     required
@@ -396,10 +412,10 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-4">
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
-                  טלפון
+                  מספר טלפון
                 </label>
                 <div className="mt-2">
                   <input
@@ -407,7 +423,7 @@ const SupporterRegistration = () => {
                     name="phone"
                     type="text"
                     autoComplete="tel"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     value={registration.phone}
                     onChange={handleChange}
                     required
@@ -417,7 +433,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="birthYear"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   שנת לידה
@@ -428,7 +444,7 @@ const SupporterRegistration = () => {
                     name="birthYear"
                     value={registration.birthYear}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   >
                     <option value="not-selected">בחר שנה</option>
@@ -446,7 +462,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="gender"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   מגדר
@@ -456,7 +472,7 @@ const SupporterRegistration = () => {
                     id="gender"
                     name="gender"
                     autoComplete="gender"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     value={registration.gender}
                     onChange={handleChange}
                     required
@@ -471,7 +487,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="location"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   איזור
@@ -482,7 +498,7 @@ const SupporterRegistration = () => {
                     name="area"
                     value={registration.area}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   >
                     <option value="not-selected">בחר</option>
@@ -496,7 +512,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   עיר
@@ -566,7 +582,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-6">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   כתובת
@@ -579,7 +595,7 @@ const SupporterRegistration = () => {
                     autoComplete="address"
                     value={registration.address}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   />
                 </div>
@@ -588,7 +604,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="preferredLanguage"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   שפה מועדפת?
@@ -598,7 +614,7 @@ const SupporterRegistration = () => {
                     id="preferredLanguage"
                     name="preferredLanguage"
                     autoComplete="language"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     value={registration.preferredLanguage}
                     onChange={handleChange}
                     required
@@ -612,14 +628,14 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-4">
                 <label
                   htmlFor="meeting"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   אופן המפגש
                 </label>
                 <div className="mt-2 flex justify-around items-center">
                   <span
-                    className={`relative inline-flex items-center rounded-md bg-blue-50 px-8 py-2 text-sm font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer ${
+                    className={`relative inline-flex items-center rounded-md bg-blue-50 px-8 py-2 text-base font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 cursor-pointer ${
                       registration.meeting.includes(meetingOffline) ? "" : ""
                     }`}
                     onClick={() => handleBadgeClick(meetingOffline)}
@@ -643,7 +659,7 @@ const SupporterRegistration = () => {
                     )}
                   </span>
                   <span
-                    className={`relative inline-flex items-center rounded-md bg-indigo-50 px-8 py-2  text-sm font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 cursor-pointer ${
+                    className={`relative inline-flex items-center rounded-md bg-indigo-50 px-8 py-2  text-base font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 cursor-pointer ${
                       registration.meeting.includes(meetingOnline) ? "" : ""
                     }`}
                     onClick={() => handleBadgeClick(meetingOnline)}
@@ -667,7 +683,7 @@ const SupporterRegistration = () => {
                     )}
                   </span>
                   <span
-                    className={`relative inline-flex items-center rounded-md bg-purple-50  px-8 py-2  text-sm font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 cursor-pointer ${
+                    className={`relative inline-flex items-center rounded-md bg-purple-50  px-8 py-2  text-base font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 cursor-pointer ${
                       registration.meeting.includes(phoneCall) ? "" : ""
                     }`}
                     onClick={() => handleBadgeClick(phoneCall)}
@@ -696,7 +712,7 @@ const SupporterRegistration = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="referralSource"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   איך הגעת אלינו
@@ -707,7 +723,7 @@ const SupporterRegistration = () => {
                     name="referralSource"
                     value={registration.referralSource}
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   >
                     <option value="not-selected">בחר</option>
@@ -728,7 +744,7 @@ const SupporterRegistration = () => {
               <div className="col-span-full">
                 <label
                   htmlFor="about"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   קצת על עצמך
                 </label>
@@ -739,16 +755,16 @@ const SupporterRegistration = () => {
                     rows={3}
                     maxLength={200} // Set the maximum character limit here
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="placeholder-custom block w-full rounded-md border-0 py-1.5 max-md:h-40 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                     placeholder="כתבו בקצרה על עצמכם: שם, גיל, עיר מגורים, רקע אקדמי, סוג התמיכה שאתם מציעים.
 **לדוגמה**: אני נועה, בת 36 מרעננה, בעלת תואר שני בפסיכולוגיה קלינית. התמחיתי בהתמודדות עם משברים אישיים. אשמח להכיר אותך ולעזור לך להתגבר על האתגרים שאתה חווה."
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="mt-3 text-sm leading-6 text-gray-600">
+                  <p className="mt-3 text-base leading-6 text-gray-600">
                     כתוב על עצמך בכמה משפטים
                   </p>
-                  <p className="mt-1 text-sm leading-6 text-gray-600">
+                  <p className="mt-1 text-base leading-6 text-gray-600">
                     200 / {charCount}
                   </p>
                 </div>
@@ -760,7 +776,7 @@ const SupporterRegistration = () => {
             <h2 className="text-xl font-semibold leading-7 text-gray-900">
               העלאת מסמכים
             </h2>
-            <p className="mt-1 text-sm leading-6 max-w-[500px] text-gray-600">
+            <p className="mt-1 text-base leading-6 max-w-[500px] text-gray-600">
               העלאת מסמכים אלו הכרחיים על מנת שנוכל לבצע תהליך אישור כראוי
             </p>
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -809,17 +825,29 @@ const SupporterRegistration = () => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <input
-              id="terms"
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-              required
-            />
-            <label htmlFor="terms" className="text-sm font-medium pr-2">
-              אני מסכים למדיניות הפרטיות ולתקנון
-            </label>
-          </div>
+          <Field className="flex gap-x-4 sm:col-span-2" id="terms" required>
+            <div className="flex h-6 items-center">
+              <Switch
+                checked={agreed}
+                onChange={setAgreed}
+                dir="ltr"
+                className="group flex w-8 flex-none cursor-pointer rounded-full bg-gray-200 p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 data-[checked]:bg-indigo-600"
+              >
+                <span className="sr-only">הסכמה לתנאים</span>
+                <span
+                  aria-hidden="true"
+                  className="h-4 w-4 transform rounded-full bg-white shadow-sm ring-1 ring-gray-900/5 transition duration-200 ease-in-out group-data-[checked]:translate-x-3.5"
+                />
+              </Switch>
+            </div>
+            <Label className="text-sm leading-6 text-gray-600">
+              על ידי בחירה זו, אתה מסכים ל{" "}
+              <a href="#" className="font-semibold text-indigo-600">
+                תנאים
+              </a>
+              .
+            </Label>
+          </Field>
 
           {error && <h3>{error}</h3>}
           <div className="mt-6 flex items-center justify-center gap-x-6">

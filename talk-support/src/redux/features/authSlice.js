@@ -33,7 +33,7 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
     if(querySnapshot.exists()){
       return(querySnapshot.data())
     }
-    console.log('here');
+    
     throw new Error('user does not exist or incorrect type')
   // }catch(error){
   //   console.log(error);
@@ -49,11 +49,13 @@ export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getSt
  
 });
 
-export const updateSupporter = createAsyncThunk('auth/updateSupporter', async ({supporterId, chatId}) => {
+export const updateSupporter = createAsyncThunk('auth/updateSupporter', async ({supporterId, chatId,supporterName}, {getState}) => {
+  const state = getState();
+  const supporterChat = {chatId, clientId: state.auth.user.uid, clientName: state.auth.user.nickname, supporterId, supporterName, lastMessage:"", readLastMessage:true}
   
   try{
     const supporterRef = doc(db, 'supporters', supporterId);
-    await updateDoc(supporterRef, {chats: arrayUnion(chatId)})
+    await updateDoc(supporterRef, {chats: arrayUnion(supporterChat)})
     return {};
   }catch(error){
     console.log(error);
@@ -93,7 +95,8 @@ export const authSlice = createSlice({
       if(!state.user.chats){
         state.user.chats = [];
       }
-      state.user.chats.push({chatId: action.payload.chatId, isVisible: false})
+      const{chatId, supporterId, supporterName } = action.payload;
+      state.user.chats.push({chatId, clientId: state.user.uid, clientName: state.user.nickname, supporterId, supporterName, lastMessage:"", readLastMessage:true})
     }
   },
   extraReducers: (builder) => {

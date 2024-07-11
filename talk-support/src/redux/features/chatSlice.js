@@ -10,9 +10,9 @@ const initialState = {
   chat:{
     isVisible:false,
     id: "", //supporter.id + client.id
-    supporterId:"xwOsupvBN3UTc0uHKmfRKeY13aa2", //supporterId
+    supporterId:"", //supporterId
     clientId: "",  //supporterId
-    massages:[],  // message: {timestamp, text, sender,}
+    messages:[],  // message: {timestamp, text, sender,}
   },
   chats: []
  //supporterChats:[{cliehtId:'', chatId:'', lastMessage:''}]
@@ -31,6 +31,7 @@ export const resumeChat = createAsyncThunk('chat/resumeChat', async ({ chatId })
 })
 
 export const loadChats = createAsyncThunk('chat/loadChats', async ({ userChats }) => {
+  if(!userChats || userChats.length === 0) return []
   const chatQuery = query(collection(db, chatCollection), where(documentId(), 'in', userChats))
   const chats = await getDocs(chatQuery);
   //console.log('loadChats', chats);
@@ -61,7 +62,13 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     addMassage:(state,action) =>{
-        state.chat.massages.push(action.payload);
+        state.chat.messages.push({...action.payload, sentAt: new Date().toISOString()});
+        state.chat.lastUpdate = new Date().toISOString();
+        const index = state.chats.findIndex(c => c.id == state.chat.id);
+        if(index == -1){
+          console.log('not found', state);
+        }
+        state.chats[index] = state.chat;
     },
     startChat:(state,action) => {
       state.chat.clientId = action.payload.clientId;
@@ -69,12 +76,24 @@ export const chatSlice = createSlice({
       state.chat.id = action.payload.chatId;
     },
     currentChat:(state, action) => {
-      console.log('sdfds', state);
       const chat = state.chats.find(chat => chat.id == action.payload)
       state.chat   = chat;
     },
     updateChat: (state, action) => {
+      if(!action.payload)return;
       state.chat = action.payload;
+    },
+    logoutChat: (state, action) => {
+      state.status = 'ready';
+      state.error = '';
+      state.chat = {
+        isVisible:false,
+        id: "", //supporter.id + client.id
+        supporterId:"", //supporterId
+        clientId: "",  //supporterId
+        messages:[],  // message: {timestamp, text, sender,}
+      };
+      state.chats = [];
     }
   },extraReducers: (builder) => {
     builder
@@ -108,7 +127,7 @@ export const chatSlice = createSlice({
       .addCase(loadChats.fulfilled, (state, action) => {
         state.status = 'succeeded';
         console.log('loadChats fulfilled', action.payload);
-        state.chats = {...action.payload};
+        state.chats = [...action.payload];
       })
       .addCase(loadChats.rejected, (state, action) => {
         state.status = 'failed';
@@ -117,6 +136,6 @@ export const chatSlice = createSlice({
   }
 })
 // Action creators are generated for each case reducer function
-export const { addMassage, updateChat, startChat, currentChat} = chatSlice.actions
+export const { addMassage, updateChat, startChat, currentChat, logoutChat} = chatSlice.actions
 
 export default chatSlice.reducer

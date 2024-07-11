@@ -15,15 +15,25 @@ import {
 import { db } from "../firebase_config";
 
 const ChatPage = () => {
-  const { massages } = useSelector((store) => store.chat.chat);
-  const { uid } = useSelector((store) => store.auth.user);
+  const [chatDetails, setChatDetails] = useState({
+    supporterName: "",
+    clientName: "",
+  });
+  const { messages } = useSelector((store) => store.chat.chat);
+
+  const {
+    user: { uid, chats: userChatsArray },
+    userType,
+  } = useSelector((store) => store.auth);
+
   const { chats } = useSelector((store) => store.chat);
+
   const params = useParams();
   const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuToggle = () => {
-    if (window.innerWidth > 640) {
+    if (window.innerWidth > 765) {
       setIsMenuOpen(false);
     } else {
       setIsMenuOpen(!isMenuOpen);
@@ -31,19 +41,19 @@ const ChatPage = () => {
   };
 
   const mapMassageType = () => {
-    if (!massages) return [];
-    return massages.map((massage) => {
+    if (!messages) return [];
+    return messages.map((message) => {
       return {
-        ...massage,
-        type: massage.senderId == uid ? "outgoing" : "incoming",
+        ...message,
+        type: message.senderId == uid ? "outgoing" : "incoming",
       };
     });
   };
 
   useEffect(() => {
     if (!params.chatId) return;
-
     const chat = Object.values(chats).find((chat) => chat.id == params.chatId);
+    console.log(params.chatId, chat);
     dispatch(updateChat(chat));
     //dispatch(resumeChat(params.chatId));
     //dispatch(currentChat(params.chatId));
@@ -58,24 +68,35 @@ const ChatPage = () => {
       }
     );
 
+    const chatDetails = userChatsArray.find(
+      (uc) => uc.chatId === params.chatId
+    );
+    setChatDetails(chatDetails);
+
     return () => unsubscribe();
-  }, [params, dispatch]);
-  console.log(isMenuOpen);
+  }, [params.chatId]);
+
   return (
     <>
       <div className="flex h-[91vh] w-screen mt-16">
         <div className="flex-1 flex flex-col">
-          <div dir="rtl">
+          <div dir="rtl" className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0">
             <ChatHeader
-              contactName="אליס"
+              contactName={
+                userType == "client"
+                  ? chatDetails.supporterName
+                  : chatDetails.clientName
+              }
               isMenuOpen={isMenuOpen}
               handleMenuToggle={handleMenuToggle}
             />
           </div>
-          <div className="overflow-y-scroll flex-1 bg-gray-100">
+          <div className="flex-1 overflow-y-scroll bg-gray-100">
             <ChatMessages messages={mapMassageType()} />
           </div>
+          <div className="max-md:fixed max-md:bottom-0 max-md:left-0 max-md:right-0">
           <ChatInput />
+          </div>
         </div>
         <div className="">
           <Sidebar

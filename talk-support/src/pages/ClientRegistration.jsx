@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { auth, db } from "../firebase_config";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import {
 } from "../redux/features/authSlice";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { Field, Label, Switch } from '@headlessui/react';
 import { cities } from "../cities";
 
 const ClientRegistration = () => {
@@ -21,7 +22,7 @@ const ClientRegistration = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { status } = useSelector((store) => store.auth);
-
+  const [agreed, setAgreed] = useState(false)
 
   const [registration, setRegistration] = useState({
     email: "",
@@ -66,15 +67,36 @@ const ClientRegistration = () => {
     return emailRegex.test(email);
   };
 
+  const requiredFields = [
+    { key: "nickname", label: "Nickname" },
+    { key: "recentStatus", label: "Recent Status" },
+    { key: "gender", label: "Gender" },
+    { key: "birthYear", label: "Birth Year" },
+    { key: "firstName", label: "First Name" },
+    { key: "lastName", label: "Last Name" },
+    { key: "email", label: "Email" },
+    { key: "password", label: "Password" },
+    { key: "area", label: "Area" },
+    { key: "city", label: "City" },
+    { key: "address", label: "Address" },
+    { key: "referralSource", label: "Referral Source" },
+    { key: "preferredLanguage", label: "Language" }
+  ];
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
-
+  
+    if (!agreed) {
+      setError("You must agree to the terms and conditions to register.");
+      return;
+    }
+  
     if (!validateEmail(registration.email)) {
       setError("Invalid email format.");
       return;
     }
-
+  
     if (
       registration.nickname.toLowerCase().includes(registration.firstName.toLowerCase()) ||
       registration.nickname.toLowerCase().includes(registration.lastName.toLowerCase())
@@ -82,20 +104,8 @@ const ClientRegistration = () => {
       setError("Nickname should not contain your first or last name.");
       return;
     }
-
-
-    // Validation for "not-selected" options
-    const requiredFields = [
-      { key: "gender", label: "Gender" },
-      { key: "birthYear", label: "Birth Year" },
-      { key: "area", label: "Area" },
-      { key: "city", label: "City" },
-      { key: "relationshipStatus", label: "Relationship Status" },
-      { key: "recentStatus", label: "Recent Status" },
-      { key: "referralSource", label: "Referral Source" },
-      { key: "preferredLanguage", label: "Language" },
-    ];
-
+  
+    // Validation for required fields
     for (let field of requiredFields) {
       if (
         registration[field.key] === "not-selected" ||
@@ -106,8 +116,20 @@ const ClientRegistration = () => {
         return;
       }
     }
-
+  
     try {
+      // Check if nickname already exists
+      const nicknameQuery = query(
+        collection(db, "nicknames"),
+        where("nickname", "==", registration.nickname)
+      );
+      const nicknameSnapshot = await getDocs(nicknameQuery);
+  
+      if (!nicknameSnapshot.empty) {
+        setError("Nickname already exists. Please choose another one.");
+        return;
+      }
+  
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         registration.email,
@@ -115,13 +137,18 @@ const ClientRegistration = () => {
       );
       const userId = userCredential.user.uid;
       const user = { ...registration, uid: userId };
-      user.chats =[];
+      user.chats = [];
       await updateProfile(userCredential.user, {
         displayName: registration.firstName + " " + registration.lastName,
       });
-
+  
       await setDoc(doc(db, "clients", userId), user);
-
+  
+      // Add nickname to nicknames collection
+      await setDoc(doc(db, "nicknames", userId), {
+        nickname: registration.nickname
+      });
+  
       // Update Redux
       dispatch(setUserType(userTypeClient));
       dispatch(setFormDetails(registration));
@@ -140,7 +167,7 @@ const ClientRegistration = () => {
       <form className="w-fit space-y-12 max-md:px-4 pt-10 " onSubmit={handleSubmit}>
         <Link
           to="/welcome"
-          className="flex justify-end text-base font-semibold text-gray-900"
+          className="absolute top-4 left-4 m-4 flex justify-end text-base font-semibold text-gray-900"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -158,10 +185,10 @@ const ClientRegistration = () => {
           </svg>
         </Link>
         <div className="border-b border-gray-900/10 pb-12">
-          <h2 className="text-2xl mb-4 font-semibold leading-7 text-gray-900 underline">
+          <h2 className="text-3xl mb-4 font-semibold leading-7 text-gray-900 underline">
             הרשמה באתי לשתף
           </h2>
-          <p className="mt-1 text-base leading-6 max-w-[500px] text-gray-600">
+          <p className="mt-1 text-lg leading-6 max-w-[500px] text-gray-600">
             מילוי הפרטים הבאים הזהות והשיחות שלך יישארו אנונימיים, ויוצגו רק
             המידע הרלוונטי למצבך. הזהות האישית שלך תישאר פרטית עד שתבחר לחשוף
             אותה או להחליף פרטי התקשרות עם התומך שלך. אנו מאמינים שלכל אחד מגיעה
@@ -173,7 +200,7 @@ const ClientRegistration = () => {
           <h2 className="text-xl font-semibold leading-7 text-gray-900">
             פרופיל
           </h2>
-          <p className="mt-1 text-sm leading-6 max-w-[500px] text-gray-600">
+          <p className="mt-1 text-base leading-6 max-w-[500px] text-gray-600">
             חלק זה נועד לעזור לתומכים שלנו להבין מה הכי חשוב לך, כדי שיוכלו לספק
             את התמיכה הטובה ביותר מבלי לדעת פרטים אישיים שלך.
           </p>
@@ -182,7 +209,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                שם משתמש (כינוי)  
@@ -195,7 +222,7 @@ const ClientRegistration = () => {
                   autoComplete="nickname"
                   value={registration.nickname}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 />
               </div>
@@ -204,7 +231,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="recentStatus"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 מצבך לאחרונה
@@ -215,7 +242,7 @@ const ClientRegistration = () => {
                   name="recentStatus"
                   value={registration.recentStatus}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 >
                   <option value="not-selected">בחר</option>
@@ -230,7 +257,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="gender"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 מגדר
@@ -241,7 +268,7 @@ const ClientRegistration = () => {
                   name="gender"
                   value={registration.gender}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 >
                   <option value="not-selected">בחר</option>
@@ -254,7 +281,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="birthYear"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 שנת לידה
@@ -265,7 +292,7 @@ const ClientRegistration = () => {
                   name="birthYear"
                   value={registration.birthYear}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 >
                   <option value="not-selected">בחר שנה</option>
@@ -287,14 +314,14 @@ const ClientRegistration = () => {
           <h2 className="text-xl font-semibold leading-7 text-gray-900">
             פרטים אישיים
           </h2>
-          <p className="mt-1 text-sm leading-6 max-w-[500px] text-gray-600">
+          <p className="mt-1 text-base leading-6 max-w-[500px] text-gray-600">
             פרטים אישיים אינם נראים למשתמשים אחרים באפליקציה
           </p>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 שם פרטי
@@ -307,7 +334,7 @@ const ClientRegistration = () => {
                   autoComplete="firstName"
                   value={registration.firstName}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 />
               </div>
@@ -315,7 +342,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 שם משפחה
@@ -328,7 +355,7 @@ const ClientRegistration = () => {
                   autoComplete="lastName"
                   value={registration.lastName}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 />
               </div>
@@ -338,7 +365,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-4">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 דוא"ל
@@ -351,7 +378,7 @@ const ClientRegistration = () => {
                   autoComplete="email"
                   value={registration.email}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 />
               </div>
@@ -360,7 +387,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-2">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 סיסמא
@@ -371,7 +398,7 @@ const ClientRegistration = () => {
                   name="password"
                   type={passwordVisible ? "text" : "password"}
                   autoComplete="new-password"
-                  className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   value={registration.password}
                   onChange={handleChange}
                   required
@@ -424,7 +451,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="location"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 איזור
@@ -435,7 +462,7 @@ const ClientRegistration = () => {
                   name="area"
                   value={registration.area}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 >
                   <option value="not-selected">בחר</option>
@@ -449,7 +476,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
                 <label
                   htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-base font-medium leading-6 text-gray-900"
                 >
                   <span className="text-red-500 ml-1">*</span>
                   עיר
@@ -520,7 +547,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-6">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 כתובת
@@ -533,7 +560,7 @@ const ClientRegistration = () => {
                   autoComplete="address"
                   value={registration.address}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 />
               </div>
@@ -542,7 +569,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="referralSource"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 איך הגעת אלינו
@@ -553,7 +580,7 @@ const ClientRegistration = () => {
                   name="referralSource"
                   value={registration.referralSource}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 >
                   <option value="not-selected">בחר</option>
@@ -570,7 +597,7 @@ const ClientRegistration = () => {
             <div className="sm:col-span-3">
               <label
                 htmlFor="preferredLanguage"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-base font-medium leading-6 text-gray-900"
               >
                 <span className="text-red-500 ml-1">*</span>
                 שפה מועדפת
@@ -581,7 +608,7 @@ const ClientRegistration = () => {
                   name="preferredLanguage"
                   value={registration.preferredLanguage}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                   required
                 >
                   <option value="hebrew">עברית</option>
@@ -592,17 +619,29 @@ const ClientRegistration = () => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <input
-            id="terms"
-            type="checkbox"
-            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-            required
-          />
-          <label htmlFor="terms" className="text-sm font-medium pr-2">
-            אני מסכים למדיניות הפרטיות ולתקנון
-          </label>
-        </div>
+
+        <Field className="flex gap-x-4 sm:col-span-2" id="terms" required>
+            <div className="flex h-6 items-center">
+              <Switch
+                checked={agreed}
+                onChange={setAgreed}
+                dir="ltr"
+                className="group flex w-8 flex-none cursor-pointer rounded-full bg-gray-200 p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 data-[checked]:bg-indigo-600"
+              >
+                <span className="sr-only">הסכמה לתנאים</span>
+                <span
+                  aria-hidden="true"
+                  className="h-4 w-4 transform rounded-full bg-white shadow-sm ring-1 ring-gray-900/5 transition duration-200 ease-in-out group-data-[checked]:translate-x-3.5"
+                />
+              </Switch>
+            </div>
+            <Label className="text-sm leading-6 text-gray-600">
+              על ידי בחירה זו, אתה מסכים ל{' '}
+              <a href="#" className="font-semibold text-indigo-600">
+              תנאים              </a>
+              .
+            </Label>
+          </Field>
 
         {error && <div className="text-red-500 mb-4">{error}</div>}
 

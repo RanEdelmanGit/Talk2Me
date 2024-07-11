@@ -13,7 +13,7 @@ export const fetchSupporters = createAsyncThunk('supporters/fetchSupporters', as
   return supportersCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });
 
-export const loadSupporterByChats = createAsyncThunk('chat/loadSupporterByChats', async ({ supporterIds }) => {
+export const loadSupporterByChats = createAsyncThunk('supporters/loadSupporterByChats', async ({ supporterIds }) => {
  console.log('supporterIds', supporterIds)
   const supporterQuery = query(collection(db, 'supporters'), where(documentId(), 'in', supporterIds))
   const supporters = await getDocs(supporterQuery);

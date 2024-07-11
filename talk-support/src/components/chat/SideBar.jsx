@@ -4,34 +4,31 @@ import Header from "../layout/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { loadChats } from "../../redux/features/chatSlice";
 import colors from "../../profileColors";
+import { useNavigate } from "react-router-dom";
 import { loadSupporterByChats } from "../../redux/features/supportersSlice";
+import Loading from "../common/Loading";
 
 const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
-  
   const { contactedSupporters } = useSelector((store) => store.supporters);
   const userChats = useSelector((store) => store.auth.user.chats);
+  const { chats } = useSelector((store) => store.chat);
   const { userType, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
- 
+  const nav = useNavigate();
 
   useEffect(() => {
     if (!userChats) return;
 
-    dispatch(loadChats({ userChats: userChats.map((c) => c.chatId) }))
-      .unwrap()
-      .then((chats) => {
-        const supporterIds = [];
-
-        for (let index = 0; index < chats.length; index++) {
-          const element = chats[index];
-          supporterIds.push(element.supporterId);
-        }
-        dispatch(loadSupporterByChats({ supporterIds }));
-      });
+    if (userChats.length === 0) {
+      nav("/supporters");
+    }
+    dispatch(loadChats({ userChats: userChats.map((c) => c.chatId) }));
   }, [userChats]);
 
+  if (!userChats || !chats || chats.length === 0) {
+    return <Loading show={true} />;
+  }
 
-  
   return (
     <div>
       {/* Sidebar */}
@@ -53,25 +50,35 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
             type="search"
             className="rounded-lg h-8 border-gray-300 focus:ring-indigo-500"
             placeholder="חפש לפי שם ..."
-           
           />
         </header>
         <div
           className="overflow-auto h-[83vh] max-md:h-[73vh] mb-9 pb-5 border-l border-gray-300"
           dir="rtl"
         >
-          {contactedSupporters.map((contact, index) => (
-            <div key={index} className="border-b border-gray-200">
-              <Chats
-                contact={{
-                  ...contact,
-                  color: colors[index % colors.length],
-                }}
-                handleMenuToggle={handleMenuToggle}
-                chatId={contact.uid + user.uid}
-              />
-            </div>
-          ))}
+          {user.chats &&
+            user.chats
+              .map((c) => ({
+                displayName:
+                  userType == "client" ? c.supporterName : c.clientName,
+                chatId: c.chatId,
+                lastUpdate: chats.find((chat) => chat.id === c.chatId)
+                  .lastUpdate,
+              }))
+              .sort((c1, c2) => c2.lastUpdate.localeCompare(c1.lastUpdate))
+              .map((contact, index) => (
+                <div key={index} className="border-b border-gray-200">
+                  <Chats
+                    contact={{
+                      ...contact,
+                      color: colors[index % colors.length],
+                    }}
+                    index={index}
+                    handleMenuToggle={handleMenuToggle}
+                    chatId={contact.chatId}
+                  />
+                </div>
+              ))}
         </div>
       </div>
     </div>

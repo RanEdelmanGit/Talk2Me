@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Chats({ contact, handleMenuToggle, chatId }) {
+export default function Chats({ contact, handleMenuToggle, chatId, index }) {
   const nav = useNavigate();
+  console.log("index", index);
+
+  useEffect(() => {
+    if (index == 0) {
+      nav(`/chat/${chatId}`);
+      handleMenuToggle();
+    }
+  }, [index]);
   return (
     <div
       className="flex items-center py-3 px-2 md:px-6 cursor-pointer hover:bg-gray-100 rounded-md"
-    
       onClick={() => {
         nav(`/chat/${chatId}`);
         handleMenuToggle();
@@ -20,10 +27,8 @@ export default function Chats({ contact, handleMenuToggle, chatId }) {
         />
       </div>
       <div className="flex-1">
-        <h2 className="text-lg font-semibold">
-          {contact.firstName + " " + contact.lastName}
-        </h2>
-        <p className="text-gray-600">{contact.message}</p>
+        <h2 className="text-lg font-semibold">{contact.displayName}</h2>
+        {/* <p className="text-gray-600">{contact.message}</p> */}
       </div>
     </div>
   );

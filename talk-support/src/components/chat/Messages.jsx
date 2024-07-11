@@ -2,7 +2,7 @@ import React from "react";
 
 const ChatMessages = ({ messages }) => {
   return (
-    <div className="flex-1 overflow-y-auto px-4 pt-8">
+    <div className="flex-1 overflow-y-auto p-4">
       {messages.map((msg, index) => (
         <div
           key={index}
@@ -18,6 +18,9 @@ const ChatMessages = ({ messages }) => {
             }`}
           >
             <p>{msg.text}</p>
+            <p className="text-xs text-gray-400">
+              {new Date(msg.sentAt).toLocaleTimeString()}
+            </p>
           </div>
         </div>
       ))}

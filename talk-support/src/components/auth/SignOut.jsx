@@ -4,6 +4,7 @@ import { auth } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../../redux/features/authSlice";
+import { logoutChat } from "../../redux/features/chatSlice";
 
 export default function SignOut() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export default function SignOut() {
     try {
       await signOut(auth);
       dispatch(clearUser());
+      dispatch(logoutChat());
       localStorage.removeItem("userType");
       navigate("/welcome");
     } catch (error) {

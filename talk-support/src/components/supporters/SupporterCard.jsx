@@ -32,7 +32,7 @@ const SupporterCard = ({
   },
   aboutOpen,
   toggleAbout,
-  color // Accept color prop
+  color, // Accept color prop
 }) => {
   const { user } = useSelector((store) => store.auth);
   const [isFavorite, setIsFavorite] = useState(
@@ -57,8 +57,7 @@ const SupporterCard = ({
 
   const handleStartChatClick = (e) => {
     e.stopPropagation();
-   
-    if(!chats.includes(chatId)){
+    if (!chats.find((c) => c.chatId == chatId)) {
       dispatch(
         startChat({
           clientId: user.uid,
@@ -67,9 +66,21 @@ const SupporterCard = ({
         })
       );
       dispatch(saveChat());
-      dispatch(initChat({ chatId: chatId }));
+      dispatch(
+        initChat({
+          chatId,
+          supporterId: uid,
+          supporterName: `${firstName} ${lastName}`,
+        })
+      );
       dispatch(updateUser());
-      dispatch(updateSupporter({ supporterId: uid, chatId: chatId }));
+      dispatch(
+        updateSupporter({
+          chatId,
+          supporterId: uid,
+          supporterName: `${firstName} ${lastName}`,
+        })
+      );
     }
     navigate(`/chat/${chatId}`, { state: { supporterId: uid } });
   };
@@ -78,7 +89,11 @@ const SupporterCard = ({
 
   if (isMobile) {
     return (
-      <div className="w-full mx-auto md:p-3 border-b border-gray-300" dir="rtl" onClick={toggleAbout}>
+      <div
+        className="w-full mx-auto md:p-3 border-b border-gray-300"
+        dir="rtl"
+        onClick={toggleAbout}
+      >
         <div className="flex flex-col items-start justify-between w-full py-4">
           <div className="flex justify-between items-center w-full">
             <div className="flex items-center gap-2">
@@ -170,7 +185,9 @@ const SupporterCard = ({
               className="rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={handleStartChatClick}
             >
-              {chats.includes(chatId)?"המשך שיחה":"התחל שיחה"}
+              {chats.find((c) => c.chatId == chatId)
+                ? "המשך שיחה"
+                : "התחל שיחה"}
             </button>
           </div>
         </div>
@@ -179,7 +196,11 @@ const SupporterCard = ({
   }
 
   return (
-    <div className="w-full mx-auto md:p-3 border-b border-gray-300 flex flex-col" dir="rtl" onClick={toggleAbout}>
+    <div
+      className="w-full mx-auto md:p-3 border-b border-gray-300 flex flex-col"
+      dir="rtl"
+      onClick={toggleAbout}
+    >
       <div className="flex items-center justify-between w-full px-10 sm:p-3 sm:gap-3 ">
         <img
           src={avatarUrl}
@@ -218,7 +239,7 @@ const SupporterCard = ({
           className="rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           onClick={handleStartChatClick}
         >
-          התחל שיחה
+          {chats.find((c) => c.chatId == chatId) ? "המשך שיחה" : "התחל שיחה"}
         </button>
         <button
           className="h-6 w-6 focus:outline-none"

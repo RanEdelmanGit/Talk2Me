@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { userTypeClient, userTypeSupporter } from "./redux/features/authSlice";
 import ClientRegistration from "./pages/ClientRegistration";
 import SupporterRegistration from "./pages/SupporterRegistration";
+import Contact from "./pages/Contact";
 
 const Root = () => {
   return (
@@ -74,7 +75,7 @@ function App() {
 
   return (
     <Routes>
-      <Route element={<Root/>}>
+      <Route element={<Root />}>
         <Route
           path="/chat/:chatId"
           element={
@@ -102,6 +103,7 @@ function App() {
         <Route path="/" element={<Navigate to="/chat" />} />
       </Route>
       <Route path="/welcome" element={<Welcome />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/register/client" element={<ClientRegistration />} />
       <Route path="/register/supporter" element={<SupporterRegistration />} />
       <Route path="*" element={<Navigate to="/welcome" />} />

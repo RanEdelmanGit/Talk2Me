@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from "react";
-import { useUser } from "../../context/userContext";
+import { useSelector } from "react-redux";
 
 export default function Message({ message }) {
-  const { user } = useUser();
+  const { user } = useSelector((store) => store.auth);
   const ref = useRef();
 
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
 
+  
   return (
     <div ref={ref}>
       <div className={`message ${message.senderId === user.uid && "owner"}`}>
