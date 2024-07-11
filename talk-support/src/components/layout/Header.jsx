@@ -13,8 +13,7 @@ import { useSelector } from "react-redux";
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { userType } = useSelector((state) => state.auth);
-  // console.log(user);
-  // console.log(userType);
+  
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -29,16 +28,18 @@ const Header = () => {
     { name: "צ'אט", href: "/chat" },
     { name: "תומכים", href: "/supporters" },
     { name: "עזרה ומשאבים", href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE", external: true },
+    { name: "צור קשר", href: "/contact" }, // Added Contact link
   ];
 
   const navigationSupporter = [
     { name: "צ'אט", href: "/chat" },
     { name: "בית", href: "/supporters" },
     { name: "עזרה ומשאבים", href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE", external: true },
+    { name: "צור קשר", href: "/contact" }, // Added Contact link
   ];
 
   const navigation =
-    userType == "client" ? navigationClient : navigationSupporter;
+    userType === "client" ? navigationClient : navigationSupporter;
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -55,7 +56,6 @@ const Header = () => {
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
-                {/* Mobile menu button */}
                 <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (

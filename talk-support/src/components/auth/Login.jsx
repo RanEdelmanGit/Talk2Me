@@ -132,6 +132,7 @@ const Login = ({ setIsLoginVisible }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              dir="ltr"
               className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
             />
             <span
