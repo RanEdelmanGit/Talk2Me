@@ -52,11 +52,31 @@ export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getSt
 export const updateSupporter = createAsyncThunk('auth/updateSupporter', async ({supporterId, chatId,supporterName}, {getState}) => {
   const state = getState();
   const supporterChat = {chatId, clientId: state.auth.user.uid, clientName: state.auth.user.nickname, supporterId, supporterName, lastMessage:"", readLastMessage:true}
-  
+
   try{
     const supporterRef = doc(db, 'supporters', supporterId);
     await updateDoc(supporterRef, {chats: arrayUnion(supporterChat)})
     return {};
+  }catch(error){
+    console.log(error);
+  }
+});
+export const toggleSupporterVisibility = createAsyncThunk('auth/toggleSupporterVisibility', async ({chatId}, {getState}) => {
+  const state = getState();
+  const chat = state.auth.user.chats.find( c => c.chatId == chatId)
+
+  try{
+    const supporterRef = doc(db, 'supporters', chat.supporterId);
+    const querySnapshot = await getDoc(supporterRef);
+    if(querySnapshot.exists()){
+      const supporter = querySnapshot.data()
+      const index = supporter.chats.findIndex(c => c.chatId == chat.chatId)
+      supporter.chats[index]=chat
+      await updateDoc(supporterRef,supporter)
+    }
+
+    
+    
   }catch(error){
     console.log(error);
   }
@@ -97,7 +117,19 @@ export const authSlice = createSlice({
       }
       const{chatId, supporterId, supporterName } = action.payload;
       state.user.chats.push({chatId, clientId: state.user.uid, clientName: state.user.nickname, supporterId, supporterName, lastMessage:"", readLastMessage:true})
-    }
+    },
+    updateChatVisibility: (state, action) =>{
+      const {isVisible, chatId} = action.payload;
+      const chatIndex=  state.user.chats.findIndex(c => c.chatId == chatId);
+      const chat = state.user.chats[chatIndex];
+      if(isVisible){
+        chat.clientName = `${state.user.firstName} ${state.user.lastName}`;
+      }else{
+        chat.clientName = state.user.nickname;
+      }
+      state.user.chats[chatIndex] = chat;
+      
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -135,10 +167,20 @@ export const authSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       })
+      .addCase(toggleSupporterVisibility.pending, (state) =>{
+        state.status = 'loading';
+      })
+      .addCase(toggleSupporterVisibility.fulfilled, (state) => {
+        state.status = 'succeeded'; 
+      })
+      .addCase(toggleSupporterVisibility.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
   }
 })
 
 // Action creators are generated for each case reducer function
-export const {setFormDetails, setUserType, setUid, clearUser, addFavorite, removeFavorite, initChat } = authSlice.actions
+export const {setFormDetails, setUserType, setUid, clearUser, addFavorite, removeFavorite, initChat, updateChatVisibility } = authSlice.actions
 
 export default authSlice.reducer

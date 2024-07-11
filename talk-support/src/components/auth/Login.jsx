@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
@@ -48,12 +49,18 @@ const Login = ({ setIsLoginVisible }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       const uid = auth.currentUser.uid;
-      dispatch(setUid(uid));
-      dispatch(fetchUser({ uid, userType: logInUserType }));
-      dispatch(setUserType(logInUserType));
-      localStorage.setItem("userType", logInUserType);
+      dispatch(fetchUser({ uid, userType: logInUserType }))
+        .unwrap()
+        .then(() => {
+          console.log("w4543");
+          dispatch(setUserType(logInUserType));
+          dispatch(setUid(uid));
+          localStorage.setItem("userType", logInUserType);
+          navigate("/chat");
+        });
     } catch (error) {
       console.log(error);
+      signOut(auth);
       setError(error.message);
     }
   };

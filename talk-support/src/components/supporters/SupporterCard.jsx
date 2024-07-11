@@ -57,7 +57,7 @@ const SupporterCard = ({
 
   const handleStartChatClick = (e) => {
     e.stopPropagation();
-    if (!chats.find((c) => c.chatId == chatId)) {
+    if (!chats.find((c) => c.chatId == chatId)) { // new chat
       dispatch(
         startChat({
           clientId: user.uid,

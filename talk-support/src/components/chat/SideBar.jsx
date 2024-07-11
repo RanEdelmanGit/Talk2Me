@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Chats from "./Chats";
 import Header from "../layout/Header";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,12 +9,12 @@ import { loadSupporterByChats } from "../../redux/features/supportersSlice";
 import Loading from "../common/Loading";
 
 const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
-  const { contactedSupporters } = useSelector((store) => store.supporters);
   const userChats = useSelector((store) => store.auth.user.chats);
   const { chats } = useSelector((store) => store.chat);
   const { userType, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const nav = useNavigate();
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (!userChats) return;
@@ -29,6 +29,12 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
     return <Loading show={true} />;
   }
 
+  const getLastUpdate = (chatId) => {
+    const chat = chats.find((chat) => chat.id === chatId);
+    if(chat) return chat.lastUpdate
+    return new Date().toISOString();
+  }
+  
   return (
     <div>
       {/* Sidebar */}
@@ -48,6 +54,8 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
           {/* Close button in header */}
           <input
             type="search"
+            value={search}
+            onChange={(e)=> setSearch(e.target.value)}
             className="rounded-lg h-8 border-gray-300 focus:ring-indigo-500"
             placeholder="חפש לפי שם ..."
           />
@@ -62,10 +70,10 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
                 displayName:
                   userType == "client" ? c.supporterName : c.clientName,
                 chatId: c.chatId,
-                lastUpdate: chats.find((chat) => chat.id === c.chatId)
-                  .lastUpdate,
+                lastUpdate:getLastUpdate(c.chatId),
               }))
               .sort((c1, c2) => c2.lastUpdate.localeCompare(c1.lastUpdate))
+              .filter((c)=> search == "" ? true: c.displayName.includes(search))
               .map((contact, index) => (
                 <div key={index} className="border-b border-gray-200">
                   <Chats

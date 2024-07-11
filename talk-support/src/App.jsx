@@ -10,13 +10,13 @@ import {
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
 import { setUid, fetchUser, setUserType } from "./redux/features/authSlice";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase_config";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, db } from "./firebase_config";
+import { doc, onSnapshot } from "firebase/firestore";
 import ChatPage from "./pages/ChatPage";
 import SupportersPage from "./pages/Supporters";
 import Header from "./components/layout/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { userTypeClient, userTypeSupporter } from "./redux/features/authSlice";
 import ClientRegistration from "./pages/ClientRegistration";
 import SupporterRegistration from "./pages/SupporterRegistration";
 import Contact from "./pages/Contact";
@@ -45,24 +45,47 @@ function App() {
   const { user, isAuth } = useSelector((state) => state.auth);
   const { userType } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
+  // signOut(auth);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
+      const savedUserType = localStorage.getItem("userType");
+      console.log("onAuthStateChanged", savedUserType);
+      if (currentUser && savedUserType) {
         const uid = currentUser.uid;
-        const userType = localStorage.getItem("userType");
+
         dispatch(setUid(uid));
-        dispatch(setUserType(userType)); //TODO detect usertype in autologin fetchuser
+        dispatch(setUserType(savedUserType)); //TODO detect usertype in autologin fetchuser
         dispatch(fetchUser({ uid, userType }));
       } else {
-        localStorage.removeItem("userType");
+        //localStorage.removeItem("userType");
+
         navigate("/welcome");
       }
     });
 
+    // let unsubscribeUser;
+
+    // if (isAuth) {
+    //   unsubscribeUser = userType == "client" ? "clients" : "supporters";
+    //   const userCollection = onSnapshot(
+    //     doc(db, userCollection, user.uid),
+    //     (doc) => {
+    //       if (!doc.exists()) {
+    //         // ?
+    //       } else {
+    //         //dispatch(updateChat(doc.data()));
+    //         console.log("chats", doc.chats);
+    //       }
+    //     }
+    //   );
+    // }
+
     // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
+    return () => {
+      unsubscribe();
+      // unsubscribeUser && unsubscribeUser();
+    };
+  }, [isAuth]);
 
   useEffect(() => {
     if (isAuth) {
