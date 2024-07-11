@@ -20,7 +20,7 @@ const ChatPage = () => {
     clientName: "",
   });
   const { messages } = useSelector((store) => store.chat.chat);
-
+  
   const {
     user: { uid, chats: userChatsArray },
     userType,
@@ -49,6 +49,7 @@ const ChatPage = () => {
       };
     });
   };
+ 
 
   useEffect(() => {
     if (!params.chatId) return;
@@ -78,8 +79,8 @@ const ChatPage = () => {
 
   return (
     <>
-      <div className="flex h-[91vh] w-screen mt-16">
-        <div className="flex-1 flex flex-col">
+      <div className="flex top-0 max-md:h-[73vh] h-[91vh] w-screen mt-20 ">
+        <div className="flex-1 flex flex-col ">
           <div dir="rtl" className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0">
             <ChatHeader
               contactName={

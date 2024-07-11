@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 const ChatMessages = ({ messages }) => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
-    <div className="flex-1 overflow-y-auto p-4">
+    <div className="flex-1 overflow-y-auto p-2">
       {messages.map((msg, index) => (
         <div
+          ref={ref}
           key={index}
           className={`flex ${
             msg.type === "outgoing" ? "justify-end" : "justify-start"
