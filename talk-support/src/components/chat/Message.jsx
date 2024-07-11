@@ -11,9 +11,9 @@ export default function Message({ message }) {
 
   
   return (
-    <div ref={ref}>
+    <div >
       <div className={`message ${message.senderId === user.uid && "owner"}`}>
-        <div className="messageInfo">
+        <div className="messageInfo" >
           <img
             src={
               user.photoURL ||

@@ -79,9 +79,9 @@ const ChatPage = () => {
 
   return (
     <>
-      <div className="flex top-0 max-md:h-[73vh] h-[91vh] w-screen mt-20 ">
+      <div className="flex  max-md:h-[73vh] h-[91vh] w-screen mt-16 ">
         <div className="flex-1 flex flex-col ">
-          <div dir="rtl" className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0">
+          <div dir="rtl" className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0 ">
             <ChatHeader
               contactName={
                 userType == "client"
@@ -92,7 +92,7 @@ const ChatPage = () => {
               handleMenuToggle={handleMenuToggle}
             />
           </div>
-          <div className="flex-1 overflow-y-scroll bg-gray-100">
+          <div className="flex-1   overflow-y-scroll bg-gray-100">
             <ChatMessages messages={mapMassageType()} />
           </div>
           <div className="max-md:fixed max-md:bottom-0 max-md:left-0 max-md:right-0">
