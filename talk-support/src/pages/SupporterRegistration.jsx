@@ -232,15 +232,15 @@ const SupporterRegistration = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen " dir="rtl">
+    <div className="flex items-center justify-center h-screen" dir="rtl">
       <div className="w-full h-full overflow-y-scroll flex justify-center">
         <form
-          className="w-fit space-y-12 pt-10 max-md:px-4"
+          className="w-fit space-y-12 md:pt-10 max-md:px-4"
           onSubmit={handleSubmit}
         >
           <Link
             to="/welcome"
-            className=" absolute top-4 left-4 m-4 flex justify-end text-base font-semibold text-gray-900"
+            className=" md:absolute md:top-4 md:left-4 m-4 flex justify-end text-base font-semibold text-gray-900"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

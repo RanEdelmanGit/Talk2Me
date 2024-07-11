@@ -15,7 +15,6 @@ import { auth, db } from "./firebase_config";
 import { doc, onSnapshot } from "firebase/firestore";
 import ChatPage from "./pages/ChatPage";
 import SupportersPage from "./pages/Supporters";
-import Header from "./components/layout/Header";
 import { useSelector, useDispatch } from "react-redux";
 import ClientRegistration from "./pages/ClientRegistration";
 import SupporterRegistration from "./pages/SupporterRegistration";

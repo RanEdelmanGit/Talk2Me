@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase_config"; // Make sure to import your firebase_config
+import { useSelector } from "react-redux";
 
-export default function ContactForm({ isAuth, userType }) {
+export default function ContactForm() {
+  const { isAuth, userType } = useSelector((state) => state.auth);
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -30,17 +33,20 @@ export default function ContactForm({ isAuth, userType }) {
 
     // Form validation
     if (!formData.email || !formData.phone || !formData.subject || !formData.message) {
-      setError("Email, phone, subject and message are required.");
+      setError("Email, phone, subject, and message are required.");
       return;
     }
 
-    let collectionName = "inquiries";
+    let inquiryType = "Other";
     if (isAuth) {
-      collectionName = userType === "client" ? "clientInquiries" : "supporterInquiries";
+      inquiryType = userType === "client" ? "Client" : "Supporter";
     }
 
     try {
-      await addDoc(collection(db, collectionName), formData);
+      await addDoc(collection(db, "inquiries"), {
+        ...formData,
+        type: inquiryType
+      });
       setSuccess("Your message has been sent successfully!");
       setFormData({
         firstName: "",
@@ -153,7 +159,9 @@ export default function ContactForm({ isAuth, userType }) {
             />
           </div>
         </div>
-      </div>
+      </div>   
+      {error && <p className="mt-4 text-red-500">{error}</p>}
+      {success && <p className="mt-4 text-green-500">{success}</p>}
       <div className="mt-10">
         <button
           type="submit"
@@ -162,8 +170,7 @@ export default function ContactForm({ isAuth, userType }) {
           בוא נדבר
         </button>
       </div>
-      {error && <p className="mt-4 text-red-500">{error}</p>}
-      {success && <p className="mt-4 text-green-500">{success}</p>}
+   
     </form>
   );
 }

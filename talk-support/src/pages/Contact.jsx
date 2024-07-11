@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function Contact() {
-  const { isAuth, userType } = useSelector((state) => state.auth);
+  const { isAuth} = useSelector((state) => state.auth);
 
   return (
     <div className="relative flex max-md:flex-col max-md:h-[1000px] pb-40 overflow-y-scroll" dir="rtl">
@@ -32,7 +32,7 @@ export default function Contact() {
         <ContactInfo />
       </div>
       <div className="flex-1 mt-16 sm:mt-32">
-        <ContactForm isAuth={isAuth} userType={userType} />
+        <ContactForm />
       </div>
     </div>
   );
