@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/loginPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setUid, fetchUser, setUserType } from "../../redux/features/authSlice";
+import { loadChats, } from "../../redux/features/chatSlice";
 import Loading from "../common/Loading";
 
 const Login = ({ setIsLoginVisible }) => {
@@ -51,12 +52,17 @@ const Login = ({ setIsLoginVisible }) => {
       const uid = auth.currentUser.uid;
       dispatch(fetchUser({ uid, userType: logInUserType }))
         .unwrap()
-        .then(() => {
-          console.log("w4543");
-          dispatch(setUserType(logInUserType));
-          dispatch(setUid(uid));
-          localStorage.setItem("userType", logInUserType);
-          navigate("/chat");
+        .then((user) => {
+          console.log("after load user");
+          dispatch(loadChats({ userChats: user.chats.map((c) => c.chatId) }))
+            .unwrap()
+            .then(() => {
+              console.log("after load chats");
+              dispatch(setUserType(logInUserType));
+              dispatch(setUid(uid));
+              localStorage.setItem("userType", logInUserType);
+              navigate("/chat");
+            });
         });
     } catch (error) {
       console.log(error);

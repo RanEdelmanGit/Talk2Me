@@ -15,14 +15,12 @@ import {
 import { db } from "../firebase_config";
 
 const ChatPage = () => {
-  const [chatDetails, setChatDetails] = useState({
-    supporterName: "",
-    clientName: "",
-  });
+
   const { messages } = useSelector((store) => store.chat.chat);
+  const { supporterName, clientName } = useSelector((store) => store.chat.chat);
   
   const {
-    user: { uid, chats: userChatsArray },
+    user: { uid },
     userType,
   } = useSelector((store) => store.auth);
 
@@ -56,8 +54,7 @@ const ChatPage = () => {
     const chat = Object.values(chats).find((chat) => chat.id == params.chatId);
     console.log(params.chatId, chat);
     dispatch(updateChat(chat));
-    //dispatch(resumeChat(params.chatId));
-    //dispatch(currentChat(params.chatId));
+
     const unsubscribeChat = onSnapshot(
       doc(db, chatCollection, params.chatId),
       (doc) => {
@@ -68,13 +65,6 @@ const ChatPage = () => {
         }
       }
     );
-
-   
-
-    const chatDetails = userChatsArray.find(
-      (uc) => uc.chatId === params.chatId
-    );
-    setChatDetails(chatDetails);
 
     return () => unsubscribeChat();
   }, [params.chatId]);
@@ -90,8 +80,8 @@ const ChatPage = () => {
             <ChatHeader
               contactName={
                 userType == "client"
-                  ? chatDetails.supporterName
-                  : chatDetails.clientName
+                  ? supporterName
+                  : clientName
               }
               isMenuOpen={isMenuOpen}
               handleMenuToggle={handleMenuToggle}

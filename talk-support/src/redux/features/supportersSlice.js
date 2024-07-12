@@ -21,11 +21,22 @@ export const loadSupporterByChats = createAsyncThunk('supporters/loadSupporterBy
   return supporters.docs.map(doc => ({ id: doc.id, ...doc.data() }));;
 })
 
+export const loadClientsByChats = createAsyncThunk('supporters/loadClientsByChats', async ({ clientIds }) => {
+  
+  if(!clientIds || clientIds.length === 0) return []
+  const clientQuery = query(collection(db, "clients"), where(documentId(), 'in', clientIds))
+  const clients = await getDocs(clientQuery);
+  
+  return clients.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+})
+
 const supportersSlice = createSlice({
   name: 'supporters',
   initialState: {
     supporters: [],
     contactedSupporters:[],
+    contactedClients:[],
     showFavorites:false,
     status: 'idle',
     error: null,
@@ -59,6 +70,17 @@ const supportersSlice = createSlice({
         state.contactedSupporters = action.payload;
       })
       .addCase(loadSupporterByChats.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(loadClientsByChats.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(loadClientsByChats.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.contactedClients = action.payload;
+      })
+      .addCase(loadClientsByChats.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadChats } from "../../redux/features/chatSlice";
 import colors from "../../profileColors";
 import { useNavigate } from "react-router-dom";
-import { loadSupporterByChats } from "../../redux/features/supportersSlice";
 import Loading from "../common/Loading";
 
 const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
@@ -17,24 +16,32 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (!userChats) return;
+    if (!chats) return;
 
-    if (userChats.length === 0) {
+    if (chats.length === 0) {
       nav("/supporters");
     }
-    dispatch(loadChats({ userChats: userChats.map((c) => c.chatId) }));
+
+    //dispatch(loadChats({ userChats: userChats.map((c) => c.chatId) })); // loads user chats into chats selector
   }, [userChats]);
 
-  if (!userChats || !chats || chats.length === 0) {
-    return <Loading show={true} />;
+  console.log(chats);
+  if (!chats || chats.length === 0) {
+    <div className="flex w-full min-h-screen justify-center items-center">
+      <Loading show={true} />
+    </div>;
   }
 
   const getLastUpdate = (chatId) => {
     const chat = chats.find((chat) => chat.id === chatId);
-    if(chat) return chat.lastUpdate
+    if (chat) {
+      if(chat.lastUpdate)
+        return chat.lastUpdate;
+      return new Date().toISOString();
+    }
     return new Date().toISOString();
-  }
-  
+  };
+
   return (
     <div>
       {/* Sidebar */}
@@ -55,7 +62,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
           <input
             type="search"
             value={search}
-            onChange={(e)=> setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
             className="rounded-lg h-8 border-gray-300 focus:ring-indigo-500"
             placeholder="חפש לפי שם ..."
           />
@@ -64,16 +71,18 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
           className="overflow-auto h-[83vh] max-md:h-[73vh] mb-9 pb-5 border-l border-gray-300"
           dir="rtl"
         >
-          {user.chats &&
-            user.chats
+          {chats &&
+            chats
               .map((c) => ({
                 displayName:
                   userType == "client" ? c.supporterName : c.clientName,
-                chatId: c.chatId,
-                lastUpdate:getLastUpdate(c.chatId),
+                chatId: c.id,
+                lastUpdate: getLastUpdate(c.id),
               }))
               .sort((c1, c2) => c2.lastUpdate.localeCompare(c1.lastUpdate))
-              .filter((c)=> search == "" ? true: c.displayName.includes(search))
+              .filter((c) =>
+                search == "" ? true : c.displayName.includes(search)
+              )
               .map((contact, index) => (
                 <div key={index} className="border-b border-gray-200">
                   <Chats

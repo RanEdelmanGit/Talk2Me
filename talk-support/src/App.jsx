@@ -10,11 +10,12 @@ import {
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
 import { setUid, fetchUser, setUserType } from "./redux/features/authSlice";
+import { loadChats } from "./redux/features/chatSlice";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "./firebase_config";
 import { doc, onSnapshot } from "firebase/firestore";
 import ChatPage from "./pages/ChatPage";
-import SupportersPage from "./pages/Supporters";
+import ClientsSupportersPage from "./pages/ClientsSupportersPage";
 import { useSelector, useDispatch } from "react-redux";
 import ClientRegistration from "./pages/ClientRegistration";
 import SupporterRegistration from "./pages/SupporterRegistration";
@@ -48,13 +49,17 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       const savedUserType = localStorage.getItem("userType");
-      console.log("onAuthStateChanged", savedUserType);
       if (currentUser && savedUserType) {
         const uid = currentUser.uid;
 
         dispatch(setUid(uid));
         dispatch(setUserType(savedUserType)); //TODO detect usertype in autologin fetchuser
-        dispatch(fetchUser({ uid, userType }));
+        dispatch(fetchUser({ uid, userType }))
+          .unwrap()
+          .then( user => {
+            dispatch(loadChats({ userChats: user.chats.map((c) => c.chatId) }));
+          })
+        
       } else {
         //localStorage.removeItem("userType");
 
@@ -88,7 +93,6 @@ function App() {
 
   useEffect(() => {
     if (isAuth) {
-      console.log("app", user);
       navigate("/chat");
     } else {
       navigate("/welcome");
@@ -118,7 +122,7 @@ function App() {
           path="/supporters"
           element={
             <ProtectedRoute user={user}>
-              <SupportersPage />
+              <ClientsSupportersPage />
             </ProtectedRoute>
           }
         />

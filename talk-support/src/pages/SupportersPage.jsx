@@ -2,30 +2,25 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SupporterList from "../components/supporters/SupporterList";
 import Sidebar from "../components/supporters/Sidebar";
-import { fetchSupporters, displayFavorites, displayAll } from "../redux/features/supportersSlice";
-import Header from "../components/layout/Header";
+import { fetchSupporters } from "../redux/features/supportersSlice";
 import Loading from "../components/common/Loading";
-
-
-
+import {
+  displayFavorites,
+  displayAll,
+} from "../redux/features/supportersSlice";
 
 const SupportersPage = () => {
-
+  const dispatch = useDispatch();
+  const showFavorites = useSelector((state) => state.supporters.showFavorites);
+  const user = useSelector((state) => state.auth.user);
+  const [filteredSupporters, setFilteredSupporters] = useState([]);
+  const supporters = useSelector((state) => state.supporters.supporters);
   const status = useSelector((state) => state.supporters.status);
   const error = useSelector((state) => state.supporters.error);
-  const dispatch = useDispatch();
-  const supporters = useSelector((state) => state.supporters.supporters);
-  const showFavorites = useSelector((state) => state.supporters.showFavorites);
-  const [filteredSupporters, setFilteredSupporters] = useState([]);
-  const { userType, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchSupporters());
-  }, [dispatch]);
-
-  useEffect(() => {
-    applyFilters(filters);
-  }, [supporters, showFavorites]);
+  }, []);
 
   const [filters, setFilters] = useState({
     name: "",
@@ -37,6 +32,10 @@ const SupportersPage = () => {
     preferredLanguage: "not-selected",
   });
 
+  useEffect(() => {
+    applyFilters(filters);
+  }, [supporters, showFavorites]);
+
   const applyFilters = (filters) => {
     let filtered;
     const allFiltersSelected = Object.values(filters).every(
@@ -45,7 +44,9 @@ const SupportersPage = () => {
 
     if (allFiltersSelected) {
       filtered = showFavorites
-        ? supporters.filter((supporter) => user.favorites.includes(supporter.id))
+        ? supporters.filter((supporter) =>
+            user.favorites.includes(supporter.id)
+          )
         : supporters;
       setFilteredSupporters(filtered);
       return;
@@ -67,18 +68,24 @@ const SupportersPage = () => {
     filtered = supporters.filter((supporter) => {
       const ageRange = ageRanges[filters.age];
       const [minAge, maxAge] = ageRange || [0, Infinity];
-      const isFavorite = showFavorites ? user.favorites.includes(supporter.id) : true;
+      const isFavorite = showFavorites
+        ? user.favorites.includes(supporter.id)
+        : true;
       return (
         (!filters.name ||
           `${supporter.firstName} ${supporter.lastName}`
             .toLowerCase()
             .includes(filters.name.toLowerCase())) &&
-        (filters.meeting === "not-selected" || supporter.meeting === filters.meeting) &&
-        (filters.gender === "not-selected" || supporter.gender === filters.gender) &&
-        (filters.age === "not-selected" || (supporter.age >= minAge && supporter.age <= maxAge)) &&
+        (filters.meeting === "not-selected" ||
+          supporter.meeting === filters.meeting) &&
+        (filters.gender === "not-selected" ||
+          supporter.gender === filters.gender) &&
+        (filters.age === "not-selected" ||
+          (supporter.age >= minAge && supporter.age <= maxAge)) &&
         (filters.area === "not-selected" || supporter.area === filters.area) &&
         (!filters.city || supporter.city === filters.city) &&
-        (filters.preferredLanguage === "not-selected" || supporter.preferredLanguage === filters.preferredLanguage) &&
+        (filters.preferredLanguage === "not-selected" ||
+          supporter.preferredLanguage === filters.preferredLanguage) &&
         isFavorite
       );
     });
@@ -103,45 +110,32 @@ const SupportersPage = () => {
     dispatch(displayAll());
   };
 
-
-
-
   if (status === "loading") {
-    return <div className="flex w-full min-h-screen justify-center items-center"> <Loading show={true} /></div>;
+    return (
+      <div className="flex w-full min-h-screen justify-center items-center">
+        <Loading show={true} />
+      </div>
+    );
   }
 
   if (status === "failed") {
     return <div>Error:{error}</div>;
   }
 
-  console.log(filteredSupporters);
   return (
     <>
-      {user.uid && <Header/>}
-      <div className="min-h-screen flex flex-col md:flex-row mt-16" dir="rtl">
-        {userType === "client" && (
-          <>
-            <div className="order-1 w-full md:w-72 md:fixed">
-              <Sidebar
-                onFilter={handleFilter}
-                onToggleFavorites={handleToggleFavorites}
-                showFavorites={showFavorites}
-                onClearFilters={handleClearFilters}
-              />
-            </div>
-            <div className="order-2 w-full md:mr-72 flex-1 flex flex-col items-center max-md:fixed top-32">
-              <div className="w-full">
-                <SupporterList supporters={filteredSupporters} />
-              </div>
-            </div>
-          </>
-        )}
-        {userType === "supporter" && (
-          <div className="flex flex-col items-center justify-center w-full">
-            {/* Your content for supporters */}
-            <p>Welcome, Supporter! Here is your specific content.</p>
-          </div>
-        )}
+      <div className="order-1 w-full md:w-72 md:fixed">
+        <Sidebar
+          onFilter={handleFilter}
+          onToggleFavorites={handleToggleFavorites}
+          showFavorites={showFavorites}
+          onClearFilters={handleClearFilters}
+        />
+      </div>
+      <div className="order-2 w-full md:mr-72 flex-1 flex flex-col items-center max-md:fixed top-32">
+        <div className="w-full">
+          <SupporterList supporters={filteredSupporters} />
+        </div>
       </div>
     </>
   );

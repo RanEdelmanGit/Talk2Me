@@ -11,8 +11,6 @@ import {
 } from "../../redux/features/authSlice";
 
 import { startChat, saveChat } from "../../redux/features/chatSlice";
-
-import profilePicPlaceholder from "./profile.jpg";
 import heartSolid from "../../assets/supporters/heart-solid.svg";
 import heartRegular from "../../assets/supporters/heart-regular.svg";
 
@@ -26,7 +24,6 @@ const SupporterCard = ({
     meeting,
     city,
     age,
-    profilePic = profilePicPlaceholder,
     about,
     chats,
   },
@@ -57,17 +54,23 @@ const SupporterCard = ({
 
   const handleStartChatClick = (e) => {
     e.stopPropagation();
-    if (!chats.find((c) => c.chatId == chatId)) { // new chat
+    if (!chats.find((c) => c.chatId == chatId)) {
+      // new chat
       dispatch(
         startChat({
+          // creates a new chat in the chatslice
           clientId: user.uid,
           supporterId: uid,
           chatId: chatId,
+          supporterName: `${firstName} ${lastName}`,
+          clientName: user.nickname,
         })
       );
-      dispatch(saveChat());
+      dispatch(saveChat()); // saves the chat to firestore/chats collection
+
       dispatch(
         initChat({
+          // creates a chat element in the client and supporter chat array
           chatId,
           supporterId: uid,
           supporterName: `${firstName} ${lastName}`,

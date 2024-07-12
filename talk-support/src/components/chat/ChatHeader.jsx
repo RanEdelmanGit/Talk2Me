@@ -9,13 +9,15 @@ import {
 const ChatHeader = ({ contactName, isMenuOpen, handleMenuToggle }) => {
   const dispatch = useDispatch();
   const { isVisible, id } = useSelector((store) => store.chat.chat);
-  const { userType } = useSelector((store) => store.auth);
+  const { userType, user } = useSelector((store) => store.auth);
 
   const handleVisibility = () => {
-    dispatch(toggleVisibility());
+    const nickName = user.nickname;
+    const fullName = `${user.firstName} ${user.lastName}`;
+    dispatch(toggleVisibility({ nickName, fullName }));
     dispatch(saveChat());
-    dispatch(updateChatVisibility({ isVisible: !isVisible, chatId: id }));
-    dispatch(toggleSupporterVisibility({ chatId: id }));
+    //dispatch(updateChatVisibility({ isVisible: !isVisible, chatId: id }));
+    //dispatch(toggleSupporterVisibility({ chatId: id }));
   };
 
   return (

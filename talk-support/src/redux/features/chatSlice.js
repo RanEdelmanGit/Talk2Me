@@ -77,9 +77,12 @@ export const chatSlice = createSlice({
         id:  action.payload.chatId, 
         supporterId: action.payload.supporterId,
         clientId: action.payload.clientId,
+        supporterName: action.payload.supporterName,
+        clientName: action.payload.clientName,
         messages:[]
       }
       state.chat = chat
+      state.chats.push(chat);
     },
     currentChat:(state, action) => {
       const chat = state.chats.find(chat => chat.id == action.payload)
@@ -88,9 +91,21 @@ export const chatSlice = createSlice({
     updateChat: (state, action) => {
       if(!action.payload)return;
       state.chat = action.payload;
+      const index = state.chats.findIndex(c => c.id == state.chat.id)
+      state.chats[index] = state.chat
     },
     toggleVisibility: (state, action) =>{
       state.chat.isVisible = !state.chat.isVisible
+      const {nickName, fullName} = action.payload;
+      console.log( action.payload);
+      if(state.chat.isVisible){
+        // client name is client firstname + lastname
+        state.chat.clientName = fullName;
+      }else{
+        // client name is nickname
+        state.chat.clientName = nickName;
+      }
+      console.log( state.chat.clientName);
     },
     logoutChat: (state, action) => {
       state.status = 'ready';
