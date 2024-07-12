@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import heartSolid from "./heart-solid.svg";
-import HeartRegular from "./heart-regular.svg";
+import heartSolid from "../../assets/supporters/heart-solid.svg";
+import heartRegular from "../../assets/supporters/heart-regular.svg";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { cities } from "../../cities";
@@ -99,7 +99,7 @@ const Sidebar = ({
 
         <button onClick={onToggleFavorites} className="flex items-center">
           <img
-            src={showFavorites ? heartSolid : HeartRegular}
+            src={showFavorites ? heartSolid : heartRegular}
             alt="Favorites"
             className="h-6 w-6 mr-2"
           />
@@ -126,7 +126,7 @@ const Sidebar = ({
           <button onClick={onToggleFavorites} className="flex items-center">
             <span>הצג מועדפים</span>
             <img
-              src={showFavorites ? heartSolid : HeartRegular}
+              src={showFavorites ? heartSolid : heartRegular}
               alt="Favorites"
               className="h-6 w-6 mr-2"
             />

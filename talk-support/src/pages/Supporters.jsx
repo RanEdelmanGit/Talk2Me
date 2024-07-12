@@ -110,7 +110,7 @@ const SupportersPage = () => {
   console.log(filteredSupporters);
   return (
     <>
-      {user.uid && <Header user={user} userType={userType} />}
+      {user.uid && <Header/>}
       <div className="min-h-screen flex flex-col md:flex-row mt-16" dir="rtl">
         {userType === "client" && (
           <>

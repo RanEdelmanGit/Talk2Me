@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { userType } = useSelector((state) => state.auth);
+  const { userType, user } = useSelector((state) => state.auth);
   
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);

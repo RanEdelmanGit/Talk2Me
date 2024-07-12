@@ -13,7 +13,7 @@ const ChatMessages = ({ messages }) => {
           <div
             className={`relative rounded-lg px-4 py-2 ${
               msg.type === "outgoing"
-                ? "bg-blue-300 text-gray-800 text-right"
+                ? "bg-indigo-300 text-gray-800 text-right"
                 : "bg-gray-300 text-gray-800"
             }`}
             style={{ maxWidth: "70%" }}

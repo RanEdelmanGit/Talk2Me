@@ -13,8 +13,8 @@ import {
 import { startChat, saveChat } from "../../redux/features/chatSlice";
 
 import profilePicPlaceholder from "./profile.jpg";
-import heartSolid from "./heart-solid.svg";
-import HeartRegular from "./heart-regular.svg";
+import heartSolid from "../../assets/supporters/heart-solid.svg";
+import heartRegular from "../../assets/supporters/heart-regular.svg";
 
 const SupporterCard = ({
   supporter: {
@@ -115,7 +115,7 @@ const SupporterCard = ({
                 <img src={heartSolid} alt="Favorite" className="h-5 w-5" />
               ) : (
                 <img
-                  src={HeartRegular}
+                  src={heartRegular}
                   alt="Not Favorite"
                   className="h-5 w-5"
                 />
@@ -249,7 +249,7 @@ const SupporterCard = ({
           {isFavorite ? (
             <img src={heartSolid} alt="Favorite" className="h-5 w-5" />
           ) : (
-            <img src={HeartRegular} alt="Not Favorite" className="h-5 w-5" />
+            <img src={heartRegular} alt="Not Favorite" className="h-5 w-5" />
           )}
         </button>
       </div>
