@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
 import { auth } from "../../firebase_config";
 import { useNavigate } from "react-router-dom";
@@ -48,12 +49,18 @@ const Login = ({ setIsLoginVisible }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       const uid = auth.currentUser.uid;
-      dispatch(setUid(uid));
-      dispatch(fetchUser({ uid, userType: logInUserType }));
-      dispatch(setUserType(logInUserType));
-      localStorage.setItem("userType", logInUserType);
+      dispatch(fetchUser({ uid, userType: logInUserType }))
+        .unwrap()
+        .then(() => {
+          console.log("w4543");
+          dispatch(setUserType(logInUserType));
+          dispatch(setUid(uid));
+          localStorage.setItem("userType", logInUserType);
+          navigate("/chat");
+        });
     } catch (error) {
       console.log(error);
+      signOut(auth);
       setError(error.message);
     }
   };
@@ -132,6 +139,7 @@ const Login = ({ setIsLoginVisible }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              dir="ltr"
               className="block w-full rounded-md border-0 py-1.5 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
             />
             <span

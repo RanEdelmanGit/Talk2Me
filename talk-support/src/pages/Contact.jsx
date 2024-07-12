@@ -2,12 +2,15 @@ import React from "react";
 import ContactForm from "../components/contact/ContactForm";
 import ContactInfo from "../components/contact/ContactInfo";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function Contact() {
+  const { isAuth} = useSelector((state) => state.auth);
+
   return (
-    <div className="relative flex max-md:flex-col max-md:h-[1000px] pb-40  overflow-y-scroll" dir="rtl">
+    <div className="relative flex max-md:flex-col max-md:h-[1000px] pb-40 overflow-y-scroll" dir="rtl">
       <Link
-        to="/welcome"
+        to={isAuth ? "/" : "/welcome"}
         className="absolute top-4 left-4 m-4 text-base font-semibold text-gray-900"
       >
         <svg

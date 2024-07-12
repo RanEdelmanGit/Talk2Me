@@ -4,6 +4,7 @@ import {db} from '../../firebase_config'
 
 export const chatCollection = "chats"
 
+
 const initialState = {
   status:'ready',
   error:'',
@@ -71,9 +72,14 @@ export const chatSlice = createSlice({
         state.chats[index] = state.chat;
     },
     startChat:(state,action) => {
-      state.chat.clientId = action.payload.clientId;
-      state.chat.supporterId = action.payload.supporterId;
-      state.chat.id = action.payload.chatId;
+      const chat = {
+        isVisible:false,
+        id:  action.payload.chatId, 
+        supporterId: action.payload.supporterId,
+        clientId: action.payload.clientId,
+        messages:[]
+      }
+      state.chat = chat
     },
     currentChat:(state, action) => {
       const chat = state.chats.find(chat => chat.id == action.payload)
@@ -82,6 +88,9 @@ export const chatSlice = createSlice({
     updateChat: (state, action) => {
       if(!action.payload)return;
       state.chat = action.payload;
+    },
+    toggleVisibility: (state, action) =>{
+      state.chat.isVisible = !state.chat.isVisible
     },
     logoutChat: (state, action) => {
       state.status = 'ready';
@@ -136,6 +145,6 @@ export const chatSlice = createSlice({
   }
 })
 // Action creators are generated for each case reducer function
-export const { addMassage, updateChat, startChat, currentChat, logoutChat} = chatSlice.actions
+export const { addMassage, updateChat, startChat, currentChat, logoutChat, toggleVisibility} = chatSlice.actions
 
 export default chatSlice.reducer

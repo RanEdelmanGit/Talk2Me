@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase_config"; // Make sure to import your firebase_config
+import { useSelector } from "react-redux";
 
 export default function ContactForm() {
+  const { isAuth, userType } = useSelector((state) => state.auth);
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    subject:"",
+    subject: "",
     message: ""
   });
 
@@ -29,13 +32,21 @@ export default function ContactForm() {
     setSuccess(null);
 
     // Form validation
-    if (!formData.email || !formData.phone || !formData.subject ||!formData.message) {
-      setError("Email, phone, subject and message are required.");
+    if (!formData.email || !formData.phone || !formData.subject || !formData.message) {
+      setError("Email, phone, subject, and message are required.");
       return;
     }
 
+    let inquiryType = "Other";
+    if (isAuth) {
+      inquiryType = userType === "client" ? "Client" : "Supporter";
+    }
+
     try {
-      await addDoc(collection(db, "contacts"), formData);
+      await addDoc(collection(db, "inquiries"), {
+        ...formData,
+        type: inquiryType
+      });
       setSuccess("Your message has been sent successfully!");
       setFormData({
         firstName: "",
@@ -118,6 +129,22 @@ export default function ContactForm() {
           </div>
         </div>
         <div className="sm:col-span-2">
+          <label htmlFor="subject" className="block text-sm font-semibold leading-6 text-gray-900">
+            נושא
+          </label>
+          <div className="mt-2.5">
+            <input
+              id="subject"
+              name="subject"
+              type="text"
+              value={formData.subject}
+              onChange={handleChange}
+              autoComplete="subject"
+              className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            />
+          </div>
+        </div>
+        <div className="sm:col-span-2">
           <label htmlFor="message" className="block text-sm font-semibold leading-6 text-gray-900">
             הודעה
           </label>
@@ -132,7 +159,9 @@ export default function ContactForm() {
             />
           </div>
         </div>
-      </div>
+      </div>   
+      {error && <p className="mt-4 text-red-500">{error}</p>}
+      {success && <p className="mt-4 text-green-500">{success}</p>}
       <div className="mt-10">
         <button
           type="submit"
@@ -141,8 +170,7 @@ export default function ContactForm() {
           בוא נדבר
         </button>
       </div>
-      {error && <p className="mt-4 text-red-500">{error}</p>}
-      {success && <p className="mt-4 text-green-500">{success}</p>}
+   
     </form>
   );
 }

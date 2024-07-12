@@ -58,7 +58,7 @@ const ChatPage = () => {
     dispatch(updateChat(chat));
     //dispatch(resumeChat(params.chatId));
     //dispatch(currentChat(params.chatId));
-    const unsubscribe = onSnapshot(
+    const unsubscribeChat = onSnapshot(
       doc(db, chatCollection, params.chatId),
       (doc) => {
         if (!doc.exists()) {
@@ -69,19 +69,24 @@ const ChatPage = () => {
       }
     );
 
+   
+
     const chatDetails = userChatsArray.find(
       (uc) => uc.chatId === params.chatId
     );
     setChatDetails(chatDetails);
 
-    return () => unsubscribe();
+    return () => unsubscribeChat();
   }, [params.chatId]);
 
   return (
     <>
-      <div className="flex  max-md:h-[73vh] h-[91vh] w-screen mt-16 ">
-        <div className="flex-1 flex flex-col ">
-          <div dir="rtl" className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0 ">
+      <div className="flex h-[91vh] w-screen mt-16">
+        <div className="flex-1 flex flex-col">
+          <div
+            dir="rtl"
+            className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0"
+          >
             <ChatHeader
               contactName={
                 userType == "client"
@@ -96,7 +101,7 @@ const ChatPage = () => {
             <ChatMessages messages={mapMassageType()} />
           </div>
           <div className="max-md:fixed max-md:bottom-0 max-md:left-0 max-md:right-0">
-          <ChatInput />
+            <ChatInput />
           </div>
         </div>
         <div className="">

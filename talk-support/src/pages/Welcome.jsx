@@ -53,7 +53,7 @@ const WelcomePage = () => {
         )}
 
         <div className="fixed bottom-4 left-0 right-0 pt-4 md:mt-auto flex justify-center w-full items-center">
-          <div className="flex items-center justify-around md:px-96 w-full">
+          <div className="flex items-center justify-around w-full md:w-[50%]">
             <div className="flex text-lg max-md:text-sm">
               <h2 className="pl-2">לפניות ושאלות:</h2>
               <Link

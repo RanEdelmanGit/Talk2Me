@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Chats({ contact, handleMenuToggle, chatId, index }) {
   const nav = useNavigate();
-  console.log("index", index);
+  const params = useParams();
 
   useEffect(() => {
-    if (index == 0) {
+    if (index == 0 && !params.chatId) {
       nav(`/chat/${chatId}`);
       handleMenuToggle();
     }
