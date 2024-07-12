@@ -1,6 +1,6 @@
 import React from "react";
 import ClientCard from "./ClientCard";
-import colors from "../../profileColors";
+import colors from "../../constants/profileColors";
 
 export default function ClientList({ clients }) {
   return (

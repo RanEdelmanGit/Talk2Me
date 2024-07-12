@@ -3,7 +3,7 @@ import heartSolid from "../../assets/supporters/heart-solid.svg";
 import heartRegular from "../../assets/supporters/heart-regular.svg";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { cities } from "../../cities";
+import { cities } from "../../constants/cities";
 
 const Sidebar = ({
   onFilter,

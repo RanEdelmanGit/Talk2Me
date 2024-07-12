@@ -24,7 +24,7 @@ import Loading from "../components/common/Loading";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Field, Label, Switch } from "@headlessui/react";
-import { cities } from "../cities";
+import { cities } from "../constants/cities";
 
 const SupporterRegistration = () => {
   const [error, setError] = useState(null);

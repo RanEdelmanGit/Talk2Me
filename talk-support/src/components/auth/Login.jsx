@@ -9,8 +9,9 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/loginPage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setUid, fetchUser, setUserType } from "../../redux/features/authSlice";
-import { loadChats, } from "../../redux/features/chatSlice";
+import { loadChats } from "../../redux/features/chatSlice";
 import Loading from "../common/Loading";
+import { texts } from "../../constants/texts";
 
 const Login = ({ setIsLoginVisible }) => {
   const [email, setEmail] = useState("");
@@ -38,12 +39,12 @@ const Login = ({ setIsLoginVisible }) => {
     setMessage(null);
 
     if (!validateEmail(email)) {
-      setError("Invalid email format.");
+      setError(texts.Login.invalidEmailError);
       return;
     }
 
     if (logInUserType === "not-selected") {
-      setError("Please select a valid option for user type.");
+      setError(texts.Login.selectUserTypeError);
       return;
     }
 
@@ -71,20 +72,13 @@ const Login = ({ setIsLoginVisible }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (user && user.email) {
-  //     console.log("login", user);
-  //     navigate("/chat");
-  //   }
-  // }, [user]);
-
   const handlePasswordReset = async () => {
     setError(null);
     setMessage(null);
 
     try {
       await sendPasswordResetEmail(auth, email);
-      setMessage("Password reset email sent. Please check your inbox.");
+      setMessage(texts.Login.passwordResetMessage);
     } catch (error) {
       setError(error.message);
     }
@@ -102,7 +96,7 @@ const Login = ({ setIsLoginVisible }) => {
             htmlFor="email"
             className="block text-sm font-medium leading-6 text-gray-900"
           >
-            אימייל
+            {texts.Login.emailLabel}
           </label>
           <div className="mt-2">
             <input
@@ -125,14 +119,14 @@ const Login = ({ setIsLoginVisible }) => {
               htmlFor="password"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
-              סיסמא
+              {texts.Login.passwordLabel}
             </label>
             <div className="text-sm">
               <button
                 onClick={handlePasswordReset}
                 className="font-semibold text-indigo-500 hover:text-indigo-500"
               >
-                שכחת סיסמה?
+                {texts.Login.forgotPassword}
               </button>
             </div>
           </div>
@@ -233,7 +227,7 @@ const Login = ({ setIsLoginVisible }) => {
                     htmlFor="client"
                     className="mr-2 ml-4 block text-base font-medium text-gray-700"
                   >
-                    באתי לשתף
+                    {texts.Login.userTypeClient}
                   </label>
                 </div>
                 <div className="flex items-center">
@@ -250,7 +244,7 @@ const Login = ({ setIsLoginVisible }) => {
                     htmlFor="supporter"
                     className="mr-2 ml-4 block text-base font-medium text-gray-700"
                   >
-                    באתי להקשיב
+                    {texts.Login.userTypeSupporter}
                   </label>
                 </div>
               </div>
@@ -268,7 +262,7 @@ const Login = ({ setIsLoginVisible }) => {
             type="submit"
             className="flex w-full justify-center items-center rounded-md bg-indigo-500 hover:bg-indigo-300 px-3 py-1.5 text-lg font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
-            <p className="mx-2">התחבר</p> <Loading show={status == "loading"} />
+            <p className="mx-2">{texts.Login.loginButton}</p> <Loading show={status == "loading"} />
           </button>
         </div>
       </form>

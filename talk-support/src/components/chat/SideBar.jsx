@@ -3,7 +3,7 @@ import Chats from "./Chats";
 import Header from "../layout/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { loadChats } from "../../redux/features/chatSlice";
-import colors from "../../profileColors";
+import colors from "../../constants/profileColors";
 import { useNavigate } from "react-router-dom";
 import Loading from "../common/Loading";
 
