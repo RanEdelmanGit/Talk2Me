@@ -81,7 +81,7 @@ const ChatPage = () => {
 
   return (
     <>
-      <div className="flex h-[91vh] w-screen mt-16">
+      <div className="flex max-md:h-[77vh] max-md:pt-2 h-[91vh] w-screen mt-16">
         <div className="flex-1 flex flex-col">
           <div
             dir="rtl"

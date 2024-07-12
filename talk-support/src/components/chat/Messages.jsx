@@ -1,4 +1,3 @@
-import { ref } from "firebase/storage";
 import React, { useEffect, useRef } from "react";
 
 const ChatMessages = ({ messages }) => {
@@ -12,7 +11,7 @@ const ChatMessages = ({ messages }) => {
     <div className="flex-1 overflow-y-auto p-2">
       {messages.map((msg, index) => (
         <div
-        ref={ref}
+        ref={lastMessageRef}
           key={index}
           className={`flex ${
             msg.type === "outgoing" ? "justify-end" : "justify-start"
