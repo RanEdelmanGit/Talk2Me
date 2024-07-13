@@ -203,7 +203,7 @@ const ClientRegistration = () => {
             <h2 className="text-3xl mb-4 font-semibold leading-7 text-gray-900 underline">
               {texts.ClientRegistration.registrationTitle}
             </h2>
-            <p className="mt-1 text-lg leading-6 max-w-[500px] text-gray-600">
+            <p className="mt-1 text-lg leading-6 max-w-[700px] text-gray-600">
               {texts.ClientRegistration.registrationDescription}
             </p>
           </div>
@@ -308,7 +308,7 @@ const ClientRegistration = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   >
-                    <option value="not-selected">בחר שנה</option>
+                    <option value="not-selected"> {texts.ClientRegistration.selectYear} </option>
                     {Array.from(
                       { length: 83 },
                       (_, i) => new Date().getFullYear() - 18 - i

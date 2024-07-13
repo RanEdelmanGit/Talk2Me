@@ -28,10 +28,10 @@ export default function Contact() {
           />
         </svg>
       </Link>
-      <div className="flex-1 mt-16 sm:mt-32">
+      <div className="flex-1 mt-16 sm:mt-24">
         <ContactInfo />
       </div>
-      <div className="flex-1 mt-16 sm:mt-32">
+      <div className="flex-1 mt-16 sm:mt-24 pb-16">
         <ContactForm />
       </div>
     </div>

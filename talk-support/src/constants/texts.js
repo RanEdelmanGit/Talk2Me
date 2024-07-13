@@ -35,6 +35,7 @@ export const texts = {
         termsAgreementError: "You must agree to the terms and conditions to register.",
         nicknameExistsError: "Nickname already exists. Please choose another one.",
         requiredFieldError: "Please select a valid option for ",
+        selectYear:"בחר שנה",
       },
     ClientsPage: {
 
@@ -43,10 +44,61 @@ export const texts = {
    
     },
     Contact: {
-    
+      title: "צור קשר",
+      description: "ניתן ליצור איתנו קשר לכל שאלה או פניה. אנו כאן לעזור ולספק מענה לכל צורך או בעיה. אל תהססו לפנות אלינו באמצעות הטלפון, הדואר האלקטרוני, או על ידי מילוי הטופס המקוון. נשמח לשמוע מכם ולעזור בכל דרך אפשרית.",
+      phone: "+972 544444444",
+      email: "hello@example.com",
+      firstNameLabel: "שם פרטי",
+      lastNameLabel: "שם משפחה",
+      emailLabel: "אימייל",
+      phoneLabel: "מספר טלפון",
+      subjectLabel: "נושא",
+      messageLabel: "הודעה",
+      submitButton: "בוא נדבר",
+      emailPhoneSubjectMessageRequiredError: "Email, phone, subject, and message are required.",
+      successMessage: "Your message has been sent successfully!",
+      errorMessage: "Error sending message. Please try again."
     },
     SupporterRegistration: {
-      
+      registrationTitle: "הרשמה באתי להקשיב",
+      registrationDescription:
+        "תודה רבה לכם על הרשמתכם לאפליקציה שלנו! כל עזרה מצדכם תתקבל בברכה ובשמחה. אנו מאמינים כי בעזרתכם נוכל לסייע לקרובים שלנו ולחברה כולה, ולהקל על אנשים החווים קשיים בתקופה זו. ההשתתפות שלכם משמעותית וחשובה, וביחד נוכל לתמוך באנשים שזקוקים לכך ולהביא לשינוי חיובי בחייהם. הצטרפו אלינו למאמץ, ויחד נבנה עתיד טוב יותר לכולנו.",
+      profileTitle: "פרופיל",
+      profileDescription:
+        "ההרשמה תשלח לאישור ולאחר מכן נוכל לאפשר לכם כניסה לאפליקציה ולעזור לאנשים למצוא אתכם. תהליך האישור נועד להבטיח שכל תומך מתאים ומשמעותי, וכך נוכל להציע את העזרה הטובה ביותר למי שזקוק לה.",
+      firstNameLabel: "שם פרטי",
+      lastNameLabel: "שם משפחה",
+      emailLabel: "דוא\"ל",
+      passwordLabel: "סיסמא",
+      phoneLabel: "מספר טלפון",
+      birthYearLabel: "שנת לידה",
+      genderLabel: "מגדר",
+      areaLabel: "איזור",
+      cityLabel: "עיר",
+      addressLabel: "כתובת",
+      preferredLanguageLabel: "שפה מועדפת?",
+      meetingLabel: "אופן המפגש",
+      referralSourceLabel: "איך הגעת אלינו",
+      aboutLabel: "קצת על עצמך",
+      aboutPlaceholder:
+        "כתבו בקצרה על עצמכם: שם, גיל, עיר מגורים, רקע אקדמי, סוג התמיכה שאתם מציעים.\n**לדוגמה**: אני נועה, בת 36 מרעננה, בעלת תואר שני בפסיכולוגיה קלינית. התמחיתי בהתמודדות עם משברים אישיים. אשמח להכיר אותך ולעזור לך להתגבר על האתגרים שאתה חווה.",
+      documentUploadTitle: "העלאת מסמכים",
+      documentUploadDescription:
+        "העלאת מסמכים אלו הכרחיים על מנת שנוכל לבצע תהליך אישור כראוי",
+      studentApprovalLabel: "אישור לימודים/סיום לימודים",
+      resumeLabel: "קורות חיים",
+      termsAgreementLabel: "הסכמה לתנאים",
+      termsAgreementLink: "תנאים",
+      cancelButton: "בטל",
+      registerButton: "הירשם",
+      emailExistsError: "Email already exists",
+      missingDataError: "Missing data",
+      invalidEmailError: "Invalid email format.",
+      invalidPhoneError: "Invalid phone format. Please enter a 10-digit phone number.",
+      selectValidOptionError: "Please select a valid option for ",
+      termsAgreementError: "You must agree to the terms and conditions to register.",
+      aboutParagraph:"כתוב על עצמך בכמה משפטים",
+      selectYear:"בחר שנה",
     },
     SupportersPage: {
     

@@ -4,7 +4,7 @@ import colors from "../../constants/profileColors";
 
 export default function ClientList({ clients }) {
   return (
-    <div>
+    <div className="mt-4">
       {clients.map((c, index) => {
         return (
           <ClientCard

@@ -54,7 +54,7 @@ const WelcomePage = () => {
 
         <div className="fixed bottom-4 left-0 right-0 pt-4 md:mt-auto flex justify-center w-full items-center">
           <div className="flex items-center justify-around w-full md:w-[50%]">
-            <div className="flex text-lg max-md:text-sm">
+            <div className="flex text-lg max-md:text-base">
               <h2 className="pl-2">{texts.Welcome.contactPrompt}</h2>
               <Link
                 to="/contact"
@@ -64,7 +64,7 @@ const WelcomePage = () => {
               </Link>
             </div>
             <button
-              className="bg-slate-500 text-white px-2 md:px-4 py-1 md:py-2 rounded max-md:text-sm"
+              className="bg-slate-500 text-white px-2 md:px-4 py-1 md:py-2 rounded max-md:text-base"
               onClick={() =>
                 window.open(
                   "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE",

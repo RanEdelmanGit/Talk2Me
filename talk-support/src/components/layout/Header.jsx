@@ -79,7 +79,7 @@ const Header = () => {
                             item.current
                               ? " "
                               : "text-gray-700 hover:text-indigo-500 hover:underline",
-                            "rounded-md px-3 py-2 text-sm font-medium"
+                            "rounded-md px-3 py-2 text-base font-medium"
                           )}
                           aria-current={item.current ? "page" : undefined}
                         >
@@ -93,7 +93,7 @@ const Header = () => {
                             item.current
                               ? " "
                               : "text-gray-700 hover:text-indigo-500 hover:underline",
-                            "rounded-md px-3 py-2 text-sm font-medium"
+                            "rounded-md px-3 py-2 text-base font-medium"
                           )}
                           aria-current={item.current ? "page" : undefined}
                         >

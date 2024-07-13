@@ -127,16 +127,16 @@ const SupporterCard = ({
           </div>
           <div className="flex w-full justify-start pr-12 gap-2">
             <span className="flex justify-center items-center">
-              <h3 className="text-sm text-gray-500">{age} | </h3>
+              <h3 className="text-base text-gray-500">{age} | </h3>
             </span>
             <span className="flex justify-center items-center">
-              <h3 className="text-sm text-gray-500">{area} | </h3>
+              <h3 className="text-base text-gray-500">{area} | </h3>
             </span>
             <span className="flex justify-center items-center">
-              <h3 className="text-sm text-gray-500">{city}</h3>
+              <h3 className="text-base text-gray-500">{city}</h3>
             </span>
             <span className="flex justify-center items-center cursor-pointer">
-              <h3 className="text-sm text-gray-500">
+              <h3 className="text-base text-gray-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -165,7 +165,7 @@ const SupporterCard = ({
             </span>
           </div>
           <div className={`mt-4 mb-2 ${aboutOpen ? "" : "hidden"}`}>
-            <h3 className="text-sm text-gray-500">{about}</h3>
+            <h3 className="text-base text-gray-500">{about}</h3>
           </div>
           <div className="flex w-full justify-between mt-6">
             <span className="flex flex-wrap justify-around items-center gap-2">
@@ -185,7 +185,7 @@ const SupporterCard = ({
               )}
             </span>
             <button
-              className="rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-indigo-600 px-2 py-1 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={handleStartChatClick}
             >
               {chats.find((c) => c.chatId == chatId)
@@ -211,16 +211,16 @@ const SupporterCard = ({
           className="w-12 h-12 rounded-full"
         />
         <span className="w-32 h-8 overflow-hidden text-ellipsis whitespace-nowrap">
-          <h2 className="text-lg font-bold">{name}</h2>
+          <h2 className="text-xl font-bold">{name}</h2>
         </span>
         <span className="flex justify-center items-center w-10">
-          <h3 className="text-sm text-gray-500">{age}</h3>
+          <h3 className="text-base text-gray-500">{age}</h3>
         </span>
         <span className="flex justify-center items-center w-10">
-          <h3 className="text-sm text-gray-500">{area}</h3>
+          <h3 className="text-base text-gray-500">{area}</h3>
         </span>
         <span className="flex justify-center items-center w-20">
-          <h3 className="text-sm text-gray-500">{city}</h3>
+          <h3 className="text-base text-gray-500">{city}</h3>
         </span>
         <span className="flex flex-wrap justify-around items-center w-48">
           {Array.isArray(meeting) ? (
@@ -239,7 +239,7 @@ const SupporterCard = ({
           )}
         </span>
         <button
-          className="rounded-md bg-indigo-600 px-2 py-1 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="rounded-md bg-indigo-600 px-2 py-1 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           onClick={handleStartChatClick}
         >
           {chats.find((c) => c.chatId == chatId) ? "המשך שיחה" : "התחל שיחה"}
@@ -257,7 +257,7 @@ const SupporterCard = ({
         </button>
       </div>
       <div className={`my-4 flex justify-center ${aboutOpen ? "" : "hidden"}`}>
-        <h3 className="text-sm text-gray-500">{about}</h3>
+        <h3 className="text-base text-gray-500">{about}</h3>
       </div>
     </div>
   );

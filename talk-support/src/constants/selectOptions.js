@@ -36,3 +36,15 @@ export const recentStatusOptions = [
     { value: "english", label: "English" }
   ];
   
+  export const meetingOptions = [
+    { value: "meetingOffline", label: "מפגש" },
+    { value: "meetingOnline", label: "וידיאו" },
+    { value: "phoneCall", label: "טלפון" },
+  ];
+
+  export const FilterMeetingOptions = [
+    { value: "not-selected", label: "בחר אופן מפגש" },
+    { value: "offline", label: "מפגש פנים אל פנים" },
+    { value: "online", label: "מרחוק" },
+    { value: "both", label: "שניהם" }
+  ];
