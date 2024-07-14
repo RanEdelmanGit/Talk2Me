@@ -23,10 +23,6 @@ export default function SignOut() {
     }
   };
 
-  // if (!user.uid) {
-  //   navigate("/welcome");
-  //   return null;
-  // }
 
   return (
     <button

@@ -19,17 +19,15 @@ import {
   userTypeClient,
   setUid,
 } from "../redux/features/authSlice";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import { Field, Label, Switch } from "@headlessui/react";
-import { cities } from "../constants/cities";
+import CityAutocomplete from "../components/common/CityAutocomplete";
 import { texts } from "../constants/texts";
 import {
   recentStatusOptions,
   genderOptions,
   areaOptions,
   referralSourceOptions,
-  preferredLanguageOptions
+  preferredLanguageOptions,
 } from "../constants/selectOptions";
 import BackArrowIcon from "../assets/svgs/BackArrowIcon";
 import EyeIcon from "../assets/svgs/EyeIcon";
@@ -197,7 +195,7 @@ const ClientRegistration = () => {
             to="/welcome"
             className="md:absolute md:top-4 md:left-4 m-4 flex justify-end text-base font-semibold text-gray-900"
           >
-            <BackArrowIcon/>
+            <BackArrowIcon />
           </Link>
           <div className="border-b border-gray-900/10 pb-12">
             <h2 className="text-3xl mb-4 font-semibold leading-7 text-gray-900 underline">
@@ -308,7 +306,10 @@ const ClientRegistration = () => {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-base sm:leading-6"
                     required
                   >
-                    <option value="not-selected"> {texts.ClientRegistration.selectYear} </option>
+                    <option value="not-selected">
+                      {" "}
+                      {texts.ClientRegistration.selectYear}{" "}
+                    </option>
                     {Array.from(
                       { length: 83 },
                       (_, i) => new Date().getFullYear() - 18 - i
@@ -415,13 +416,14 @@ const ClientRegistration = () => {
                     value={registration.password}
                     onChange={handleChange}
                     required
+                    dir="ltr"
                   />
                   <span
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={togglePasswordVisibility}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                   >
-                    {passwordVisible ? <EyeIcon/> : <EyeOffIcon/>}
+                    {passwordVisible ? <EyeIcon /> : <EyeOffIcon />}
                   </span>
                 </div>
               </div>
@@ -461,63 +463,14 @@ const ClientRegistration = () => {
                   {texts.ClientRegistration.cityLabel}
                 </label>
                 <div className="mt-2">
-                  <Autocomplete
-                    id="city"
-                    options={cities}
-                    getOptionLabel={(option) => option}
+                  <CityAutocomplete
                     value={registration.city}
-                    onChange={(event, newValue) => {
+                    onChange={(newValue) => {
                       setRegistration((prevState) => ({
                         ...prevState,
                         city: newValue || null,
                       }));
                     }}
-                    isOptionEqualToValue={(option, value) =>
-                      option === value || value === null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        fullWidth
-                        required
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            width: "100%",
-                            borderRadius: "0.375rem",
-                            border: "0",
-                            paddingY: "0.001rem", // Adjust paddingY to make the input height smaller
-                            color: "#1f2937",
-                            boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                            backgroundColor: "#ffffff",
-                            "&:hover": {
-                              backgroundColor: "#ffffff",
-                            },
-                            "&.Mui-focused": {
-                              backgroundColor: "#ffffff",
-                              boxShadow: "0 0 0 2px rgba(67, 56, 202, 0.3)",
-                              outline: "none", // Remove the default focus ring
-                            },
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "1px",
-                            borderColor: "#d1d5db",
-                          },
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#d1d5db", // Keep the border color the same on hover
-                          },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#d1d5db", // Keep the border color the same when focused
-                            borderWidth: "1px",
-                          },
-                          "& .MuiInputBase-input": {
-                            outline: "none", // Ensure no outline on the input element itself
-                          },
-                          fontSize: "0.875rem",
-                          lineHeight: "1.25rem", // Adjust lineHeight to make the input height smaller
-                        }}
-                      />
-                    )}
                   />
                 </div>
               </div>
@@ -635,11 +588,9 @@ const ClientRegistration = () => {
             </Link>
             <button
               type="submit"
-              className=" btn-wide flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 mb-20 max-md:mb-28 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className=" btn-wide mb-20 max-md:mb-20 flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2  text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              <p className="mx-2">
-                {texts.ClientRegistration.registerButton}
-              </p>
+              <p className="mx-2">{texts.ClientRegistration.registerButton}</p>
               <Loading show={status == "loading"} />
             </button>
           </div>

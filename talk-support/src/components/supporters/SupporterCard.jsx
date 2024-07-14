@@ -11,8 +11,8 @@ import {
 } from "../../redux/features/authSlice";
 
 import { startChat, saveChat } from "../../redux/features/chatSlice";
-import heartSolid from "../../assets/supporters/heart-solid.svg";
-import heartRegular from "../../assets/supporters/heart-regular.svg";
+import HeartSolidIcon from "../../assets/svgs/HeartSolidIcon";
+import HeartRegularIcon from "../../assets/svgs/HeartRegularIcon";
 
 const SupporterCard = ({
   supporter: {
@@ -115,13 +115,10 @@ const SupporterCard = ({
               onClick={handleFavoriteClick}
             >
               {isFavorite ? (
-                <img src={heartSolid} alt="Favorite" className="h-5 w-5" />
+               <HeartSolidIcon /> 
               ) : (
-                <img
-                  src={heartRegular}
-                  alt="Not Favorite"
-                  className="h-5 w-5"
-                />
+                 <HeartRegularIcon />
+          
               )}
             </button>
           </div>
@@ -250,9 +247,9 @@ const SupporterCard = ({
           onClick={handleFavoriteClick}
         >
           {isFavorite ? (
-            <img src={heartSolid} alt="Favorite" className="h-5 w-5" />
+        <HeartSolidIcon /> 
           ) : (
-            <img src={heartRegular} alt="Not Favorite" className="h-5 w-5" />
+         <HeartRegularIcon />
           )}
         </button>
       </div>

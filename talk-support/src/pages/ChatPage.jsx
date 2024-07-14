@@ -9,8 +9,6 @@ import { doc, onSnapshot } from "firebase/firestore";
 import {
   updateChat,
   chatCollection,
-  resumeChat,
-  currentChat,
 } from "../redux/features/chatSlice";
 import { db } from "../firebase_config";
 

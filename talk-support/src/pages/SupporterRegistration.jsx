@@ -18,21 +18,20 @@ import {
 } from "../redux/features/authSlice";
 import FileInput from "../components/common/FileInput";
 import Loading from "../components/common/Loading";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import { Field, Label, Switch } from "@headlessui/react";
-import { cities } from "../constants/cities";
+import CityAutocomplete from "../components/common/CityAutocomplete";
 import { texts } from "../constants/texts";
 import {
   meetingOptions,
   genderOptions,
   areaOptions,
   referralSourceOptions,
-  preferredLanguageOptions
+  preferredLanguageOptions,
 } from "../constants/selectOptions";
 import BackArrowIcon from "../assets/svgs/BackArrowIcon";
 import EyeIcon from "../assets/svgs/EyeIcon";
 import EyeOffIcon from "../assets/svgs/EyeOffIcon";
+import CheckIcon from "../assets/svgs/CheckIcon";
 
 const SupporterRegistration = () => {
   const [error, setError] = useState(null);
@@ -152,17 +151,15 @@ const SupporterRegistration = () => {
     { key: "area", label: texts.SupporterRegistration.areaLabel },
     { key: "city", label: texts.SupporterRegistration.cityLabel },
     { key: "address", label: texts.SupporterRegistration.addressLabel },
-    {
-      key: "referralSource",
-      label: texts.SupporterRegistration.referralSourceLabel,
-    },
-    {
-      key: "preferredLanguage",
-      label: texts.SupporterRegistration.preferredLanguageLabel,
-    },
+    { key: "referralSource", label: texts.SupporterRegistration.referralSourceLabel },
+    { key: "preferredLanguage", label: texts.SupporterRegistration.preferredLanguageLabel },
     { key: "meeting", label: texts.SupporterRegistration.meetingLabel },
+    { key: "about", label: texts.SupporterRegistration.aboutLabel },
+    { key: "resume", label: texts.SupporterRegistration.resumeLabel },
+    { key: "studentApproval", label: texts.SupporterRegistration.studentApprovalLabel },
   ];
 
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
@@ -234,8 +231,8 @@ const SupporterRegistration = () => {
       dispatch(setUserType(userTypeSupporter));
       dispatch(setFormDetails(user));
       dispatch(setUid(userId));
-      localStorage.setItem("userType", userTypeSupporter);
-      navigate("/");
+      // localStorage.setItem("userType", userTypeSupporter);
+      navigate("/welcome");
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setError(texts.SupporterRegistration.emailExistsError);
@@ -359,6 +356,7 @@ const SupporterRegistration = () => {
                     value={registration.password}
                     onChange={handleChange}
                     required
+                    dir="ltr"
                   />
                   <span
                     onMouseDown={(e) => e.preventDefault()}
@@ -484,63 +482,14 @@ const SupporterRegistration = () => {
                   {texts.SupporterRegistration.cityLabel}
                 </label>
                 <div className="mt-2">
-                  <Autocomplete
-                    id="city"
-                    options={cities}
-                    getOptionLabel={(option) => option}
+                  <CityAutocomplete
                     value={registration.city}
-                    onChange={(event, newValue) => {
+                    onChange={(newValue) => {
                       setRegistration((prevState) => ({
                         ...prevState,
                         city: newValue || null,
                       }));
                     }}
-                    isOptionEqualToValue={(option, value) =>
-                      option === value || value === null
-                    }
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        fullWidth
-                        required
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            width: "100%",
-                            borderRadius: "0.375rem",
-                            border: "0",
-                            paddingY: "0.001rem", // Adjust paddingY to make the input height smaller
-                            color: "#1f2937",
-                            boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                            backgroundColor: "#ffffff",
-                            "&:hover": {
-                              backgroundColor: "#ffffff",
-                            },
-                            "&.Mui-focused": {
-                              backgroundColor: "#ffffff",
-                              boxShadow: "0 0 0 2px rgba(67, 56, 202, 0.3)",
-                              outline: "none", // Remove the default focus ring
-                            },
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "1px",
-                            borderColor: "#d1d5db",
-                          },
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#d1d5db", // Keep the border color the same on hover
-                          },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#d1d5db", // Keep the border color the same when focused
-                            borderWidth: "1px",
-                          },
-                          "& .MuiInputBase-input": {
-                            outline: "none", // Ensure no outline on the input element itself
-                          },
-                          fontSize: "0.875rem",
-                          lineHeight: "1.25rem", // Adjust lineHeight to make the input height smaller
-                        }}
-                      />
-                    )}
                   />
                 </div>
               </div>
@@ -608,35 +557,21 @@ const SupporterRegistration = () => {
                       key={option.value}
                       className={`relative inline-flex items-center rounded-md ${
                         option.bgColor
-                      } px-8 py-2 text-base font-medium ${
+                      } px-8 py-1.5 text-base font-medium ${
                         option.textColor
-                      } ring-1 ring-inset ${option.ringColor} cursor-pointer ${
+                      } ring-1 ring-inset  bg-blue-50 cursor-pointer ${
                         registration.meeting.includes(option.value) ? "" : ""
                       }`}
                       onClick={() => handleBadgeClick(option.value)}
                     >
                       {option.label}
                       {registration.meeting.includes(option.value) && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="absolute p-1 top-0 left-0 size-6 text-gray-700"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m4.5 12.75 6 6 9-13.5"
-                          />
-                        </svg>
+                        <CheckIcon />
                       )}
                     </span>
                   ))}
                 </div>
               </div>
-
 
               <div className="sm:col-span-3">
                 <label
@@ -684,6 +619,7 @@ const SupporterRegistration = () => {
                     onChange={handleChange}
                     className="placeholder-custom block w-full rounded-md border-0 py-1.5 max-md:h-40 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
                     placeholder={texts.SupporterRegistration.aboutPlaceholder}
+                    required
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -780,7 +716,7 @@ const SupporterRegistration = () => {
             </Label>
           </Field>
 
-          {error && <div className="text-red-500 mb-4">{error}</div>}
+          {error && <div className="flex w-full justify-center mb-4">{error}</div>}
 
           <div className="mt-6 flex items-center justify-center gap-x-6">
             <Link
@@ -792,7 +728,7 @@ const SupporterRegistration = () => {
 
             <button
               type="submit"
-              className="btn-wide flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 mb-20 max-md:mb-28 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="btn-wide mb-20 max-md:mb-20 flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               <p className="mx-2">
                 {texts.SupporterRegistration.registerButton}

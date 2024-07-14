@@ -94,6 +94,10 @@ export const chatSlice = createSlice({
       const index = state.chats.findIndex(c => c.id == state.chat.id)
       state.chats[index] = state.chat
     },
+    updateChats: (state, action) => {
+      if(!action.payload)return;
+      state.chats = action.payload;
+    },
     toggleVisibility: (state, action) =>{
       state.chat.isVisible = !state.chat.isVisible
       const {nickName, fullName} = action.payload;
@@ -160,6 +164,6 @@ export const chatSlice = createSlice({
   }
 })
 // Action creators are generated for each case reducer function
-export const { addMassage, updateChat, startChat, currentChat, logoutChat, toggleVisibility} = chatSlice.actions
+export const { addMassage, updateChat, updateChats, startChat, currentChat, logoutChat, toggleVisibility} = chatSlice.actions
 
 export default chatSlice.reducer

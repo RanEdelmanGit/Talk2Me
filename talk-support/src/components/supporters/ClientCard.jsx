@@ -6,7 +6,6 @@ export default function ClientCard({
   client,
   handleStartChatClick = () => {},
 }) {
-  const cccc = useSelector((store) => store.supporters.contactedClients);
   const clientDetails = useSelector((store) =>
     store.supporters.contactedClients.find((c) => c.uid == client.clientId)
   );
@@ -54,10 +53,10 @@ export default function ClientCard({
           </span>
           {client.isVisible && (
             <>
-             <h3 className="text-base text-gray-500">|</h3>
+             <h3 className="text-base text-gray-500"></h3>
               <span className="flex justify-center items-center">
                 <h3 className="text-base text-gray-500">
-                  {clientDetails.area} |
+                  {clientDetails.area} 
                 </h3>
               </span>
               <span className="flex justify-center items-center">

@@ -8,7 +8,7 @@ const WelcomePage = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center pt-16"
+      className="min-h-screen flex items-center justify-center pt-10 md:pt-16"
       dir="rtl"
     >
       <div className="p-6 bg-white rounded-lg flex flex-col justify-start min-h-screen">

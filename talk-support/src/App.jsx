@@ -10,10 +10,17 @@ import {
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
 import { setUid, fetchUser, setUserType } from "./redux/features/authSlice";
-import { loadChats } from "./redux/features/chatSlice";
+import { loadChats, updateChats } from "./redux/features/chatSlice";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "./firebase_config";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  query,
+  collection,
+  where,
+  documentId,
+} from "firebase/firestore";
 import ChatPage from "./pages/ChatPage";
 import ClientsSupportersPage from "./pages/ClientsSupportersPage";
 import { useSelector, useDispatch } from "react-redux";
@@ -45,51 +52,56 @@ function App() {
   const { user, isAuth } = useSelector((state) => state.auth);
   const { userType } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  // signOut(auth);
+
   useEffect(() => {
+    const savedUserType = localStorage.getItem("userType");
+    let unsubscribeChats;
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      const savedUserType = localStorage.getItem("userType");
       if (currentUser && savedUserType) {
         const uid = currentUser.uid;
 
         dispatch(setUid(uid));
         dispatch(setUserType(savedUserType)); //TODO detect usertype in autologin fetchuser
-        dispatch(fetchUser({ uid, userType }))
+        dispatch(fetchUser({ uid, userType: savedUserType }))
           .unwrap()
-          .then( user => {
-            dispatch(loadChats({ userChats: user.chats.map((c) => c.chatId) }));
-          })
-        
+          .then((user) => {
+            //dispatch(loadChats({ userChats: user.chats.map((c) => c.chatId) }));
+            unsubscribeChats = startChatsListener(user);
+          });
       } else {
-        //localStorage.removeItem("userType");
-
         navigate("/welcome");
       }
     });
 
-    // let unsubscribeUser;
-
-    // if (isAuth) {
-    //   unsubscribeUser = userType == "client" ? "clients" : "supporters";
-    //   const userCollection = onSnapshot(
-    //     doc(db, userCollection, user.uid),
-    //     (doc) => {
-    //       if (!doc.exists()) {
-    //         // ?
-    //       } else {
-    //         //dispatch(updateChat(doc.data()));
-    //         console.log("chats", doc.chats);
-    //       }
-    //     }
-    //   );
-    // }
-
     // Cleanup subscription on unmount
     return () => {
       unsubscribe();
-      // unsubscribeUser && unsubscribeUser();
+      unsubscribeChats && unsubscribeChats();
     };
   }, [isAuth]);
+
+  const startChatsListener = (user) => {
+    if (!isAuth) return () => {};
+    const supporterQuery = query(
+      collection(db, "chats"),
+      where(
+        documentId(),
+        "in",
+        user.chats.map((c) => c.chatId)
+      )
+    );
+    const unsubscribe = onSnapshot(supporterQuery, (chatsSnapshot) => {
+      const chats = chatsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      if (chats.length > 0) {
+        dispatch(updateChats(chats));
+      }
+    });
+    return unsubscribe;
+  };
 
   useEffect(() => {
     if (isAuth) {

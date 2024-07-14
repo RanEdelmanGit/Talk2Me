@@ -4,14 +4,18 @@ const ChatMessages = ({ messages }) => {
   const lastMessageRef = useRef();
 
   useEffect(() => {
-    lastMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    lastMessageRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start",
+    });
   }, [messages]);
 
   return (
     <div className="flex-1 overflow-y-auto p-2">
       {messages.map((msg, index) => (
         <div
-        ref={lastMessageRef}
+          ref={lastMessageRef}
           key={index}
           className={`flex ${
             msg.type === "outgoing" ? "justify-end" : "justify-start"
@@ -25,11 +29,13 @@ const ChatMessages = ({ messages }) => {
             }`}
             style={{ maxWidth: "70%" }}
           >
-            <p className="mb-4">{msg.text}</p>
+            <p className="mb-4 text-lg" dir="rtl">
+              {msg.text}
+            </p>
             <p className="absolute bottom-0 right-0 text-xs text-gray-700 mb-1 mr-1">
-              {new Date(msg.sentAt).toLocaleTimeString('en-GB', {
-                hour: '2-digit',
-                minute: '2-digit',
+              {new Date(msg.sentAt).toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit",
               })}
             </p>
           </div>

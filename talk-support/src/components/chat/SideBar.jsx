@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Chats from "./Chats";
 import Header from "../layout/Header";
 import { useDispatch, useSelector } from "react-redux";
-import { loadChats } from "../../redux/features/chatSlice";
 import colors from "../../constants/profileColors";
 import { useNavigate } from "react-router-dom";
 import Loading from "../common/Loading";
@@ -11,7 +10,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
   const userChats = useSelector((store) => store.auth.user.chats);
   const { chats } = useSelector((store) => store.chat);
   const { userType, user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const nav = useNavigate();
   const [search, setSearch] = useState("");
 
@@ -25,7 +24,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
     //dispatch(loadChats({ userChats: userChats.map((c) => c.chatId) })); // loads user chats into chats selector
   }, [userChats]);
 
-  console.log(chats);
+  
   if (!chats || chats.length === 0) {
     <div className="flex w-full min-h-screen justify-center items-center">
       <Loading show={true} />

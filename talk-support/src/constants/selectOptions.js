@@ -9,13 +9,13 @@ export const recentStatusOptions = [
   ];
   
   export const genderOptions = [
-    { value: "not-selected", label: "בחר" },
-    { value: "woman", label: "אישה" },
-    { value: "man", label: "גבר" }
+    { value: "not-selected", label: "בחר מגדר" },
+    { value: "אישה", label: "אישה" },
+    { value: "גבר", label: "גבר" }
   ];
   
   export const areaOptions = [
-    { value: "not-selected", label: "בחר" },
+    { value: "not-selected", label: "בחר איזור" },
     { value: "צפון", label: "צפון" },
     { value: "מרכז", label: "מרכז" },
     { value: "דרום", label: "דרום" }
@@ -32,19 +32,33 @@ export const recentStatusOptions = [
   ];
   
   export const preferredLanguageOptions = [
-    { value: "hebrew", label: "עברית" },
+    { value: "עברית", label: "עברית" },
     { value: "english", label: "English" }
   ];
   
   export const meetingOptions = [
-    { value: "meetingOffline", label: "מפגש" },
-    { value: "meetingOnline", label: "וידיאו" },
-    { value: "phoneCall", label: "טלפון" },
+    { value: "מפגש", label: "מפגש" },
+    { value: "וידיאו", label: "וידיאו" },
+    { value: "טלפון", label: "טלפון" },
   ];
 
-  export const FilterMeetingOptions = [
+  export const filterMeetingOptions = [
     { value: "not-selected", label: "בחר אופן מפגש" },
-    { value: "offline", label: "מפגש פנים אל פנים" },
-    { value: "online", label: "מרחוק" },
-    { value: "both", label: "שניהם" }
+    { value: "מפגש", label: "מפגש" },
+    { value: "וידיאו", label: "וידיאו" },
+    { value: "טלפון", label: "טלפון" },
+  ];
+
+  export const ageOptions = [
+  { value: "not-selected", label: "בחר טווח גילאים" },
+    { value: "18-22", label: "18-22" },
+    { value: "23-27", label: "23-27" },
+    { value: "28-32", label: "28-32" },
+    { value: "33-37", label: "33-37" },
+    { value: "38-42", label: "38-42" },
+    { value: "43-47", label: "43-47" },
+    { value: "48-52", label: "48-52" },
+    { value: "53-57", label: "53-57" },
+    { value: "58-62", label: "58-62" },
+    { value: "65+", label: "65+" },
   ];

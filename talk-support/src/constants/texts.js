@@ -103,6 +103,14 @@ export const texts = {
     SupportersPage: {
     
     },
+    SupportersSidebar:{
+      filterTitle: "סינון",
+      clearSelection: "נקה בחירה",
+      showFavorites: "הצג מועדפים",
+      searchPlaceholder: "חפש שם ...",
+      selectMeeting: "בחר אופן מפגש",
+      selectLanguage: "בחר שפה",
+    },
     Welcome: {
         title: "ברוכים הבאים",
         description: "פלטפורמה המחברת אנשים המחפשים תמיכה רגשית עם סטודנטים לפסיכולוגיה שרוצים להקשיב ולתמוך. בהתנדבות.",

@@ -9,11 +9,15 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
+import Loading from "../common/Loading";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { userType, user } = useSelector((state) => state.auth);
-  
+  const authStatus = useSelector((store) => store.auth.status);
+  const chatStatus = useSelector((store) => store.chat.status);
+  const supportersStatus = useSelector((store) => store.supporters.status);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -27,14 +31,22 @@ const Header = () => {
   const navigationClient = [
     { name: "צ'אט", href: "/chat" },
     { name: "תומכים", href: "/supporters" },
-    { name: "עזרה ומשאבים", href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE", external: true },
+    {
+      name: "עזרה ומשאבים",
+      href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE",
+      external: true,
+    },
     { name: "צור קשר", href: "/contact" }, // Added Contact link
   ];
 
   const navigationSupporter = [
     { name: "צ'אט", href: "/chat" },
     { name: "בית", href: "/supporters" },
-    { name: "עזרה ומשאבים", href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE", external: true },
+    {
+      name: "עזרה ומשאבים",
+      href: "https://www.nafshi.info/?gad_source=1&gclid=CjwKCAjw4f6zBhBVEiwATEHFVksjVfWBlmzoFq5zStUbxpFrmTrOuV6IMYVJx9fYzkUKtw-P0mDjFxoCUGAQAvD_BwE",
+      external: true,
+    },
     { name: "צור קשר", href: "/contact" }, // Added Contact link
   ];
 
@@ -59,16 +71,22 @@ const Header = () => {
                 <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block size-7 text-gray-700" aria-hidden="true" />
+                    <XMarkIcon
+                      className="block size-7 text-gray-700"
+                      aria-hidden="true"
+                    />
                   ) : (
-                    <Bars3Icon className="block size-7 text-gray-700" aria-hidden="true" />
+                    <Bars3Icon
+                      className="block size-7 text-gray-700"
+                      aria-hidden="true"
+                    />
                   )}
                 </DisclosureButton>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="hidden sm:block">
                   <div className="flex space-x-24 rtl:space-x-reverse">
-                    {navigation.map((item) => (
+                    {navigation.map((item) =>
                       item.external ? (
                         <a
                           key={item.name}
@@ -100,10 +118,12 @@ const Header = () => {
                           {item.name}
                         </Link>
                       )
-                    ))}
+                    )}
                   </div>
                 </div>
+                <Loading show={authStatus == "loading" || chatStatus == "loading" || supportersStatus == "loading"} />
               </div>
+              
               <div className=" flex items-center justify-center mr-4">
                 <SignOut />
               </div>
