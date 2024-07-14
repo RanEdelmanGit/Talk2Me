@@ -12,7 +12,7 @@ const ChatMessages = ({ messages }) => {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-2">
+    <div className="flex-1 overflow-y-auto p-2 max-md:py-10">
       {messages.map((msg, index) => (
         <div
           ref={lastMessageRef}
