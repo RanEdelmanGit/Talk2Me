@@ -73,7 +73,7 @@ const ChatPage = () => {
         <div className="flex-1 flex flex-col">
           <div
             dir="rtl"
-            className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0"
+            className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0 z-30"
           >
             <ChatHeader
               contactName={
@@ -85,10 +85,10 @@ const ChatPage = () => {
               handleMenuToggle={handleMenuToggle}
             />
           </div>
-          <div className="flex-1 overflow-y-scroll bg-gray-100">
+          <div className="flex-1 overflow-y-scroll bg-gray-100 max-md:mb-16">
             <ChatMessages messages={mapMassageType()} />
           </div>
-          <div className="max-md:fixed max-md:bottom-0 max-md:left-0 max-md:right-0">
+          <div className="max-md:fixed max-md:bottom-0 max-md:left-0 max-md:right-0 z-30">
             <ChatInput />
           </div>
         </div>
