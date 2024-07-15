@@ -9,8 +9,6 @@ const ClientsSupportersPage = () => {
   
   const { userType, user } = useSelector((state) => state.auth);
 
- 
-
 
   return (
     <>

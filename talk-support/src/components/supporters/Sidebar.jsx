@@ -35,8 +35,12 @@ const Sidebar = ({
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters, [name]: value };
+      return newFilters;
+    });
   };
+  
 
   const handleClearFilters = () => {
     const initialFilters = {
@@ -91,7 +95,9 @@ const Sidebar = ({
         }`}
       >
         <div className="flex justify-between items-center mb-4 border-b pb-6 border-gray-400 max-md:hidden">
-          <h2 className="text-2xl font-bold ">{texts.SupportersSidebar.filterTitle}</h2>
+          <h2 className="text-2xl font-bold ">
+            {texts.SupportersSidebar.filterTitle}
+          </h2>
 
           {areFiltersActive() && (
             <button
@@ -103,14 +109,17 @@ const Sidebar = ({
           )}
         </div>
 
-        <div className="flex justify-end pb-6 max-md:hidden">
-          <button onClick={onToggleFavorites} className="flex items-center gap-2">
+        <div className="flex justify-start pb-6 max-md:hidden">
+          <button
+            onClick={onToggleFavorites}
+            className="flex items-center gap-2"
+          >
             <span>{texts.SupportersSidebar.showFavorites}</span>
             {showFavorites ? <HeartSolidIcon /> : <HeartRegularIcon />}
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="mb-2">
             <input
               name="name"
@@ -121,18 +130,18 @@ const Sidebar = ({
             />
           </div>
 
-          <div className="mb-2">
-            <select
-              name="meeting"
-              value={filters.meeting}
-              onChange={handleChange}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              {filterMeetingOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
-              ))}
-            </select>
-          </div>
+          <select
+            name="meeting"
+            value={filters.meeting}
+            onChange={handleChange}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          >
+            {filterMeetingOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
 
           <div className="mb-2">
             <select
@@ -141,8 +150,10 @@ const Sidebar = ({
               onChange={handleChange}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
-              {genderOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+              {genderOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </select>
           </div>
@@ -154,8 +165,10 @@ const Sidebar = ({
               onChange={handleChange}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
-              {ageOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+              {ageOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </select>
           </div>
@@ -167,8 +180,10 @@ const Sidebar = ({
               onChange={handleChange}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
-              {areaOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+              {areaOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </select>
           </div>
@@ -192,9 +207,13 @@ const Sidebar = ({
               onChange={handleChange}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
-              <option value="not-selected">{texts.SupportersSidebar.selectLanguage}</option>
-              {preferredLanguageOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+              <option value="not-selected">
+                {texts.SupportersSidebar.selectLanguage}
+              </option>
+              {preferredLanguageOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </select>
           </div>

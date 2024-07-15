@@ -28,9 +28,10 @@ const SupportersPage = () => {
     gender: "not-selected",
     age: "not-selected",
     area: "not-selected",
-    city: "not-selected",
+    city: null,
     preferredLanguage: "not-selected",
   });
+  
 
   useEffect(() => {
     applyFilters(filters);
@@ -41,7 +42,7 @@ const SupportersPage = () => {
     const allFiltersSelected = Object.values(filters).every(
       (value) => value === "not-selected" || value === ""
     );
-
+  
     if (allFiltersSelected) {
       filtered = showFavorites
         ? supporters.filter((supporter) =>
@@ -51,7 +52,7 @@ const SupportersPage = () => {
       setFilteredSupporters(filtered);
       return;
     }
-
+  
     const ageRanges = {
       "18-22": [18, 22],
       "23-27": [23, 27],
@@ -64,20 +65,22 @@ const SupportersPage = () => {
       "58-62": [58, 62],
       "65+": [65, Infinity],
     };
-
+  
     filtered = supporters.filter((supporter) => {
       const ageRange = ageRanges[filters.age];
       const [minAge, maxAge] = ageRange || [0, Infinity];
       const isFavorite = showFavorites
         ? user.favorites.includes(supporter.id)
         : true;
+  
+  
       return (
         (!filters.name ||
           `${supporter.firstName} ${supporter.lastName}`
             .toLowerCase()
             .includes(filters.name.toLowerCase())) &&
         (filters.meeting === "not-selected" ||
-          supporter.meeting === filters.meeting) &&
+          supporter.meeting.includes(filters.meeting)) &&
         (filters.gender === "not-selected" ||
           supporter.gender === filters.gender) &&
         (filters.age === "not-selected" ||
@@ -89,9 +92,11 @@ const SupportersPage = () => {
         isFavorite
       );
     });
-
+  
     setFilteredSupporters(filtered);
   };
+  
+  
 
   const handleFilter = (filters) => {
     setFilters(filters);
@@ -132,13 +137,12 @@ const SupportersPage = () => {
           onClearFilters={handleClearFilters}
         />
       </div>
-      <div className="order-2 w-full md:mr-72 flex-1 flex flex-col items-center max-md:fixed top-32">
-        <div className="w-full">
+      <div className="order-2 w-full md:mr-72 flex-1 flex-col items-center max-md:mt-16 safe-bottom">
           <SupporterList supporters={filteredSupporters} />
-        </div>
       </div>
     </>
   );
+  
 };
 
 export default SupportersPage;

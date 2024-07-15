@@ -1,19 +1,21 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import SupporterCard from "./SupporterCard";
 import colors from "../../constants/profileColors"; // Import the colors array
 
 export default function SupporterList({ supporters }) {
   const [openAboutIndex, setOpenAboutIndex] = useState(null);
+  const status = useSelector((state) => state.supporters.status);
 
   const toggleAbout = (index) => {
     setOpenAboutIndex(openAboutIndex === index ? null : index);
   };
 
   return (
-    <div className="max-h-[71vh] md:max-h-[90vh] mx-auto w-[92%] flex flex-col overflow-y-auto">
+    <div className="flex-1 w-[92%] mx-auto flex flex-col overflow-y-auto safe-bottom">
       {supporters.length === 0 ? (
         <h2 className="text-center text-gray-500 mt-4 text-xl">
-          לא נמצאו תומכים
+          {status === "loading" ? "טוען תומכים..." : "לא נמצאו תומכים"}
         </h2>
       ) : (
         supporters.map((supporter, index) => (
