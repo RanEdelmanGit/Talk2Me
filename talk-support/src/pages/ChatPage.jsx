@@ -6,17 +6,13 @@ import ChatInput from "../components/chat/Input";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { doc, onSnapshot } from "firebase/firestore";
-import {
-  updateChat,
-  chatCollection,
-} from "../redux/features/chatSlice";
+import { updateChat, chatCollection } from "../redux/features/chatSlice";
 import { db } from "../firebase_config";
 
 const ChatPage = () => {
-
   const { messages } = useSelector((store) => store.chat.chat);
   const { supporterName, clientName } = useSelector((store) => store.chat.chat);
-  
+
   const {
     user: { uid },
     userType,
@@ -45,7 +41,6 @@ const ChatPage = () => {
       };
     });
   };
- 
 
   useEffect(() => {
     if (!params.chatId) return;
@@ -76,11 +71,7 @@ const ChatPage = () => {
             className="max-md:fixed max-md:top-0 max-md:left-0 max-md:right-0 z-30"
           >
             <ChatHeader
-              contactName={
-                userType == "client"
-                  ? supporterName
-                  : clientName
-              }
+              contactName={userType == "client" ? supporterName : clientName}
               isMenuOpen={isMenuOpen}
               handleMenuToggle={handleMenuToggle}
             />

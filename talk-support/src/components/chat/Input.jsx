@@ -17,7 +17,7 @@ const ChatInput = () => {
   };
 
   return (
-    <footer className="bg-white border-t border-gray-300 p-4">
+    <footer className="bg-white border-t border-gray-300 p-4 safe-bottom">
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <input
           type="text"
