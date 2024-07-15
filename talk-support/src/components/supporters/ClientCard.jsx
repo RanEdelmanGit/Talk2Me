@@ -1,35 +1,17 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { resumeChat, startChat, currentChat } from "../../redux/features/chatSlice";
 
 export default function ClientCard({ color, client }) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((store) => store.auth.user);
   const clientDetails = useSelector((store) =>
     store.supporters.contactedClients.find((c) => c.uid == client.clientId)
   );
-  const user = useSelector((store) => store.auth.user);
   const avatarUrl = `https://placehold.co/200x/${color}/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato`;
 
-  const handleStartChatClick = async () => {
+  const handleStartChatClick = () => {
     const chatId = client.clientId + user.uid;
-
-    const existingChat = client.chats && client.chats.find((c) => c.chatId === chatId);
-
-    if (existingChat) {
-      await dispatch(resumeChat({ chatId }));
-      dispatch(currentChat(chatId));
-    } else {
-      dispatch(startChat({
-        chatId: chatId,
-        supporterId: user.uid,
-        clientId: client.clientId,
-        supporterName: user.nickname,
-        clientName: client.clientName,
-      }));
-    }
-
     navigate(`/chat/${chatId}`, { state: { clientId: client.clientId } });
   };
 
