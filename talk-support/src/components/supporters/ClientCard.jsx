@@ -16,12 +16,12 @@ export default function ClientCard({ color, client }) {
   };
 
   if (!clientDetails) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center"></div>;
   }
 
   return (
     <div
-      className="w-[350px] md:w-[800px] mx-auto md:p-3 border-b border-gray-300"
+      className="w-[92%] md:w-[800px] mx-auto md:p-3 border-b border-gray-300"
       dir="rtl"
     >
       <div className="flex flex-col items-start justify-between w-full py-4">

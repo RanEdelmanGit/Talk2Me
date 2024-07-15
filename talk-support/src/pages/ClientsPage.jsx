@@ -28,7 +28,7 @@ const ClientsPage = () => {
   };
 
   return (
-    <div className="flex flex-col w-full mx-auto items-center">
+    <div className="flex flex-col w-full mx-auto">
       <ClientSearch search={search} setSearch={setSearch} />
       <ClientList clients={buildClients()} />
     </div>
