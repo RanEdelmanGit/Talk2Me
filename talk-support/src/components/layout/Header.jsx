@@ -60,7 +60,7 @@ const Header = () => {
   return (
     <Disclosure
       as="nav"
-      className="bg-white fixed top-0 left-0 right-0 border-b z-50 "
+      className="bg-white fixed top-0 left-0 right-0 border-b z-40 "
       dir="rtl"
     >
       {({ open }) => (

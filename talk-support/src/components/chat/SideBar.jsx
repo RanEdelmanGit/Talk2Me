@@ -8,14 +8,14 @@ import Loading from "../common/Loading";
 
 const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
   const userChats = useSelector((store) => store.auth.user.chats);
-  const { chats } = useSelector((store) => store.chat);
+  const { chats, status } = useSelector((store) => store.chat);
   const { userType, user } = useSelector((state) => state.auth);
   // const dispatch = useDispatch();
   const nav = useNavigate();
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (!chats) return;
+    if (!chats || status == "loading") return;
 
     if (chats.length === 0) {
       nav("/supporters");

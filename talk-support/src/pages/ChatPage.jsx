@@ -9,6 +9,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { updateChat, chatCollection } from "../redux/features/chatSlice";
 import { db } from "../firebase_config";
 
+// import '../styles/layout/chatPage.css'
+
 const ChatPage = () => {
   const { messages } = useSelector((store) => store.chat.chat);
   const { supporterName, clientName } = useSelector((store) => store.chat.chat);
@@ -45,7 +47,6 @@ const ChatPage = () => {
   useEffect(() => {
     if (!params.chatId) return;
     const chat = Object.values(chats).find((chat) => chat.id == params.chatId);
-    console.log(params.chatId, chat);
     dispatch(updateChat(chat));
 
     const unsubscribeChat = onSnapshot(
@@ -76,7 +77,7 @@ const ChatPage = () => {
               handleMenuToggle={handleMenuToggle}
             />
           </div>
-          <div className="flex-1 overflow-y-scroll bg-gray-100 max-md:mb-16">
+          <div className="flex-1 overflow-y-scroll bg-gray-100 max-md:mb-16 safe-bottom py-4">
             <ChatMessages messages={mapMassageType()} />
           </div>
           <div className="max-md:fixed max-md:bottom-0 max-md:left-0 max-md:right-0">

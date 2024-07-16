@@ -159,7 +159,7 @@ const ClientRegistration = () => {
         registration.password
       );
       const userId = userCredential.user.uid;
-      const user = { ...registration, uid: userId };
+      const user = { ...registration, uid: userId, dateOfRegistration: new Date().toISOString()};
       user.chats = [];
       await updateProfile(userCredential.user, {
         displayName: registration.firstName + " " + registration.lastName,

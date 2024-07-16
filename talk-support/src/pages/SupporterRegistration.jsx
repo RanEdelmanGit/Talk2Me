@@ -207,7 +207,7 @@ const SupporterRegistration = () => {
         displayName: registration.firstName + " " + registration.lastName,
       });
 
-      const user = { ...registration, uid: userId };
+      const user = { ...registration, uid: userId, dateOfRegistration: new Date().toISOString() };
 
       if (user.resume) {
         const resumeURL = await uploadFile(

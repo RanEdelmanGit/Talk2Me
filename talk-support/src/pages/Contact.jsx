@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function Contact() {
-  const { isAuth} = useSelector((state) => state.auth);
+  const {isAuth} = useSelector((state) => state.auth);
 
   return (
     <div className="relative flex max-md:flex-col h-screen " dir="rtl">

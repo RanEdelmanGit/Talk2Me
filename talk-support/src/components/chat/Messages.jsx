@@ -6,16 +6,21 @@ const ChatMessages = ({ messages }) => {
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "nearest",
+      block: "end",
       inline: "start",
     });
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-2 max-md:py-10">
+    <div className="flex-1 overflow-y-auto p-2">
       {messages.map((msg, index) => (
         <div
-          ref={lastMessageRef}
+          style={{
+            scrollMarginBottom:
+              index == messages.length - 1 ? "2rem" : "initial",
+            marginTop: index == 0 ? "2rem" : "initial",
+          }}
+          ref={index == messages.length - 1 ? lastMessageRef : null}
           key={index}
           className={`flex ${
             msg.type === "outgoing" ? "justify-end" : "justify-start"

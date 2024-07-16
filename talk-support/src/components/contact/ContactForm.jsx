@@ -43,8 +43,9 @@ export default function ContactForm() {
     }
 
     try {
+      const form = {...formData, date: new Date().toISOString()}
       await addDoc(collection(db, "inquiries"), {
-        ...formData,
+        ...form,
         type: inquiryType
       });
       setSuccess(texts.Contact.successMessage);

@@ -37,14 +37,14 @@ export const recentStatusOptions = [
   ];
   
   export const meetingOptions = [
-    { value: "מפגש", label: "מפגש" },
+    { value: "פרונטלי", label: "פרונטלי" },
     { value: "וידיאו", label: "וידיאו" },
     { value: "טלפון", label: "טלפון" },
   ];
 
   export const filterMeetingOptions = [
     { value: "not-selected", label: "בחר אופן מפגש" },
-    { value: "מפגש", label: "מפגש" },
+    { value: "פרונטלי", label: "פרונטלי" },
     { value: "וידיאו", label: "וידיאו" },
     { value: "טלפון", label: "טלפון" },
   ];

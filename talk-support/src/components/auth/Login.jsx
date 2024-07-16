@@ -92,7 +92,7 @@ const Login = ({ setIsLoginVisible }) => {
   };
 
   return (
-    <div className="mt-4 mb-8 md:my-14 sm:mx-auto sm:w-full sm:max-w-sm relative">
+    <div className="sm:mx-auto sm:w-full sm:max-w-sm relative">
       <form className="space-y-6" method="POST" onSubmit={handleSubmit}>
         <div>
           <label

@@ -6,7 +6,7 @@ export const chatCollection = "chats"
 
 
 const initialState = {
-  status:'ready',
+  status:'loading',
   error:'',
   chat:{
     isVisible:false,
@@ -101,7 +101,6 @@ export const chatSlice = createSlice({
     toggleVisibility: (state, action) =>{
       state.chat.isVisible = !state.chat.isVisible
       const {nickName, fullName} = action.payload;
-      console.log( action.payload);
       if(state.chat.isVisible){
         // client name is client firstname + lastname
         state.chat.clientName = fullName;
@@ -109,7 +108,9 @@ export const chatSlice = createSlice({
         // client name is nickname
         state.chat.clientName = nickName;
       }
-      console.log( state.chat.clientName);
+    },
+    updateStatus:(state, action) =>{
+      state.status = action.payload
     },
     logoutChat: (state, action) => {
       state.status = 'ready';
@@ -164,6 +165,6 @@ export const chatSlice = createSlice({
   }
 })
 // Action creators are generated for each case reducer function
-export const { addMassage, updateChat, updateChats, startChat, currentChat, logoutChat, toggleVisibility} = chatSlice.actions
+export const { addMassage, updateChat, updateChats, startChat, currentChat, logoutChat, toggleVisibility, updateStatus} = chatSlice.actions
 
 export default chatSlice.reducer
