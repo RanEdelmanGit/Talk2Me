@@ -12,8 +12,38 @@ export default function SupporterList({ supporters }) {
   };
 
   return (
-    <div className="flex-1 w-[92%] mx-auto flex flex-col overflow-y-auto safe-bottom">
+    <div className="flex-1 w-[92%] mx-auto flex flex-col h-[90vh] overflow-y-auto ">
       {supporters.length === 0 ? (
+        <h2 className="text-center text-gray-500 mt-4 text-xl">
+          {status === "loading" ? "טוען תומכים..." : "לא נמצאו תומכים"}
+        </h2>
+      ) : (
+        supporters.map((supporter, index) => (
+          <SupporterCard
+            key={index}
+            supporter={supporter}
+            aboutOpen={openAboutIndex === index}
+            toggleAbout={() => toggleAbout(index)}
+            color={colors[index % colors.length]} // Cycle through colors using modulus operator
+          />
+        ))
+      )}
+      {supporters.length === 0 ? (
+        <h2 className="text-center text-gray-500 mt-4 text-xl">
+          {status === "loading" ? "טוען תומכים..." : "לא נמצאו תומכים"}
+        </h2>
+      ) : (
+        supporters.map((supporter, index) => (
+          <SupporterCard
+            key={index}
+            supporter={supporter}
+            aboutOpen={openAboutIndex === index}
+            toggleAbout={() => toggleAbout(index)}
+            color={colors[index % colors.length]} // Cycle through colors using modulus operator
+          />
+        ))
+      )}
+       {supporters.length === 0 ? (
         <h2 className="text-center text-gray-500 mt-4 text-xl">
           {status === "loading" ? "טוען תומכים..." : "לא נמצאו תומכים"}
         </h2>

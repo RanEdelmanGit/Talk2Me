@@ -8,7 +8,7 @@ export default function Contact() {
   const {isAuth} = useSelector((state) => state.auth);
 
   return (
-    <div className="relative flex max-md:flex-col h-screen " dir="rtl">
+    <div className="relative flex max-md:flex-col h-screen overflow-y-auto pb-19" dir="rtl">
       <Link
         to={isAuth ? "/" : "/welcome"}
         className="absolute top-4 left-4 m-4 text-base font-semibold text-gray-900"
@@ -31,7 +31,7 @@ export default function Contact() {
       <div className="flex-1 mt-16 sm:mt-24">
         <ContactInfo />
       </div>
-      <div className="flex-1 mt-16 sm:mt-24 pb-10 safe-bottom">
+      <div className="flex-1 mt-16 sm:mt-24 pb-10 ">
         <ContactForm />
       </div>
     </div>

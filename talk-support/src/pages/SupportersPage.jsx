@@ -31,7 +31,6 @@ const SupportersPage = () => {
     city: null,
     preferredLanguage: "not-selected",
   });
-  
 
   useEffect(() => {
     applyFilters(filters);
@@ -42,7 +41,7 @@ const SupportersPage = () => {
     const allFiltersSelected = Object.values(filters).every(
       (value) => value === "not-selected" || value === ""
     );
-  
+
     if (allFiltersSelected) {
       filtered = showFavorites
         ? supporters.filter((supporter) =>
@@ -52,7 +51,7 @@ const SupportersPage = () => {
       setFilteredSupporters(filtered);
       return;
     }
-  
+
     const ageRanges = {
       "18-22": [18, 22],
       "23-27": [23, 27],
@@ -65,15 +64,14 @@ const SupportersPage = () => {
       "58-62": [58, 62],
       "65+": [65, Infinity],
     };
-  
+
     filtered = supporters.filter((supporter) => {
       const ageRange = ageRanges[filters.age];
       const [minAge, maxAge] = ageRange || [0, Infinity];
       const isFavorite = showFavorites
         ? user.favorites.includes(supporter.id)
         : true;
-  
-  
+
       return (
         (!filters.name ||
           `${supporter.firstName} ${supporter.lastName}`
@@ -92,11 +90,9 @@ const SupportersPage = () => {
         isFavorite
       );
     });
-  
+
     setFilteredSupporters(filtered);
   };
-  
-  
 
   const handleFilter = (filters) => {
     setFilters(filters);
@@ -128,8 +124,13 @@ const SupportersPage = () => {
   }
 
   return (
-    <>
-      <div className="order-1 w-full md:w-72 md:fixed">
+    <div className="flex flex-col lg:flex-row w-full">
+      <div className="w-full lg:flex-grow order-2 lg:order-1">
+        <div className="flex-1 flex-col items-center safe-bottom">
+          <SupporterList supporters={filteredSupporters} />
+        </div>
+      </div>
+      <div className="order-1 lg:order-2">
         <Sidebar
           onFilter={handleFilter}
           onToggleFavorites={handleToggleFavorites}
@@ -137,12 +138,8 @@ const SupportersPage = () => {
           onClearFilters={handleClearFilters}
         />
       </div>
-      <div className="order-2 w-full md:mr-72 flex-1 flex-col items-center max-md:mt-16 safe-bottom">
-          <SupporterList supporters={filteredSupporters} />
-      </div>
-    </>
+    </div>
   );
-  
 };
 
 export default SupportersPage;

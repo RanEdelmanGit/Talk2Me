@@ -185,7 +185,7 @@ const ClientRegistration = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen" dir="rtl">
+    <div className="flex items-center justify-center h-screen overflow-y-auto" dir="rtl">
       <div className="w-full h-full flex justify-center">
         <form
           className="w-fit space-y-12 max-md:px-4 md:pt-10"

@@ -37,7 +37,7 @@ const SupporterCard = ({
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery({ query: "(max-width: 925px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 1200px)" });
   const chatId = uid + user.uid;
 
   const handleFavoriteClick = (e) => {

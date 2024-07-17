@@ -67,167 +67,163 @@ const Sidebar = ({
   };
 
   return (
-    <div className="w-full md:w-72 bg-gray-200 px-4 md:py-4 shadow-md md:min-h-screen max-md:fixed max-md:top-16 rounded-md md:pr-6 z-10 ">
-      <div className="flex justify-between items-center md:hidden p-4 ">
+    <div className="w-full lg:w-72 bg-gray-200 px-4 py-4 shadow-md rounded-md lg:min-h-screen" dir="rtl">
+    <div className="flex justify-between items-center lg:hidden p-4">
+      <button
+        onClick={toggleDropdown}
+        className="flex items-center justify-between text-black rounded"
+      >
+        <FilterIcon isOpen={isOpen} />
+      </button>
+
+      {areFiltersActive() && (
         <button
-          onClick={toggleDropdown}
-          className="md:hidden flex items-center justify-between text-black rounded"
+          onClick={handleClearFilters}
+          className="flex gap-2 border border-gray-700 hover:bg-indigo-300 font-semibold px-3 py-1 rounded-md"
         >
-          <FilterIcon isOpen={isOpen} />
+          {texts.SupportersSidebar.clearSelection}
         </button>
+      )}
+
+      <button onClick={onToggleFavorites} className="flex items-center">
+        {showFavorites ? <HeartSolidIcon /> : <HeartRegularIcon />}
+      </button>
+    </div>
+    <div className={`lg:block ${isOpen ? "block pb-6 px-4 lg:px-0" : "hidden"}`}>
+      <div className="flex justify-between items-center mb-4 border-b pb-6 border-gray-400 max-lg:hidden">
+        <h2 className="text-2xl font-bold">
+          {texts.SupportersSidebar.filterTitle}
+        </h2>
 
         {areFiltersActive() && (
           <button
             onClick={handleClearFilters}
-            className="flex gap-2 border border-gray-700 hover:bg-indigo-300  font-semibold px-3 py-1 rounded-md"
+            className="flex gap-2 border-2 border-gray-700 hover:bg-indigo-300 font-semibold px-3 py-1 rounded-md"
           >
             {texts.SupportersSidebar.clearSelection}
           </button>
         )}
+      </div>
 
-        <button onClick={onToggleFavorites} className="flex items-center">
+      <div className="flex justify-start pb-6 max-lg:hidden">
+        <button
+          onClick={onToggleFavorites}
+          className="flex items-center gap-2"
+        >
+          <span>{texts.SupportersSidebar.showFavorites}</span>
           {showFavorites ? <HeartSolidIcon /> : <HeartRegularIcon />}
         </button>
       </div>
-      <div
-        className={`md:block ${
-          isOpen ? "block  pb-6 md:pt-4 px-4 md:px-2 min-h-screen" : "hidden"
-        }`}
-      >
-        <div className="flex justify-between items-center mb-4 border-b pb-6 border-gray-400 max-md:hidden">
-          <h2 className="text-2xl font-bold ">
-            {texts.SupportersSidebar.filterTitle}
-          </h2>
 
-          {areFiltersActive() && (
-            <button
-              onClick={handleClearFilters}
-              className=" flex gap-2 border-2 border-gray-700 hover:bg-indigo-300  font-semibold px-3 py-1 rounded-md"
-            >
-              {texts.SupportersSidebar.clearSelection}
-            </button>
-          )}
+      <div className="space-y-6">
+        <div className="mb-2">
+          <input
+            name="name"
+            value={filters.name}
+            onChange={handleChange}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder={texts.SupportersSidebar.searchPlaceholder}
+          />
         </div>
 
-        <div className="flex justify-start pb-6 max-md:hidden">
-          <button
-            onClick={onToggleFavorites}
-            className="flex items-center gap-2"
-          >
-            <span>{texts.SupportersSidebar.showFavorites}</span>
-            {showFavorites ? <HeartSolidIcon /> : <HeartRegularIcon />}
-          </button>
-        </div>
+        <select
+          name="meeting"
+          value={filters.meeting}
+          onChange={handleChange}
+          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        >
+          {filterMeetingOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
 
-        <div className="space-y-6">
-          <div className="mb-2">
-            <input
-              name="name"
-              value={filters.name}
-              onChange={handleChange}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder={texts.SupportersSidebar.searchPlaceholder}
-            />
-          </div>
-
+        <div className="mb-2">
           <select
-            name="meeting"
-            value={filters.meeting}
+            name="gender"
+            value={filters.gender}
             onChange={handleChange}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           >
-            {filterMeetingOptions.map((option) => (
+            {genderOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
           </select>
+        </div>
 
-          <div className="mb-2">
-            <select
-              name="gender"
-              value={filters.gender}
-              onChange={handleChange}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              {genderOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mb-2">
-            <select
-              name="age"
-              value={filters.age}
-              onChange={handleChange}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              {ageOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mb-2">
-            <select
-              name="area"
-              value={filters.area}
-              onChange={handleChange}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              {areaOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mb-2">
-            <CityAutocomplete
-              value={filters.city}
-              onChange={(newValue) => {
-                setFilters((prevFilters) => ({
-                  ...prevFilters,
-                  city: newValue || null,
-                }));
-              }}
-            />
-          </div>
-
-          <div className="mb-2">
-            <select
-              name="preferredLanguage"
-              value={filters.preferredLanguage}
-              onChange={handleChange}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            >
-              <option value="not-selected">
-                {texts.SupportersSidebar.selectLanguage}
+        <div className="mb-2">
+          <select
+            name="age"
+            value={filters.age}
+            onChange={handleChange}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          >
+            {ageOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
-              {preferredLanguageOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="self-center flex items-center justify-center my-5 md:hidden">
-            <button
-              onClick={toggleDropdown}
-              className="btn w-full flex  items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 "
-            >
-              סנן
-            </button>
-          </div>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-2">
+          <select
+            name="area"
+            value={filters.area}
+            onChange={handleChange}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          >
+            {areaOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-2">
+          <CityAutocomplete
+            value={filters.city}
+            onChange={(newValue) => {
+              setFilters((prevFilters) => ({
+                ...prevFilters,
+                city: newValue || null,
+              }));
+            }}
+          />
+        </div>
+
+        <div className="mb-2">
+          <select
+            name="preferredLanguage"
+            value={filters.preferredLanguage}
+            onChange={handleChange}
+            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          >
+            <option value="not-selected">
+              {texts.SupportersSidebar.selectLanguage}
+            </option>
+            {preferredLanguageOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="self-center flex items-center justify-center my-5 lg:hidden">
+          <button
+            onClick={toggleDropdown}
+            className="btn w-full flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            סנן
+          </button>
         </div>
       </div>
     </div>
+  </div>
   );
 };
 

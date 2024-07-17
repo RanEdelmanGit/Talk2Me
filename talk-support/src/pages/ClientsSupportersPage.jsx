@@ -13,7 +13,7 @@ const ClientsSupportersPage = () => {
   return (
     <>
       {user.uid && <Header />}
-      <div className="min-h-screen flex flex-col md:flex-row mt-16" dir="rtl">
+      <div className="min-h-screen flex flex-col md:flex-row mt-16">
         {userType === "client" && (
           <SupportersPage />
         )}
