@@ -112,7 +112,7 @@ export const texts = {
       selectLanguage: "בחר שפה",
     },
     Welcome: {
-        title: "ברוכים הבאים",
+        title: "Talk2me",
         description: "פלטפורמה המחברת אנשים המחפשים תמיכה רגשית עם סטודנטים לפסיכולוגיה שרוצים להקשיב ולתמוך. בהתנדבות מלאה וללא מטרות רווח.",
         supporterButton: "באתי להקשיב",
         clientButton: "באתי לשתף",
