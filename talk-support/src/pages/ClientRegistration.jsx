@@ -582,7 +582,7 @@ const ClientRegistration = () => {
           <div className="mt-6 flex items-center justify-center gap-x-6">
             <Link
               to="/welcome"
-              className="text-lg font-semibold leading-6 text-gray-900 mb-20 max-md:mb-28"
+              className="text-lg font-semibold leading-6 text-gray-900 mb-20 max-md:mb-20"
             >
               {texts.ClientRegistration.cancelButton}
             </Link>
