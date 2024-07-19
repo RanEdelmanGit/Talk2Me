@@ -67,7 +67,7 @@ const Sidebar = ({
   };
 
   return (
-    <div className="w-full lg:w-72 bg-gray-200 px-4 py-4 shadow-md rounded-md lg:min-h-screen" dir="rtl">
+    <div className="w-full lg:w-72 bg-gray-200 lg:px-4 lg:py-4 shadow-md rounded-md lg:min-h-screen" dir="rtl">
     <div className="flex justify-between items-center lg:hidden p-4">
       <button
         onClick={toggleDropdown}

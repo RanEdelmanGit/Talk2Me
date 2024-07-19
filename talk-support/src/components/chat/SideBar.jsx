@@ -41,6 +41,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
     return new Date().toISOString();
   };
 
+
   return (
     <div>
       {/* Sidebar */}
@@ -77,6 +78,8 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
                   userType == "client" ? c.supporterName : c.clientName,
                 chatId: c.id,
                 lastUpdate: getLastUpdate(c.id),
+                unread:c.unread||0 ,
+                lastUpdate: c.lastUpdate
               }))
               .sort((c1, c2) => c2.lastUpdate.localeCompare(c1.lastUpdate))
               .filter((c) =>
@@ -92,6 +95,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
                     index={index}
                     handleMenuToggle={handleMenuToggle}
                     chatId={contact.chatId}
+                    unread={contact.unread}
                   />
                 </div>
               ))}

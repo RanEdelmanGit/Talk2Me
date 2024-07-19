@@ -1,7 +1,13 @@
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function Chats({ contact, handleMenuToggle, chatId, index }) {
+export default function Chats({
+  contact,
+  handleMenuToggle,
+  chatId,
+  index,
+  unread,
+}) {
   const nav = useNavigate();
   const params = useParams();
 
@@ -27,6 +33,7 @@ export default function Chats({ contact, handleMenuToggle, chatId, index }) {
         />
       </div>
       <div className="flex-1">
+        {unread > 0 && <span>/\</span>}
         <h2 className="text-lg font-semibold">{contact.displayName}</h2>
         {/* <p className="text-gray-600">{contact.message}</p> */}
       </div>

@@ -9,7 +9,9 @@ const ChatMessages = ({ messages }) => {
       block: "end",
       inline: "start",
     });
+    //dispatch update to chat.lastUpdate[]
   }, [messages]);
+
 
   return (
     <div className="flex-1 overflow-y-auto p-2">

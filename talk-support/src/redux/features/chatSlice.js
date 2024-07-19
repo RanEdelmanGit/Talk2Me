@@ -65,6 +65,10 @@ export const chatSlice = createSlice({
     addMassage:(state,action) =>{
         state.chat.messages.push({...action.payload, sentAt: new Date().toISOString()});
         state.chat.lastUpdate = new Date().toISOString();
+        /**
+         * state.chat.lastUpdate {userId: lastupdate, userId: lastUpdate}
+         */
+      
         const index = state.chats.findIndex(c => c.id == state.chat.id);
         if(index == -1){
           console.log('not found', state);
@@ -96,7 +100,15 @@ export const chatSlice = createSlice({
     },
     updateChats: (state, action) => {
       if(!action.payload)return;
+      for(let i = 0; i < state.chats.length; i++){
+        const existingChat = state.chats[i]
+        const updatedChat = action.payload.find(c => c.id == existingChat.id);
+        if(existingChat && updatedChat){
+          updatedChat.unread = existingChat.messages.length < updatedChat.messages.length;
+        }
+      }
       state.chats = action.payload;
+      
     },
     toggleVisibility: (state, action) =>{
       state.chat.isVisible = !state.chat.isVisible
@@ -155,7 +167,6 @@ export const chatSlice = createSlice({
       })
       .addCase(loadChats.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log('loadChats fulfilled', action.payload);
         state.chats = [...action.payload];
       })
       .addCase(loadChats.rejected, (state, action) => {

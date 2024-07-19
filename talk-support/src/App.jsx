@@ -98,6 +98,9 @@ function App() {
       )
     );
     const unsubscribe = onSnapshot(supporterQuery, (chatsSnapshot) => {
+      // chatsSnapshot.docChanges().forEach((change)=>{
+      //   console.log(change);
+      // })
       const chats = chatsSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
