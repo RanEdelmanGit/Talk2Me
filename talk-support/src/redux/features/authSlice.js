@@ -46,12 +46,11 @@ export const updateUser = createAsyncThunk('auth/updateUser', async (arg, {getSt
 
     await setDoc(doc(db, state.auth.userType+"s", state.auth.user.uid), state.auth.user);
     return {};
- 
 });
 
 export const updateSupporter = createAsyncThunk('auth/updateSupporter', async ({supporterId, chatId,supporterName}, {getState}) => {
   const state = getState();
-  const supporterChat = {chatId, clientId: state.auth.user.uid, clientName: state.auth.user.nickname, supporterId, supporterName, lastMessage:"", readLastMessage:true}
+  const supporterChat = {chatId, clientId: state.auth.user.uid, clientName: state.auth.user.nickname, supporterId, supporterName,}
 
   try{
     const supporterRef = doc(db, 'supporters', supporterId);
@@ -116,7 +115,11 @@ export const authSlice = createSlice({
         state.user.chats = [];
       }
       const{chatId, supporterId, supporterName } = action.payload;
-      state.user.chats.push({chatId, clientId: state.user.uid, clientName: state.user.nickname, supporterId, supporterName, lastMessage:"", readLastMessage:true})
+      state.user.chats.push({chatId, clientId: state.user.uid, clientName: state.user.nickname, supporterId, supporterName,lastRead:new Date().toISOString()})
+    },
+    updateChatLastRead:(state, action) =>{
+      const chatIndex = state.user.chats.findIndex(c => c.chatId == action.payload);
+      state.user.chats[chatIndex].lastRead = new Date().toISOString();
     },
     updateChatVisibility: (state, action) =>{
       const {isVisible, chatId} = action.payload;
@@ -181,6 +184,6 @@ export const authSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const {setFormDetails, setUserType, setUid, clearUser, addFavorite, removeFavorite, initChat, updateChatVisibility } = authSlice.actions
+export const {setFormDetails, setUserType, setUid, clearUser, addFavorite, removeFavorite, initChat, updateChatVisibility, updateChatLastRead } = authSlice.actions
 
 export default authSlice.reducer

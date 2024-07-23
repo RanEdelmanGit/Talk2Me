@@ -6,7 +6,7 @@ export default function Chats({
   handleMenuToggle,
   chatId,
   index,
-  unread,
+  unreadCount,
 }) {
   const nav = useNavigate();
   const params = useParams();
@@ -33,7 +33,7 @@ export default function Chats({
         />
       </div>
       <div className="flex-1">
-        {unread > 0 && <span>/\</span>}
+        {unreadCount > 0 && <span>/{unreadCount}\</span>}
         <h2 className="text-lg font-semibold">{contact.displayName}</h2>
         {/* <p className="text-gray-600">{contact.message}</p> */}
       </div>

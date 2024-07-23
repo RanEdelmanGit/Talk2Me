@@ -21,26 +21,24 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
       nav("/supporters");
     }
 
-    //dispatch(loadChats({ userChats: userChats.map((c) => c.chatId) })); // loads user chats into chats selector
+    // dispatch()
   }, [userChats]);
 
-  
   if (!chats || chats.length === 0) {
     <div className="flex w-full min-h-screen justify-center items-center">
       <Loading show={true} />
     </div>;
   }
 
-  const getLastUpdate = (chatId) => {
-    const chat = chats.find((chat) => chat.id === chatId);
-    if (chat) {
-      if(chat.lastUpdate)
-        return chat.lastUpdate;
-      return new Date().toISOString();
-    }
-    return new Date().toISOString();
-  };
+  const countUnread = (chat) => {
+    const userChat = user.chats.find((c) => c.chatId === chat.id);
 
+    const unreadCount = chat.messages.filter(
+      (msg) => !userChat.lastRead || msg.sentAt > userChat.lastRead
+    ).length;
+
+    return unreadCount;
+  };
 
   return (
     <div>
@@ -77,11 +75,14 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
                 displayName:
                   userType == "client" ? c.supporterName : c.clientName,
                 chatId: c.id,
-                lastUpdate: getLastUpdate(c.id),
-                unread:c.unread||0 ,
-                lastUpdate: c.lastUpdate
+                unreadCount: countUnread(c),
+                lastMessageDate: c.messages[c.messages.length - 1].sentAt,
+                lastRead: user.chats.find((userChat) => userChat.chatId == c.id)
+                  .lastRead,
               }))
-              .sort((c1, c2) => c2.lastUpdate.localeCompare(c1.lastUpdate))
+              .sort((c1, c2) =>
+                c2.lastMessageDate.localeCompare(c1.lastMessageDate)
+              )
               .filter((c) =>
                 search == "" ? true : c.displayName.includes(search)
               )
@@ -95,7 +96,7 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
                     index={index}
                     handleMenuToggle={handleMenuToggle}
                     chatId={contact.chatId}
-                    unread={contact.unread}
+                    unreadCount={contact.unreadCount}
                   />
                 </div>
               ))}

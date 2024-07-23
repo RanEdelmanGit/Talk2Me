@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { doc, onSnapshot } from "firebase/firestore";
 import { updateChat, chatCollection } from "../redux/features/chatSlice";
 import { db } from "../firebase_config";
+import { updateChatLastRead, updateUser } from "../redux/features/authSlice";
 
 // import '../styles/layout/chatPage.css'
 
@@ -59,7 +60,8 @@ const ChatPage = () => {
         }
       }
     );
-
+    dispatch(updateChatLastRead(params.chatId));
+    dispatch(updateUser());
     return () => unsubscribeChat();
   }, [params.chatId]);
 
