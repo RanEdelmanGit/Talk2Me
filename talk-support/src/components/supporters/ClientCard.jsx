@@ -34,6 +34,7 @@ export default function ClientCard({ color, client }) {
             />
             <span className="w-32 h-8 text-ellipsis whitespace-nowrap">
               <h2 className="text-lg font-bold">{client.clientName}</h2>
+              <span>{client.isVisible ? "visible": "not visible"}</span>
             </span>
           </div>
         </div>

@@ -9,9 +9,14 @@ import {
 } from "react-router-dom";
 import "./styles/index.css";
 import Welcome from "./pages/Welcome";
-import { setUid, fetchUser, setUserType } from "./redux/features/authSlice";
 import {
-  loadChats,
+  setUid,
+  fetchUser,
+  setUserType,
+  clearUser,
+} from "./redux/features/authSlice";
+import {
+  logoutChat,
   updateChats,
   updateStatus,
 } from "./redux/features/chatSlice";
@@ -50,6 +55,26 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/welcome" />;
   }
   return children;
+};
+
+const SignoutPath = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const run = async () => {
+      try {
+        await signOut(auth);
+        dispatch(clearUser());
+        dispatch(logoutChat());
+        localStorage.removeItem("userType");
+        navigate("/welcome");
+      } catch (error) {
+        console.error("Error signing out:", error);
+      }
+    };
+    run();
+  }, []);
+  return <></>;
 };
 
 function App() {
@@ -132,6 +157,7 @@ function App() {
       )}
 
       <Routes>
+        <Route path="signout" element={<SignoutPath />} />
         <Route element={<Root />}>
           <Route
             path="/chat/:chatId"
