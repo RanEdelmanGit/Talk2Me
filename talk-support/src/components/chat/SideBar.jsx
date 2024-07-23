@@ -33,9 +33,16 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
   const countUnread = (chat) => {
     const userChat = user.chats.find((c) => c.chatId === chat.id);
 
-    const unreadCount = chat.messages.filter(
-      (msg) => !userChat.lastRead || msg.sentAt > userChat.lastRead
-    ).length;
+    const unreadCount = chat.messages.reduce((count, msg) => {
+      if (!userChat.lastRead || msg.sentAt > userChat.lastRead) {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+
+    // const unreadCount = chat.messages.filter(
+    //   (msg) => !userChat.lastRead || msg.sentAt > userChat.lastRead
+    // ).length;
 
     return unreadCount;
   };
