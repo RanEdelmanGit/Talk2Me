@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import SupporterList from "../components/supporters/SupporterList";
 import Sidebar from "../components/supporters/Sidebar";
 import { fetchSupporters } from "../redux/features/supportersSlice";
-// import Loading from "../components/common/Loading";
 import {
   displayFavorites,
   displayAll,
@@ -111,13 +110,6 @@ const SupportersPage = () => {
     dispatch(displayAll());
   };
 
-  // if (status === "loading") {
-  //   return (
-  //     <div className="flex w-full min-h-screen justify-center items-center">
-  //       <Loading show={true} />
-  //     </div>
-  //   );
-  // }
 
   if (status === "failed") {
     return <div>Error:{error}</div>;

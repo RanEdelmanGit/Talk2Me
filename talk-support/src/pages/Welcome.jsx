@@ -26,13 +26,13 @@ const WelcomePage = () => {
               <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 sm:gap-4">
                 <Link
                   to="/register/supporter"
-                  className="w-full btn sm:btn-wide bg-indigo-500 hover:bg-indigo-600 text-xl text-white px-8 py-3 rounded-lg transition-colors duration-300"
+                  className="w-full btn sm:btn-wide  bg-indigo-500 hover:bg-indigo-600 text-xl leading-none text-white px-8 py-3 rounded-lg transition-colors duration-300"
                 >
                   {texts.Welcome.supporterButton}
                 </Link>
                 <Link
                   to="/register/client"
-                  className="w-full btn sm:btn-wide bg-indigo-500 hover:bg-indigo-600 text-xl text-white px-8 py-3 rounded-lg transition-colors duration-300"
+                  className="w-full btn sm:btn-wide bg-indigo-500 hover:bg-indigo-600 text-xl leading-none text-white px-8 py-3 rounded-lg transition-colors duration-300"
                 >
                   {texts.Welcome.clientButton}
                 </Link>

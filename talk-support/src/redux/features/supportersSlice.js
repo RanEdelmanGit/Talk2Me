@@ -2,33 +2,28 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getFirestore, collection, getDocs, query, where, documentId } from 'firebase/firestore';
 import {db} from '../../firebase_config'
 
+
+
+
 // Fetch supporters
 export const fetchSupporters = createAsyncThunk('supporters/fetchSupporters', async () => {
-  
   const supportersRef = collection(db, "supporters");
   const q = query(supportersRef, where('approved', "==", true))
   const supportersCollection = await getDocs(q);
-  console.log(supportersCollection);
-  // const supportersCollection = await getDocs(collection(db, 'supporters'));
   return supportersCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });
 
 export const loadSupporterByChats = createAsyncThunk('supporters/loadSupporterByChats', async ({ supporterIds }) => {
- console.log('supporterIds', supporterIds)
   const supporterQuery = query(collection(db, 'supporters'), where(documentId(), 'in', supporterIds))
   const supporters = await getDocs(supporterQuery);
-  console.log('loadSupporterByChats', supporters);
   return supporters.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 })
 
 export const loadClientsByChats = createAsyncThunk('supporters/loadClientsByChats', async ({ clientIds }) => {
-  
   if(!clientIds || clientIds.length === 0) return []
   const clientQuery = query(collection(db, "clients"), where(documentId(), 'in', clientIds))
   const clients = await getDocs(clientQuery);
-  
   return clients.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
 })
 
 const supportersSlice = createSlice({

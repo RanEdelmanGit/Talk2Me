@@ -35,9 +35,6 @@ export const fetchUser = createAsyncThunk('auth/fetchUser', async ({ uid, userTy
     }
     
     throw new Error('user does not exist or incorrect type')
-  // }catch(error){
-  //   console.log(error);
-  // }
   
 });
 
@@ -57,7 +54,6 @@ export const updateSupporter = createAsyncThunk('auth/updateSupporter', async ({
     await updateDoc(supporterRef, {chats: arrayUnion(supporterChat)})
     return {};
   }catch(error){
-    console.log(error);
   }
 });
 export const toggleSupporterVisibility = createAsyncThunk('auth/toggleSupporterVisibility', async ({chatId}, {getState}) => {
@@ -73,11 +69,8 @@ export const toggleSupporterVisibility = createAsyncThunk('auth/toggleSupporterV
       supporter.chats[index]=chat
       await updateDoc(supporterRef,supporter)
     }
-
-    
     
   }catch(error){
-    console.log(error);
   }
 });
 
@@ -153,12 +146,10 @@ export const authSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.status = 'succeeded'; 
         state.user = {...state.user, ...action.payload};
-        console.log('fulfilled', state.user);
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-        console.log('aaaa', action.error.message)
       })
       .addCase(updateSupporter.pending, (state) =>{
         state.status = 'loading';

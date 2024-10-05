@@ -79,8 +79,7 @@ const SignoutPath = () => {
 
 function App() {
   const dispatch = useDispatch();
-  const { user, isAuth } = useSelector((state) => state.auth);
-  const { userType } = useSelector((state) => state.auth);
+  const { user, isAuth, userType } = useSelector((state) => state.auth);
   const { status } = useSelector((state) => state.chat);
   const navigate = useNavigate();
 
@@ -92,11 +91,10 @@ function App() {
         const uid = currentUser.uid;
         dispatch(updateStatus("loading"));
         dispatch(setUid(uid));
-        dispatch(setUserType(savedUserType)); //TODO detect usertype in autologin fetchuser
+        dispatch(setUserType(savedUserType)); 
         dispatch(fetchUser({ uid, userType: savedUserType }))
           .unwrap()
           .then((user) => {
-            //dispatch(loadChats({ userChats: user.chats.map((c) => c.chatId) }));
             unsubscribeChats = startChatsListener(user);
           });
       } else {
@@ -105,7 +103,6 @@ function App() {
       }
     });
 
-    // Cleanup subscription on unmount
     return () => {
       unsubscribe();
       unsubscribeChats && unsubscribeChats();
@@ -113,7 +110,11 @@ function App() {
   }, [isAuth]);
 
   const startChatsListener = (user) => {
-    if (!isAuth) return () => {};
+    if (!isAuth || !user.chats || user.chats.length === 0) {
+      dispatch(updateStatus("ready"));
+      return () => {};
+    }
+  
     const supporterQuery = query(
       collection(db, "chats"),
       where(
@@ -122,31 +123,24 @@ function App() {
         user.chats.map((c) => c.chatId)
       )
     );
+  
     const unsubscribe = onSnapshot(supporterQuery, (chatsSnapshot) => {
-      // chatsSnapshot.docChanges().forEach((change)=>{
-      //   console.log(change);
-      // })
       const chats = chatsSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-
+  
       if (chats.length > 0) {
         dispatch(updateChats(chats));
         dispatch(updateStatus("succeeded"));
         navigate("/chat");
+      } else {
+        dispatch(updateStatus("ready"));
       }
     });
+  
     return unsubscribe;
   };
-
-  // useEffect(() => {
-  //   if (isAuth) {
-  //     navigate("/chat");
-  //   } else if(status != "loading"){
-  //     navigate("/welcome");
-  //   }
-  // }, [isAuth]);
 
   return (
     <>

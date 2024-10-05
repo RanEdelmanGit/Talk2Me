@@ -4,7 +4,6 @@ import {db} from '../../firebase_config'
 
 export const chatCollection = "chats"
 
-
 const initialState = {
   status:'loading',
   error:'',
@@ -20,7 +19,6 @@ const initialState = {
 }
 
 export const resumeChat = createAsyncThunk('chat/resumeChat', async ({ chatId }) => {
-
   const chat = doc(db, chatCollection, chatId);
   
   const querySnapshot = await getDoc(chat);
@@ -28,17 +26,13 @@ export const resumeChat = createAsyncThunk('chat/resumeChat', async ({ chatId })
     return(querySnapshot.data())
   }
   return {};
-
 })
 
 export const loadChats = createAsyncThunk('chat/loadChats', async ({ userChats }) => {
   if(!userChats || userChats.length === 0) return []
   const chatQuery = query(collection(db, chatCollection), where(documentId(), 'in', userChats))
   const chats = await getDocs(chatQuery);
-  //console.log('loadChats', chats);
-  
   return chats.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
 })
 
 export const saveChat = createAsyncThunk('chat/saveChat', async (arg, {getState}) => {
@@ -49,13 +43,8 @@ export const saveChat = createAsyncThunk('chat/saveChat', async (arg, {getState}
   if(chat.id === ""){
     chat.id = chat.supporterId + chat.clientId
   }
-  console.log('chat', chat);
   await setDoc(doc(db, chatCollection, chat.id), chat);
-  //TODO if supporter has a chat with clientId, update its lastMessage field, else add to supporter a new document to db, "supporters", chat.supporterId, 'supporterChats'
-  //TODO make supporterChatSlice and ClientChatSlice
-  //await setDoc(doc(db, "supporters", chat.supporterId, 'supporterChats'), chat);
   return chat;
- 
 })
 
 export const chatSlice = createSlice({
@@ -65,14 +54,7 @@ export const chatSlice = createSlice({
     addMassage:(state,action) =>{
         state.chat.messages.push({...action.payload, sentAt: new Date().toISOString()});
         state.chat.lastUpdate = new Date().toISOString();
-        /**
-         * state.chat.lastUpdate {userId: lastupdate, userId: lastUpdate}
-         */
-      
         const index = state.chats.findIndex(c => c.id == state.chat.id);
-        if(index == -1){
-          console.log('not found', state);
-        }
         state.chats[index] = state.chat;
     },
     startChat:(state,action) => {
@@ -108,7 +90,6 @@ export const chatSlice = createSlice({
         }
       }
       state.chats = action.payload;
-      
     },
     toggleVisibility: (state, action) =>{
       state.chat.isVisible = !state.chat.isVisible
@@ -143,7 +124,6 @@ export const chatSlice = createSlice({
       })
       .addCase(saveChat.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log(action.payload);
         state.chat = action.payload;
       })
       .addCase(saveChat.rejected, (state, action) => {
@@ -155,7 +135,6 @@ export const chatSlice = createSlice({
       })
       .addCase(resumeChat.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log(action.payload);
         state.chat = {...action.payload};
       })
       .addCase(resumeChat.rejected, (state, action) => {

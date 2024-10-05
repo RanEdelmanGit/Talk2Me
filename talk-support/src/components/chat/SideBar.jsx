@@ -15,34 +15,30 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (!chats || status == "loading") return;
+    if (!chats || status === "loading") return;
 
     if (chats.length === 0) {
       nav("/supporters");
     }
-
-    // dispatch()
   }, [userChats]);
 
   if (!chats || chats.length === 0) {
-    <div className="flex w-full min-h-screen justify-center items-center">
-      <Loading show={true} />
-    </div>;
+    return (
+      <div className="flex w-full min-h-screen justify-center items-center">
+        <Loading show={true} />
+      </div>
+    );
   }
 
   const countUnread = (chat) => {
     const userChat = user.chats.find((c) => c.chatId === chat.id);
 
     const unreadCount = chat.messages.reduce((count, msg) => {
-      if (!userChat.lastRead || msg.sentAt > userChat.lastRead) {
+      if (msg && (!userChat.lastRead || msg.sentAt > userChat.lastRead)) {
         return count + 1;
       }
       return count;
     }, 0);
-
-    // const unreadCount = chat.messages.filter(
-    //   (msg) => !userChat.lastRead || msg.sentAt > userChat.lastRead
-    // ).length;
 
     return unreadCount;
   };
@@ -80,18 +76,20 @@ const Sidebar = ({ isMenuOpen, handleMenuToggle }) => {
             chats
               .map((c) => ({
                 displayName:
-                  userType == "client" ? c.supporterName : c.clientName,
+                  userType === "client" ? c.supporterName : c.clientName,
                 chatId: c.id,
                 unreadCount: countUnread(c),
-                lastMessageDate: c.messages[c.messages.length - 1].sentAt,
-                lastRead: user.chats.find((userChat) => userChat.chatId == c.id)
+                lastMessageDate: c.messages.length > 0 ? c.messages[c.messages.length - 1].sentAt : null,
+                lastRead: user.chats.find((userChat) => userChat.chatId === c.id)
                   .lastRead,
               }))
               .sort((c1, c2) =>
-                c2.lastMessageDate.localeCompare(c1.lastMessageDate)
+                c2.lastMessageDate && c1.lastMessageDate
+                  ? c2.lastMessageDate.localeCompare(c1.lastMessageDate)
+                  : 0
               )
               .filter((c) =>
-                search == "" ? true : c.displayName.includes(search)
+                search === "" ? true : c.displayName.includes(search)
               )
               .map((contact, index) => (
                 <div key={index} className="border-b border-gray-200">

@@ -57,11 +57,9 @@ const Login = ({ setIsLoginVisible }) => {
       dispatch(fetchUser({ uid, userType: logInUserType }))
         .unwrap()
         .then((user) => {
-          console.log("after load user");
           dispatch(loadChats({ userChats: user.chats.map((c) => c.chatId) }))
             .unwrap()
             .then(() => {
-              console.log("after load chats");
               dispatch(setUserType(logInUserType));
               dispatch(setUid(uid));
               localStorage.setItem("userType", logInUserType);
@@ -69,7 +67,6 @@ const Login = ({ setIsLoginVisible }) => {
             });
         });
     } catch (error) {
-      console.log(error);
       signOut(auth);
       setError(error.message);
     }

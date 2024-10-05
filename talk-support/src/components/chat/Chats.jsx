@@ -32,9 +32,10 @@ export default function Chats({
           className="w-12 h-12 rounded-full"
         />
       </div>
-      <div className="flex-1">
-        {unreadCount > 0 && <span>/{unreadCount}\</span>}
+      <div className="flex-1 flex items-center justify-between">
+       
         <h2 className="text-lg font-semibold">{contact.displayName}</h2>
+        {unreadCount > 0 && <span className="flex items-center justify-center w-6 h-6 bg-blue-500 text-white rounded-full">{unreadCount}</span>}
         {/* <p className="text-gray-600">{contact.message}</p> */}
       </div>
     </div>
