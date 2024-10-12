@@ -1,8 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
-import registrationReducer from './features/registrationSlice'
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './features/authSlice';
+import supportersReducer from './features/supportersSlice';
+import chatReducer from './features/chatSlice'
+
 
 export const store = configureStore({
   reducer: {
-    registration: registrationReducer,
+    auth: authReducer,
+    supporters: supportersReducer,
+    chat: chatReducer,
   },
-})
+});
+
+export default store;

@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 
+  html,body {
+    overflow: hidden;
+  } */
+
+  /* Add this CSS to your stylesheet */
+.placeholder-custom::placeholder {
+  font-size: 14px; /* Default font size */
+}
+
+
+
